@@ -15,7 +15,6 @@ export const projects: Project[] = [
       webm: `${A}/vtc-portfolio-webm.webm`,
     },
     hero: {
-      eyebrow: "Voyage Theater Company",
       headline: "Building a scalable digital stage for diverse voices.",
       media: {
         type: "video",
@@ -25,7 +24,6 @@ export const projects: Project[] = [
       },
     },
     overview: {
-      logo: { src: `${A}/black-full-logo-3.svg`, width: 1416, height: 424 },
       html: 'To modernize a decade-old digital presence and eliminate technical fragility, I led the transformation of Voyage Theater Company&rsquo;s &ldquo;messy patchwork&rdquo; WordPress site into a professional digital stage.',
       impact:
         "Replaced a decade-old WordPress build with a templated CMS and trained the staff to run it, so a small non-technical team can update the site without breaking it.",
@@ -150,11 +148,10 @@ export const projects: Project[] = [
       "Designed scalable solutions for the Content Experience, Monetization and Subscriptions, and Central Design Teams.",
     categories: ["Product Design", "Internship"],
     thumb: { type: "image", src: `${A}/frame-2-6.png`, alt: "The Washington Post Live Activity" },
-    accent: "mint",
     hero: {
-      eyebrow: "The Washington Post",
       headline: "Designing an AI-powered Live Activity Feed",
       media: { type: "image", src: `${A}/group-1-1.png`, alt: "Live Activity concept" },
+      panel: true,
     },
     overview: {
       media: { type: "image", src: `${A}/image-1.png`, alt: "" },
@@ -190,7 +187,11 @@ export const projects: Project[] = [
         kind: "text",
         html: "With the Live Activity Feeds (LUFs), contributors are not limited to traditional article formatting, allowing for quick posts designed as cards that readers can follow. To understand how to design the iOS Live Activity, I needed to understand LUFs&rsquo; anatomy.",
       },
-      { kind: "media", media: { type: "image", src: `${A}/luf2.avif`, alt: "LUF layout anatomy" } },
+      {
+        kind: "media",
+        media: { type: "image", src: `${A}/luf2.avif`, alt: "LUF layout anatomy" },
+        size: "sm",
+      },
 
       { kind: "section", label: "Understanding Reader Habits" },
       { kind: "heading", text: "Understanding how a user interacts with a notification." },
@@ -244,6 +245,7 @@ export const projects: Project[] = [
       {
         kind: "media",
         media: { type: "image", src: `${A}/screenshot-2025-10-21-at-11-14-49-pm.png`, alt: "iOS Live Activity specs" },
+        size: "md",
       },
 
       { kind: "section", label: "Designing Within iOS Limits" },
@@ -255,6 +257,7 @@ export const projects: Project[] = [
       {
         kind: "grid",
         cols: 2,
+        size: "md",
         media: [
           { type: "image", src: `${A}/2025-10-21-23-27-page-3-1-1.png`, alt: "Early sketches" },
           { type: "image", src: `${A}/2025-10-21-23-27-page-1-1.png`, alt: "Early sketches" },
@@ -268,6 +271,7 @@ export const projects: Project[] = [
       {
         kind: "grid",
         cols: 2,
+        size: "md",
         media: [
           { type: "image", src: `${A}/live-activity-lock-screen.png`, alt: "V1 lock screen" },
           { type: "image", src: `${A}/live-activity-compact-3.png`, alt: "V1 compact" },
@@ -281,6 +285,7 @@ export const projects: Project[] = [
       {
         kind: "grid",
         cols: 2,
+        size: "md",
         media: [
           { type: "image", src: `${A}/live-activity-lock-screen-3.png`, alt: "Revised lock screen" },
           { type: "image", src: `${A}/live-activity-compact-5.png`, alt: "Revised compact" },
@@ -294,6 +299,7 @@ export const projects: Project[] = [
       {
         kind: "grid",
         cols: 2,
+        size: "md",
         media: [
           { type: "image", src: `${A}/live-activity-lock-screen-1.png`, alt: "Modular zones, lock screen" },
           { type: "image", src: `${A}/live-activity-compact-4.png`, alt: "Modular zones, compact" },
@@ -323,6 +329,8 @@ export const projects: Project[] = [
       { kind: "section", label: "Final Prototype" },
       {
         kind: "media",
+        // Portrait phone capture — even at 560px wide it runs over 1100px tall.
+        size: "sm",
         media: {
           type: "video",
           poster: `${A}/screen-recording-2025-11-06-at-72619-pm-poster-00001.jpg`,
@@ -331,30 +339,27 @@ export const projects: Project[] = [
         },
       },
 
-      { kind: "section", label: "Shipping To Roadmap" },
-      { kind: "heading", text: "Results" },
+      { kind: "section", label: "Results & Learnings" },
       {
         kind: "text",
-        html: "In alignment with The Washington Post&rsquo;s initiative to expand real-time, mobile-first experiences, I presented the <strong>Live Activity Feed</strong> prototype to the <strong>Content XP leadership</strong>, alongside other newsroom and product teams exploring engagement-driven solutions.",
+        html: "I presented the <strong>Live Activity Feed</strong> prototype to <strong>Content XP leadership</strong>, alongside other newsroom and product teams exploring engagement-driven solutions.",
       },
       {
         kind: "cards",
         items: [
           {
             title: "Executive feedback",
-            body: "My design received strong feedback for its scalability, technical feasibility, and editorial alignment, specifically for its ability to automate newsroom tagging while maintaining journalistic integrity and providing a framework that extends across politics, culture, sports, and breaking news.",
+            body: "Praised for scalability, technical feasibility, and editorial alignment — automating newsroom tagging without compromising journalistic integrity.",
           },
           {
             title: "Organizational Impact",
-            body: "My solution was approved for a Q1 2026 launch and added to the roadmap after validating a scalable real-time engagement model that influenced The Post's broader AI strategy, with projected outcomes of increasing opt-ins from 17% to 25%, boosting average views per user to 3+, and extending session duration to 60 seconds.",
+            body: "Approved for a Q1 2026 launch and added to the roadmap, with projected opt-ins rising from 17% to 25%.",
           },
         ],
       },
-
-      { kind: "section", label: "Reflection" },
       {
         kind: "text",
-        html: "This was my third project during my internship at The Post, and it challenged me to move beyond execution and think like a product strategist. More than just meeting the MVP outlined in the PRD, I learned how to anticipate future scalability and design with newsroom, engineering, and audience needs in mind. Some of my key takeaways include:",
+        html: "This was my third project at The Post, and it challenged me to move beyond execution and think like a product strategist. My key takeaways:",
       },
       {
         kind: "cards",
@@ -385,7 +390,6 @@ export const projects: Project[] = [
     thumb: { type: "image", src: `${A}/frame-1-2.png`, alt: "Graditude dashboard" },
     accent: "grad",
     hero: {
-      eyebrow: "Graditude",
       headline: "Help students develop impactful career mentorship relationships.",
       media: {
         type: "image",
@@ -394,7 +398,6 @@ export const projects: Project[] = [
       },
     },
     overview: {
-      logo: { src: `${A}/group-73.svg`, width: 290, height: 89 },
       html: "Graditude is a nonprofit platform connecting students with alumni for career mentorship, in partnership with campus organizations.",
       impact:
         "Delivered a stakeholder presentation that handed my designs to the project's developer, setting the team up for implementation.",
@@ -792,7 +795,6 @@ export const projects: Project[] = [
       media: { type: "image", src: `${A}/splash-6.webp`, alt: "Quorum Bio" },
     },
     overview: {
-      logo: { src: `${A}/logo-2.png`, width: 395, height: 333 },
       html: "During the fall semester of my second year, I interned for Quorum Bio (QB) through the <strong>New York New Energy Student Startup Experience.</strong> During my time at QB, I learned about the company&rsquo;s mission of helping farmers reduce their fertilizer usage and therefore preventing algal bloom caused by the over-consumption of phosphorous. I worked with the CEO to <strong>modernize QB&rsquo;s brand to attract more shareholders</strong> and establish QB as a leading startup for <strong>precision biologics.</strong>",
     },
     meta: [

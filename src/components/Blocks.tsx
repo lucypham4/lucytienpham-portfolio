@@ -9,6 +9,12 @@ const gridCols = {
   4: "sm:grid-cols-2 lg:grid-cols-4",
 } as const;
 
+// Caps for tall screenshots that would otherwise fill the whole column.
+const sizeCap = {
+  sm: "max-w-[320px]",
+  md: "max-w-[560px]",
+} as const;
+
 function BlockView({ block }: { block: Block }) {
   switch (block.kind) {
     case "section":
@@ -46,7 +52,7 @@ function BlockView({ block }: { block: Block }) {
 
     case "media":
       return (
-        <figure className="mt-8">
+        <figure className={`mt-8 ${block.size ? sizeCap[block.size] : ""}`}>
           <MediaBlock media={block.media} />
           {block.caption && (
             <figcaption className="mt-3 text-sm leading-6 text-grey">
@@ -58,7 +64,11 @@ function BlockView({ block }: { block: Block }) {
 
     case "grid":
       return (
-        <div className={`mt-8 grid grid-cols-1 gap-4 ${gridCols[block.cols ?? 2]}`}>
+        <div
+          className={`mt-8 grid grid-cols-1 gap-4 ${gridCols[block.cols ?? 2]} ${
+            block.size ? sizeCap[block.size] : ""
+          }`}
+        >
           {block.media.map((m, i) => (
             <MediaBlock key={i} media={m} />
           ))}

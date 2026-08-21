@@ -64,7 +64,13 @@ export default async function CaseStudyPage({
             </div>
           ) : (
             <div className="shell pt-10">
-              <MediaBlock media={project.hero.media} priority />
+              <div
+                className={
+                  project.hero.panel ? "rounded-xl2 bg-shell px-6 py-10" : ""
+                }
+              >
+                <MediaBlock media={project.hero.media} priority />
+              </div>
             </div>
           ))}
 
@@ -86,21 +92,18 @@ export default async function CaseStudyPage({
         <div className="min-w-0">
           <div id="overview" className="scroll-mt-28">
             {project.overview && (
-              <section className="grid grid-cols-1 gap-8 md:grid-cols-[1fr_1.4fr]">
-                <div>
-                  {project.overview.logo && (
-                    <Image
-                      src={project.overview.logo.src}
-                      alt={project.title}
-                      width={project.overview.logo.width}
-                      height={project.overview.logo.height}
-                      className="h-auto w-40"
-                    />
-                  )}
-                  {project.overview.media && (
+              <section
+                className={
+                  project.overview.media
+                    ? "grid grid-cols-1 gap-8 md:grid-cols-[1fr_1.4fr]"
+                    : ""
+                }
+              >
+                {project.overview.media && (
+                  <div>
                     <MediaBlock media={project.overview.media} />
-                  )}
-                </div>
+                  </div>
+                )}
                 <div>
                   <p className="eyebrow">Overview</p>
                   <p

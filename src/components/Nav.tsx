@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const links = [
   { label: "Home", href: "/" },
@@ -15,9 +15,40 @@ const links = [
 export default function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [hidden, setHidden] = useState(false);
+
+  // Hide the bar when scrolling down, bring it back on the way up.
+  useEffect(() => {
+    let last = window.scrollY;
+
+    const onScroll = () => {
+      const y = window.scrollY;
+      const delta = y - last;
+
+      // Ignore jitter, and never hide the bar at the very top of the page.
+      if (Math.abs(delta) > 6) {
+        setHidden(delta > 0 && y > 120);
+        last = y;
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // A hidden bar must not swallow the menu that is open inside it.
+  const toggleMenu = () =>
+    setOpen((wasOpen) => {
+      if (!wasOpen) setHidden(false);
+      return !wasOpen;
+    });
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md">
+    <header
+      className={`sticky top-0 z-50 bg-white/80 backdrop-blur-md transition-transform duration-300 ${
+        hidden ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
       <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-2.5 md:px-[100px]">
         <Link
           href="/"
@@ -58,7 +89,7 @@ export default function Nav() {
           type="button"
           aria-label="Toggle menu"
           aria-expanded={open}
-          onClick={() => setOpen((v) => !v)}
+          onClick={toggleMenu}
           className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
         >
           <span
