@@ -143,7 +143,7 @@ export default async function CaseStudyPage({
             )}
 
             {project.meta && (
-              <dl className="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 border-t border-line pt-8 sm:grid-cols-3">
+              <dl className="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-3">
                 {project.meta.map((m) => (
                   <div key={m.label}>
                     <dt className="eyebrow">{m.label}</dt>
@@ -161,7 +161,7 @@ export default async function CaseStudyPage({
             <Blocks blocks={project.blocks} />
           </div>
 
-          <nav className="mt-24 border-t border-line pt-8">
+          <nav className="mt-24">
             <p className="eyebrow text-grey">Next project</p>
             <Link
               href={`/work/${next.slug}`}

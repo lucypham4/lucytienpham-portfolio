@@ -5,11 +5,17 @@ export type Media =
 export type MediaSize = "sm" | "md";
 
 export type Block =
-  /** Green uppercase eyebrow that opens a case-study section. */
-  | { kind: "section"; label: string }
+  /**
+   * Opens a case-study section. `label` is the short name the side nav shows;
+   * `heading` is the longer sentence rendered on the page, falling back to the
+   * label when the short name already reads as a heading.
+   */
+  | { kind: "section"; label: string; heading?: string }
   | { kind: "heading"; text: string }
   | { kind: "text"; html: string }
   | { kind: "callout"; html: string }
+  /** Something a stakeholder actually said, set apart from the narration. */
+  | { kind: "quote"; text: string; attribution?: string }
   /**
    * `size` caps how wide a block renders. Tall phone screenshots become
    * unreadably large at full column width, so they opt into a narrower frame.

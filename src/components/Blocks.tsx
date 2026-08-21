@@ -20,12 +20,26 @@ function BlockView({ block }: { block: Block }) {
   switch (block.kind) {
     case "section":
       return (
-        <div
+        <h2
           id={slugify(block.label)}
-          className="mt-20 scroll-mt-28 border-t border-line pt-6 first:mt-0"
+          className="mt-20 scroll-mt-28 text-[32px] leading-10 font-bold text-ink first:mt-0"
         >
-          <p className="eyebrow">{block.label}</p>
-        </div>
+          {block.heading ?? block.label}
+        </h2>
+      );
+
+    case "quote":
+      return (
+        <figure className="mt-8">
+          <blockquote className="rounded-xl2 border border-line px-8 py-7 text-2xl leading-9 font-medium text-ink">
+            &ldquo;{block.text}&rdquo;
+          </blockquote>
+          {block.attribution && (
+            <figcaption className="mt-3 text-sm leading-6 text-grey">
+              {block.attribution}
+            </figcaption>
+          )}
+        </figure>
       );
 
     case "heading":

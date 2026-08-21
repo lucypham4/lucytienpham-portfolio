@@ -50,8 +50,9 @@ export const projects: Project[] = [
     blocks: [
       { kind: "section", label: "A Fragile Patchwork" },
       {
-        kind: "heading",
+        kind: "quote",
         text: "Every time we make updates, something crashes or goes awry.",
+        attribution: "Voyage Theater Company staff",
       },
       {
         kind: "text",
@@ -64,10 +65,10 @@ export const projects: Project[] = [
           "The old site was not optimized for VTC's mission. How might we create a site that empowers the current staff?",
       },
 
-      { kind: "section", label: "Rebuilding The Architecture" },
       {
-        kind: "heading",
-        text: "A comprehensive redesign spanning from branding to technical migration.",
+        kind: "section",
+        label: "Rebuilding The Architecture",
+        heading: "A comprehensive redesign spanning from branding to technical migration.",
       },
       {
         kind: "text",
@@ -98,8 +99,11 @@ export const projects: Project[] = [
         },
       },
 
-      { kind: "section", label: "Content Ownership" },
-      { kind: "heading", text: "Empowering non-technical content ownership" },
+      {
+        kind: "section",
+        label: "Content Ownership",
+        heading: "Empowering non-technical content ownership",
+      },
       {
         kind: "text",
         html: "In nonprofit theater, operational independence is everything. I redesigned the site to <strong>empower a small, non-technical team</strong> to manage their own content without breaking the design system, giving VTC a digital presence built to last beyond launch. To reinforce long-term success, I introduced a templated CMS architecture paired with hands-on training, transforming a once fragile, developer-dependent website into a <strong>maintainable, brand-consistent</strong> platform.",
@@ -173,10 +177,10 @@ export const projects: Project[] = [
       { label: "Tools", value: "Figma, FigJam, Google Docs, Zeppelin" },
     ],
     blocks: [
-      { kind: "section", label: "Notification Fatigue" },
       {
-        kind: "heading",
-        text: "Mobile users receive repetitive push notifications and quickly disengage.",
+        kind: "section",
+        label: "Notification Fatigue",
+        heading: "Mobile users receive repetitive push notifications and quickly disengage.",
       },
       {
         kind: "text",
@@ -197,8 +201,11 @@ export const projects: Project[] = [
         size: "sm",
       },
 
-      { kind: "section", label: "Understanding Reader Habits" },
-      { kind: "heading", text: "Understanding how a user interacts with a notification." },
+      {
+        kind: "section",
+        label: "Understanding Reader Habits",
+        heading: "Understanding how a user interacts with a notification.",
+      },
       {
         kind: "text",
         html: "I spoke with designers, engineers, and editors across The Washington Post&rsquo;s Content XP team to understand the existing LUF experience and the challenges of mobile engagement. Through these discussions, we uncovered several key insights that shaped our design direction:",
@@ -221,8 +228,11 @@ export const projects: Project[] = [
         ],
       },
 
-      { kind: "section", label: "Anatomy Of A Feed" },
-      { kind: "heading", text: "Understanding LUF's anatomy" },
+      {
+        kind: "section",
+        label: "Anatomy Of A Feed",
+        heading: "Understanding LUF's anatomy",
+      },
       {
         kind: "text",
         html: "I <strong>dissected existing LUF structure</strong>: dynamic headlines, dynamic descriptions, contributor credits, reporter insights, article excerpts, and quick posts to understand the content I was designing for. I also <strong>defined LUF categories</strong> to further break down which type of news would work with a live activity template in addition to how users would interact with different LUF live activities.",
@@ -252,7 +262,11 @@ export const projects: Project[] = [
         size: "md",
       },
 
-      { kind: "section", label: "Designing Within iOS Limits" },
+      {
+        kind: "section",
+        label: "Designing Within iOS Limits",
+        heading: "Designing within iOS limits",
+      },
       { kind: "heading", text: "Early Sketches" },
       {
         kind: "text",
@@ -310,8 +324,11 @@ export const projects: Project[] = [
         ],
       },
 
-      { kind: "section", label: "Flexible Templates" },
-      { kind: "heading", text: "Creating Flexible Templates" },
+      {
+        kind: "section",
+        label: "Flexible Templates",
+        heading: "Creating flexible templates for diverse storytelling",
+      },
       {
         kind: "text",
         html: "To support The Post&rsquo;s diverse storytelling, I built a <strong>template design system</strong> that balanced scalability with creative freedom. Each template could adapt to event type (breaking, ongoing, or scheduled) and editorial tone while leaving space for visual experimentation by graphic artists. This framework ensures consistent brand presence across all Live Activities while allowing for event-specific customization.",
@@ -330,7 +347,11 @@ export const projects: Project[] = [
         media: { type: "image", src: `${A}/screenshot-2025-11-06-at-6-54-58-pm.png`, alt: "Motion prototype" },
       },
 
-      { kind: "section", label: "Final Prototype" },
+      {
+        kind: "section",
+        label: "Final Prototype",
+        heading: "Final prototype",
+      },
       {
         kind: "media",
         // Portrait phone capture — even at 560px wide it runs over 1100px tall.
@@ -343,7 +364,11 @@ export const projects: Project[] = [
         },
       },
 
-      { kind: "section", label: "Results & Learnings" },
+      {
+        kind: "section",
+        label: "Results & Learnings",
+        heading: "Results and learnings",
+      },
       {
         kind: "text",
         html: "I presented the <strong>Live Activity Feed</strong> prototype to <strong>Content XP leadership</strong>, alongside other newsroom and product teams exploring engagement-driven solutions.",
@@ -440,7 +465,11 @@ export const projects: Project[] = [
       { kind: "heading", text: "Project Process" },
       { kind: "media", media: { type: "image", src: `${A}/design-process-2.webp`, alt: "Design process" } },
 
-      { kind: "section", label: "Understanding Admin Needs" },
+      {
+        kind: "section",
+        label: "Understanding Admin Needs",
+        heading: "Understanding admin needs",
+      },
       { kind: "heading", text: "Stakeholder Interview and Past Documentation" },
       {
         kind: "text",
@@ -477,7 +506,11 @@ export const projects: Project[] = [
         media: { type: "image", src: `${A}/revised-user-journey-map-2.avif`, alt: "User journey map" },
       },
 
-      { kind: "section", label: "Defining The Scope" },
+      {
+        kind: "section",
+        label: "Defining The Scope",
+        heading: "Defining the scope",
+      },
       { kind: "heading", text: "User Persona" },
       {
         kind: "text",
@@ -496,7 +529,11 @@ export const projects: Project[] = [
         html: "To further define our scope and ensure that our plan was a comprehensive solution for Graditude&rsquo;s mission of providing admins with the tools they need to manage mentee/mentor matches, <strong>I took ownership</strong> over the main dashboard, inviting new members flow, creating new programs flow, and making sure that we had clear action items before and after our weekly meetings.",
       },
 
-      { kind: "section", label: "Sketching & Testing" },
+      {
+        kind: "section",
+        label: "Sketching & Testing",
+        heading: "Sketching and testing",
+      },
       { kind: "heading", text: "Sketching and Wireframes" },
       {
         kind: "text",
@@ -571,8 +608,11 @@ export const projects: Project[] = [
         ],
       },
 
-      { kind: "section", label: "The Dashboard" },
-      { kind: "heading", text: "Giving Admins Clarity" },
+      {
+        kind: "section",
+        label: "The Dashboard",
+        heading: "Giving admins clarity",
+      },
       {
         kind: "text",
         html: "Through my dashboard design, admins can now create new programs, engage with their programs&rsquo; members, and view selected statistics to keep track of their programs&rsquo; progress.",
@@ -655,10 +695,10 @@ export const projects: Project[] = [
       },
     ],
     blocks: [
-      { kind: "section", label: "Problem" },
       {
-        kind: "heading",
-        text: "Truth Pharm needed a way to design and market their upcoming events.",
+        kind: "section",
+        label: "Problem",
+        heading: "Truth Pharm needed a way to design and market their upcoming events.",
       },
       { kind: "media", media: { type: "image", src: `${A}/tp-2.webp`, alt: "Truth Pharm event" } },
       { kind: "text", html: "To accomplish this goal, I collaborated with the team to:" },
@@ -808,10 +848,10 @@ export const projects: Project[] = [
       { label: "Team", value: "CEO: Sudharsan Dwaraknath · Intern: Anthony Qiu" },
     ],
     blocks: [
-      { kind: "section", label: "Problem" },
       {
-        kind: "heading",
-        text: "Quorum Bio needed a developed brand image to attract shareholders.",
+        kind: "section",
+        label: "Problem",
+        heading: "Quorum Bio needed a developed brand image to attract shareholders.",
       },
       {
         kind: "media",
