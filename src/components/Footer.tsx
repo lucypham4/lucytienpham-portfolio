@@ -12,7 +12,7 @@ export default function Footer() {
             height={72}
             className="h-[72px] w-[72px]"
           />
-          <h2 className="text-[48px] leading-[56px] font-bold">Let&apos;s collab</h2>
+          <h2 className="text-[40px] leading-[48px] font-bold">Let&apos;s collab</h2>
         </div>
 
         <div className="flex flex-col gap-6 md:items-end">

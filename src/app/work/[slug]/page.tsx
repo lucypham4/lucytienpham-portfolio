@@ -57,38 +57,35 @@ export default async function CaseStudyPage({
         {project.hero.media &&
           (project.hero.fullBleed ? (
             <div className="h-[45vh] min-h-[320px] w-full overflow-hidden">
-              <MediaBlock
-                media={project.hero.media}
-                priority
-                className="h-full rounded-none"
-              />
+              <MediaBlock media={project.hero.media} priority fit="fill" />
             </div>
           ) : (
             <div className="shell pt-10">
               {/* Panelled splashes match the plain ones' 16:9 footprint so
-                  every case study opens at the same height. */}
-              <div
-                className={
-                  project.hero.panel
-                    ? "flex aspect-video items-center justify-center rounded-xl2 bg-shell px-6 py-10"
-                    : ""
-                }
-              >
-                <MediaBlock
-                  media={project.hero.media}
-                  priority
-                  className={
-                    project.hero.panel
-                      ? "max-h-full w-auto max-w-full object-contain"
-                      : ""
-                  }
-                />
-              </div>
+                  every case study opens at the same height. The asset is
+                  contained inside the padding rather than filling the panel. */}
+              {project.hero.panel ? (
+                <div className="aspect-video rounded-xl2 bg-shell p-6 md:p-10">
+                  <MediaBlock
+                    media={project.hero.media}
+                    priority
+                    fit="contain"
+                  />
+                </div>
+              ) : (
+                <MediaBlock media={project.hero.media} priority />
+              )}
             </div>
           ))}
+      </header>
 
-        <div className="shell py-12">
-          <h1 className="max-w-4xl text-[40px] leading-[48px] font-bold text-ink md:text-[48px] md:leading-[56px]">
+      <div className="shell grid grid-cols-1 gap-12 pt-12 lg:grid-cols-[190px_1fr] lg:gap-16">
+        <CaseStudyNav sections={sections} />
+
+        <div className="min-w-0">
+          {/* Title lives in the content column so it lines up with the copy
+              below it rather than spanning across the side nav. */}
+          <h1 className="text-[40px] leading-[48px] font-bold text-ink">
             {project.hero.headline}
           </h1>
           {showTagline && (
@@ -96,14 +93,8 @@ export default async function CaseStudyPage({
               {project.tagline}
             </p>
           )}
-        </div>
-      </header>
 
-      <div className="shell grid grid-cols-1 gap-12 lg:grid-cols-[190px_1fr] lg:gap-16">
-        <CaseStudyNav sections={sections} />
-
-        <div className="min-w-0">
-          <div id="overview" className="scroll-mt-28">
+          <div id="overview" className="mt-12 scroll-mt-28">
             {project.overview && (
               <section
                 className={

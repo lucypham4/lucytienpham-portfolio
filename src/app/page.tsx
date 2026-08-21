@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <>
       <section className="shell-wide pt-20 pb-24">
-        <h1 className="max-w-4xl text-[36px] leading-[46px] font-normal text-ink md:text-[48px] md:leading-[60px]">
+        <h1 className="max-w-4xl text-[40px] leading-[52px] font-normal text-ink">
           Lucy is a designer <strong className="font-bold">bridging the gap</strong>{" "}
           between business objectives and user experiences.
         </h1>
