@@ -13,22 +13,22 @@ export default function Home() {
       </section>
 
       <section id="work" className="shell pb-24">
-        <div className="flex flex-col gap-20">
+        <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2">
           {projects.map((project, i) => (
             <Link
               key={project.slug}
               href={`/work/${project.slug}`}
               className="group block"
             >
-              <div className="overflow-hidden rounded-xl2">
+              <div className="aspect-[4/3] overflow-hidden rounded-xl2">
                 <MediaBlock
                   media={project.thumb}
                   priority={i === 0}
-                  className="rounded-xl2 transition-opacity group-hover:opacity-80"
+                  className="h-full rounded-xl2 transition-opacity group-hover:opacity-80"
                 />
               </div>
 
-              <div className="mt-6 flex flex-col gap-3">
+              <div className="mt-5 flex flex-col gap-3">
                 <div className="flex flex-wrap gap-2">
                   {project.categories.map((cat) => (
                     <span
@@ -39,10 +39,10 @@ export default function Home() {
                     </span>
                   ))}
                 </div>
-                <h2 className="text-[36px] leading-[44px] font-bold text-ink">
+                <h2 className="text-[28px] leading-9 font-bold text-ink">
                   {project.title}
                 </h2>
-                <p className="max-w-2xl text-lg leading-8 text-grey">
+                <p className="text-base leading-7 text-grey">
                   {project.tagline}
                 </p>
               </div>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Block } from "@/content/types";
+import { slugify } from "@/lib/slug";
 import MediaBlock from "./MediaBlock";
 
 const gridCols = {
@@ -12,7 +13,10 @@ function BlockView({ block }: { block: Block }) {
   switch (block.kind) {
     case "section":
       return (
-        <div className="mt-20 border-t border-line pt-6 first:mt-0">
+        <div
+          id={slugify(block.label)}
+          className="mt-20 scroll-mt-28 border-t border-line pt-6 first:mt-0"
+        >
           <p className="eyebrow">{block.label}</p>
         </div>
       );
@@ -94,7 +98,7 @@ function BlockView({ block }: { block: Block }) {
         <ul className="mt-6 flex flex-col gap-2">
           {block.items.map((item, i) => (
             <li key={i} className="flex gap-3 text-base leading-7 text-ink-soft">
-              <span aria-hidden className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-green" />
+              <span aria-hidden className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
               <span>{item}</span>
             </li>
           ))}

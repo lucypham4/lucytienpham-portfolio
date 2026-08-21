@@ -7,6 +7,7 @@
   --color-line: #e6e6e6;
   --color-line-soft: #e7e7e7;
   --color-shell: #f7f7f7;
+  /* Brand green, kept as a token but no longer applied to text or accents. */
   --color-green: #02aa4b;
   --color-mint: #e9fff9;
   --color-grad-blue: #339af0;
@@ -32,9 +33,9 @@ body {
 }
 
 @layer components {
-  /* Section eyebrow — the uppercase green label that opens each case-study section */
+  /* Section eyebrow — the small uppercase label that opens each case-study section */
   .eyebrow {
-    @apply text-green text-xs font-semibold tracking-[1px] uppercase;
+    @apply text-ink text-xs font-semibold tracking-[1px] uppercase;
   }
 
   .shell {
