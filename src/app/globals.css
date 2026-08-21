@@ -42,6 +42,12 @@ body {
     @apply mx-auto w-full max-w-[1140px] px-6 md:px-10;
   }
 
+  /* Wider container for the home grid, where the work should fill the screen
+     rather than sit in a reading-width column. */
+  .shell-wide {
+    @apply mx-auto w-full max-w-[1400px] px-5 sm:px-8;
+  }
+
   .prose-body {
     @apply text-base leading-[28px] text-ink-soft;
   }

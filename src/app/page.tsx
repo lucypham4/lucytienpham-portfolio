@@ -5,14 +5,14 @@ import { projects } from "@/content/projects";
 export default function Home() {
   return (
     <>
-      <section className="shell pt-20 pb-24">
+      <section className="shell-wide pt-20 pb-24">
         <h1 className="max-w-4xl text-[36px] leading-[46px] font-normal text-ink md:text-[48px] md:leading-[60px]">
           Lucy is a designer <strong className="font-bold">bridging the gap</strong>{" "}
           between business objectives and user experiences.
         </h1>
       </section>
 
-      <section id="work" className="shell pb-24">
+      <section id="work" className="shell-wide pb-24">
         <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2">
           {projects.map((project, i) => (
             <Link
@@ -20,7 +20,9 @@ export default function Home() {
               href={`/work/${project.slug}`}
               className="group block"
             >
-              <div className="aspect-[4/3] overflow-hidden rounded-xl2">
+              {/* Every thumbnail is 16:9, so this frame aligns the rows
+                  without cropping any of them. */}
+              <div className="aspect-video overflow-hidden rounded-xl2">
                 <MediaBlock
                   media={project.thumb}
                   priority={i === 0}
