@@ -22,7 +22,7 @@ function BlockView({ block }: { block: Block }) {
       return (
         <h2
           id={slugify(block.label)}
-          className="mt-20 scroll-mt-28 text-[32px] leading-10 font-bold text-ink first:mt-0"
+          className="mt-20 scroll-mt-28 text-xl leading-7 font-bold text-ink first:mt-0"
         >
           {block.heading ?? block.label}
         </h2>
@@ -31,7 +31,7 @@ function BlockView({ block }: { block: Block }) {
     case "quote":
       return (
         <figure className="mt-8">
-          <blockquote className="rounded-xl2 border border-line px-8 py-7 text-2xl leading-9 font-medium text-ink">
+          <blockquote className="rounded-xl2 border border-line px-8 py-6 text-base leading-[28px] text-ink">
             &ldquo;{block.text}&rdquo;
           </blockquote>
           {block.attribution && (
@@ -44,7 +44,8 @@ function BlockView({ block }: { block: Block }) {
 
     case "heading":
       return (
-        <h3 className="mt-10 text-2xl leading-8 font-semibold text-ink">
+        // Kept below the 20px section heading so the hierarchy still reads.
+        <h3 className="mt-10 text-lg leading-7 font-semibold text-ink">
           {block.text}
         </h3>
       );

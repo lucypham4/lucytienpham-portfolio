@@ -52,7 +52,6 @@ export const projects: Project[] = [
       {
         kind: "quote",
         text: "Every time we make updates, something crashes or goes awry.",
-        attribution: "Voyage Theater Company staff",
       },
       {
         kind: "text",
@@ -68,7 +67,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Rebuilding The Architecture",
-        heading: "A comprehensive redesign spanning from branding to technical migration.",
+        heading: "A Comprehensive Redesign Spanning From Branding To Technical Migration.",
       },
       {
         kind: "text",
@@ -102,7 +101,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Content Ownership",
-        heading: "Empowering non-technical content ownership",
+        heading: "Empowering Non-Technical Content Ownership",
       },
       {
         kind: "text",
@@ -180,7 +179,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Notification Fatigue",
-        heading: "Mobile users receive repetitive push notifications and quickly disengage.",
+        heading: "Mobile Users Receive Repetitive Push Notifications And Quickly Disengage.",
       },
       {
         kind: "text",
@@ -204,7 +203,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Understanding Reader Habits",
-        heading: "Understanding how a user interacts with a notification.",
+        heading: "Understanding How A User Interacts With A Notification.",
       },
       {
         kind: "text",
@@ -231,7 +230,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Anatomy Of A Feed",
-        heading: "Understanding LUF's anatomy",
+        heading: "Understanding LUF's Anatomy",
       },
       {
         kind: "text",
@@ -265,7 +264,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Designing Within iOS Limits",
-        heading: "Designing within iOS limits",
+        heading: "Designing Within iOS Limits",
       },
       { kind: "heading", text: "Early Sketches" },
       {
@@ -327,7 +326,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Flexible Templates",
-        heading: "Creating flexible templates for diverse storytelling",
+        heading: "Creating Flexible Templates For Diverse Storytelling",
       },
       {
         kind: "text",
@@ -350,7 +349,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Final Prototype",
-        heading: "Final prototype",
+        heading: "Final Prototype",
       },
       {
         kind: "media",
@@ -367,7 +366,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Results & Learnings",
-        heading: "Results and learnings",
+        heading: "Results And Learnings",
       },
       {
         kind: "text",
@@ -468,7 +467,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Understanding Admin Needs",
-        heading: "Understanding admin needs",
+        heading: "Understanding Admin Needs",
       },
       { kind: "heading", text: "Stakeholder Interview and Past Documentation" },
       {
@@ -509,7 +508,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Defining The Scope",
-        heading: "Defining the scope",
+        heading: "Defining The Scope",
       },
       { kind: "heading", text: "User Persona" },
       {
@@ -532,7 +531,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "Sketching & Testing",
-        heading: "Sketching and testing",
+        heading: "Sketching And Testing",
       },
       { kind: "heading", text: "Sketching and Wireframes" },
       {
@@ -611,7 +610,7 @@ export const projects: Project[] = [
       {
         kind: "section",
         label: "The Dashboard",
-        heading: "Giving admins clarity",
+        heading: "Giving Admins Clarity",
       },
       {
         kind: "text",
