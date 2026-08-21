@@ -41,9 +41,11 @@ export default function CaseStudyNav({
     <aside className="hidden lg:block">
       <nav
         aria-label="Case study sections"
-        className="sticky top-28 flex flex-col gap-1 self-start"
+        className="sticky top-28 flex flex-col gap-4 self-start"
       >
-        <p className="mb-3 text-sm leading-6 font-bold text-ink">{title}</p>
+        <p className="text-xs font-semibold tracking-[1px] text-grey uppercase">
+          {title}
+        </p>
         {sections.map((section) => {
           const isActive = section.id === active;
           return (
@@ -51,10 +53,8 @@ export default function CaseStudyNav({
               key={section.id}
               href={`#${section.id}`}
               aria-current={isActive ? "true" : undefined}
-              className={`border-l-2 py-1.5 pl-3 text-sm leading-5 transition-colors ${
-                isActive
-                  ? "border-ink font-semibold text-ink"
-                  : "border-line text-grey hover:text-ink"
+              className={`text-base leading-6 transition-colors ${
+                isActive ? "font-semibold text-ink" : "text-grey hover:text-ink"
               }`}
             >
               {section.label}

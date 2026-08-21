@@ -27,7 +27,14 @@ export const projects: Project[] = [
     overview: {
       logo: { src: `${A}/black-full-logo-3.svg`, width: 1416, height: 424 },
       html: 'To modernize a decade-old digital presence and eliminate technical fragility, I led the transformation of Voyage Theater Company&rsquo;s &ldquo;messy patchwork&rdquo; WordPress site into a professional digital stage.',
+      impact:
+        "Replaced a decade-old WordPress build with a templated CMS and trained the staff to run it, so a small non-technical team can update the site without breaking it.",
     },
+    meta: [
+      // TODO: the old Webflow site never listed a duration or team for this
+      // contract — fill these in and the strip becomes three columns.
+      { label: "My Role", value: "Product Designer\nContract" },
+    ],
     stats: [
       {
         icon: `${A}/rocket-24dp-ffffff-fill0-wght400-grad0-opsz24-1-1.svg`,
@@ -39,7 +46,7 @@ export const projects: Project[] = [
       },
     ],
     blocks: [
-      { kind: "section", label: "The problem" },
+      { kind: "section", label: "A Fragile Patchwork" },
       {
         kind: "heading",
         text: "Every time we make updates, something crashes or goes awry.",
@@ -55,7 +62,7 @@ export const projects: Project[] = [
           "The old site was not optimized for VTC's mission. How might we create a site that empowers the current staff?",
       },
 
-      { kind: "section", label: "The Solution" },
+      { kind: "section", label: "Rebuilding The Architecture" },
       {
         kind: "heading",
         text: "A comprehensive redesign spanning from branding to technical migration.",
@@ -89,7 +96,7 @@ export const projects: Project[] = [
         },
       },
 
-      { kind: "section", label: "Solution analysis" },
+      { kind: "section", label: "Content Ownership" },
       { kind: "heading", text: "Empowering non-technical content ownership" },
       {
         kind: "text",
@@ -115,7 +122,7 @@ export const projects: Project[] = [
         media: { type: "image", src: `${A}/screenshot-2026-02-13-at-12-47-40-pm-1.png`, alt: "CMS training materials" },
       },
 
-      { kind: "section", label: "Reflections and Outcomes" },
+      { kind: "section", label: "Reflection" },
       {
         kind: "cards",
         items: [
@@ -152,15 +159,20 @@ export const projects: Project[] = [
     overview: {
       media: { type: "image", src: `${A}/image-1.png`, alt: "" },
       html: "To elevate real-time mobile engagement, The Washington Post&rsquo;s Content XP team set out to integrate iOS Live Activities with its Live Update Feed (LUFs). Our goal was to design a scalable, AI-powered experience that delivers glanceable news updates directly on the lock screen, boosting engagement and shaping reader habit.",
+      impact:
+        "Approved for a Q1 2026 launch and added to the roadmap, with projected gains of 17% to 25% opt-ins, 3+ average views per user, and 60-second sessions.",
     },
     meta: [
-      { label: "Role", value: "Product Design Intern" },
-      { label: "Context", value: "July–August 2025 (1 month)" },
+      { label: "Duration", value: "July – August 2025 (1 month)" },
+      { label: "My Role", value: "Product Design Intern" },
+      {
+        label: "Team",
+        value: "1 Engineer\n2 Design Leads\n1 PM\n1 PM Intern",
+      },
       { label: "Tools", value: "Figma, FigJam, Google Docs, Zeppelin" },
-      { label: "Team", value: "1 Engineer / 2 Design Leads / 1 PM / 1 PM intern" },
     ],
     blocks: [
-      { kind: "section", label: "The problem" },
+      { kind: "section", label: "Notification Fatigue" },
       {
         kind: "heading",
         text: "Mobile users receive repetitive push notifications and quickly disengage.",
@@ -180,7 +192,7 @@ export const projects: Project[] = [
       },
       { kind: "media", media: { type: "image", src: `${A}/luf2.avif`, alt: "LUF layout anatomy" } },
 
-      { kind: "section", label: "User research" },
+      { kind: "section", label: "Understanding Reader Habits" },
       { kind: "heading", text: "Understanding how a user interacts with a notification." },
       {
         kind: "text",
@@ -204,7 +216,7 @@ export const projects: Project[] = [
         ],
       },
 
-      { kind: "section", label: "Brainstorming" },
+      { kind: "section", label: "Anatomy Of A Feed" },
       { kind: "heading", text: "Understanding LUF's anatomy" },
       {
         kind: "text",
@@ -234,7 +246,7 @@ export const projects: Project[] = [
         media: { type: "image", src: `${A}/screenshot-2025-10-21-at-11-14-49-pm.png`, alt: "iOS Live Activity specs" },
       },
 
-      { kind: "section", label: "Iteration" },
+      { kind: "section", label: "Designing Within iOS Limits" },
       { kind: "heading", text: "Early Sketches" },
       {
         kind: "text",
@@ -288,7 +300,7 @@ export const projects: Project[] = [
         ],
       },
 
-      { kind: "section", label: "Prototyping" },
+      { kind: "section", label: "Flexible Templates" },
       { kind: "heading", text: "Creating Flexible Templates" },
       {
         kind: "text",
@@ -319,7 +331,7 @@ export const projects: Project[] = [
         },
       },
 
-      { kind: "section", label: "Outcome" },
+      { kind: "section", label: "Shipping To Roadmap" },
       { kind: "heading", text: "Results" },
       {
         kind: "text",
@@ -339,7 +351,7 @@ export const projects: Project[] = [
         ],
       },
 
-      { kind: "section", label: "Learnings" },
+      { kind: "section", label: "Reflection" },
       {
         kind: "text",
         html: "This was my third project during my internship at The Post, and it challenged me to move beyond execution and think like a product strategist. More than just meeting the MVP outlined in the PRD, I learned how to anticipate future scalability and design with newsroom, engineering, and audience needs in mind. Some of my key takeaways include:",
@@ -384,16 +396,20 @@ export const projects: Project[] = [
     overview: {
       logo: { src: `${A}/group-73.svg`, width: 290, height: 89 },
       html: "Graditude is a nonprofit platform connecting students with alumni for career mentorship, in partnership with campus organizations.",
+      impact:
+        "Delivered a stakeholder presentation that handed my designs to the project's developer, setting the team up for implementation.",
     },
     meta: [
+      { label: "Duration", value: "Fall 2024 (Internship)" },
       {
-        label: "Role",
-        value:
-          "UX Designer — led a team of 3 junior designers under the guidance of the CEO, full-time designer, and developer",
+        label: "My Role",
+        value: "UX Designer\nLed 3 junior designers",
       },
-      { label: "Context", value: "Started Fall 2024, Internship" },
+      {
+        label: "Team",
+        value: "1 CEO\n1 Design Lead\n1 Developer\n3 Junior Designers",
+      },
       { label: "Tools", value: "Figma, FigJam, Google Docs" },
-      { label: "Team", value: "1 CEO, 1 Design Lead, 1 Developer, 3 Junior Designers" },
     ],
     blocks: [
       {
@@ -417,7 +433,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Project Process" },
       { kind: "media", media: { type: "image", src: `${A}/design-process-2.webp`, alt: "Design process" } },
 
-      { kind: "section", label: "Empathy and research" },
+      { kind: "section", label: "Understanding Admin Needs" },
       { kind: "heading", text: "Stakeholder Interview and Past Documentation" },
       {
         kind: "text",
@@ -454,7 +470,7 @@ export const projects: Project[] = [
         media: { type: "image", src: `${A}/revised-user-journey-map-2.avif`, alt: "User journey map" },
       },
 
-      { kind: "section", label: "Define" },
+      { kind: "section", label: "Defining The Scope" },
       { kind: "heading", text: "User Persona" },
       {
         kind: "text",
@@ -473,7 +489,7 @@ export const projects: Project[] = [
         html: "To further define our scope and ensure that our plan was a comprehensive solution for Graditude&rsquo;s mission of providing admins with the tools they need to manage mentee/mentor matches, <strong>I took ownership</strong> over the main dashboard, inviting new members flow, creating new programs flow, and making sure that we had clear action items before and after our weekly meetings.",
       },
 
-      { kind: "section", label: "Iteration" },
+      { kind: "section", label: "Sketching & Testing" },
       { kind: "heading", text: "Sketching and Wireframes" },
       {
         kind: "text",
@@ -548,7 +564,7 @@ export const projects: Project[] = [
         ],
       },
 
-      { kind: "section", label: "Design" },
+      { kind: "section", label: "The Dashboard" },
       { kind: "heading", text: "Giving Admins Clarity" },
       {
         kind: "text",
@@ -575,7 +591,7 @@ export const projects: Project[] = [
         },
       },
 
-      { kind: "section", label: "Reflection and the future" },
+      { kind: "section", label: "Reflection" },
       {
         kind: "cards",
         items: [

@@ -107,6 +107,14 @@ export default async function CaseStudyPage({
                     className="prose-body mt-3 text-lg leading-8"
                     dangerouslySetInnerHTML={{ __html: project.overview.html }}
                   />
+                  {project.overview.impact && (
+                    <>
+                      <p className="eyebrow mt-8">Impact</p>
+                      <p className="prose-body mt-3 text-lg leading-8">
+                        {project.overview.impact}
+                      </p>
+                    </>
+                  )}
                 </div>
               </section>
             )}
@@ -128,11 +136,14 @@ export default async function CaseStudyPage({
             )}
 
             {project.meta && (
-              <dl className="mt-12 grid grid-cols-1 gap-8 border-t border-line pt-8 sm:grid-cols-2">
+              <dl className="mt-12 grid grid-cols-1 gap-x-8 gap-y-10 border-t border-line pt-8 sm:grid-cols-3">
                 {project.meta.map((m) => (
                   <div key={m.label}>
-                    <dt className="eyebrow text-grey">{m.label}</dt>
-                    <dd className="mt-2 text-sm leading-6 text-ink">{m.value}</dd>
+                    <dt className="eyebrow">{m.label}</dt>
+                    {/* Values may carry newlines to list team members. */}
+                    <dd className="mt-2 text-base leading-7 whitespace-pre-line text-grey">
+                      {m.value}
+                    </dd>
                   </div>
                 ))}
               </dl>

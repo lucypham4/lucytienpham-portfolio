@@ -29,6 +29,8 @@ export type Project = {
   accent?: "mint" | "grad" | "none";
   overview?: {
     html: string;
+    /** Short outcome statement shown under the overview copy. */
+    impact?: string;
     logo?: { src: string; width: number; height: number };
     media?: Media;
   };
