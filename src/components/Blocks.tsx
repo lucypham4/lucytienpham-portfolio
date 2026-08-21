@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Block } from "@/content/types";
 import { slugify } from "@/lib/slug";
+import BeforeAfter from "./BeforeAfter";
 import MediaBlock from "./MediaBlock";
 
 const gridCols = {
@@ -22,7 +23,7 @@ function BlockView({ block }: { block: Block }) {
       return (
         <h2
           id={slugify(block.label)}
-          className="mt-20 scroll-mt-28 text-xl leading-7 font-bold text-ink first:mt-0"
+          className="mt-20 scroll-mt-28 text-[32px] leading-10 font-normal text-ink-soft first:mt-0"
         >
           {block.heading ?? block.label}
         </h2>
@@ -31,7 +32,7 @@ function BlockView({ block }: { block: Block }) {
     case "quote":
       return (
         <figure className="mt-8">
-          <blockquote className="rounded-xl2 border border-line px-8 py-6 text-base leading-[28px] text-ink">
+          <blockquote className="rounded-xl2 border border-line px-8 py-6 text-lg leading-8 text-ink">
             &ldquo;{block.text}&rdquo;
           </blockquote>
           {block.attribution && (
@@ -44,8 +45,7 @@ function BlockView({ block }: { block: Block }) {
 
     case "heading":
       return (
-        // Kept below the 20px section heading so the hierarchy still reads.
-        <h3 className="mt-10 text-lg leading-7 font-semibold text-ink">
+        <h3 className="mt-10 text-2xl leading-8 font-semibold text-ink">
           {block.text}
         </h3>
       );
@@ -123,7 +123,7 @@ function BlockView({ block }: { block: Block }) {
       return (
         <ul className="mt-6 flex flex-col gap-2">
           {block.items.map((item, i) => (
-            <li key={i} className="flex gap-3 text-base leading-7 text-ink-soft">
+            <li key={i} className="flex gap-3 text-lg leading-8 text-ink-soft">
               <span aria-hidden className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
               <span>{item}</span>
             </li>
@@ -132,18 +132,7 @@ function BlockView({ block }: { block: Block }) {
       );
 
     case "beforeAfter":
-      return (
-        <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
-          <figure>
-            <figcaption className="eyebrow mb-2 text-grey">Before</figcaption>
-            <MediaBlock media={block.before} />
-          </figure>
-          <figure>
-            <figcaption className="eyebrow mb-2">After</figcaption>
-            <MediaBlock media={block.after} />
-          </figure>
-        </div>
-      );
+      return <BeforeAfter before={block.before} after={block.after} />;
 
     case "embed":
       return (

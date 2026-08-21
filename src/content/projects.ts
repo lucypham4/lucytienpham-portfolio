@@ -37,16 +37,6 @@ export const projects: Project[] = [
           "Wayne Maugans, Founding Artistic Director\nKathleen Salazar, Associate Artistic Director\nCharles C. Bales, Founding Executive Director",
       },
     ],
-    stats: [
-      {
-        icon: `${A}/rocket-24dp-ffffff-fill0-wght400-grad0-opsz24-1-1.svg`,
-        text: "Site designed and launched",
-      },
-      {
-        icon: `${A}/arrow-circle-up-24dp-ffffff-fill0-wght400-grad0-opsz24-1.svg`,
-        text: "40+ responsive pages",
-      },
-    ],
     blocks: [
       { kind: "section", label: "A Fragile Patchwork" },
       {

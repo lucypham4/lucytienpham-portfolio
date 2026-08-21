@@ -33,9 +33,10 @@ body {
 }
 
 @layer components {
-  /* Section eyebrow — the small uppercase label that opens each case-study section */
+  /* Small uppercase label: Overview, Impact, the metadata headings. Sized to
+     match the body copy it introduces. */
   .eyebrow {
-    @apply text-ink text-xs font-semibold tracking-[1px] uppercase;
+    @apply text-ink text-lg font-semibold tracking-[1px] uppercase;
   }
 
   .shell {
@@ -49,7 +50,7 @@ body {
   }
 
   .prose-body {
-    @apply text-base leading-[28px] text-ink-soft;
+    @apply text-lg leading-8 text-ink-soft;
   }
 
   .prose-body strong {

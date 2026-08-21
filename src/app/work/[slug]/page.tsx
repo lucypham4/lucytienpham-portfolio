@@ -111,13 +111,13 @@ export default async function CaseStudyPage({
                 <div>
                   <p className="eyebrow">Overview</p>
                   <p
-                    className="prose-body mt-3 text-lg leading-8"
+                    className="prose-body mt-3"
                     dangerouslySetInnerHTML={{ __html: project.overview.html }}
                   />
                   {project.overview.impact && (
                     <>
                       <p className="eyebrow mt-8">Impact</p>
-                      <p className="prose-body mt-3 text-lg leading-8">
+                      <p className="prose-body mt-3">
                         {project.overview.impact}
                       </p>
                     </>
@@ -148,7 +148,7 @@ export default async function CaseStudyPage({
                   <div key={m.label}>
                     <dt className="eyebrow">{m.label}</dt>
                     {/* Values may carry newlines to list team members. */}
-                    <dd className="mt-2 text-base leading-7 whitespace-pre-line text-grey">
+                    <dd className="mt-2 text-sm leading-6 whitespace-pre-line text-grey">
                       {m.value}
                     </dd>
                   </div>
@@ -157,7 +157,7 @@ export default async function CaseStudyPage({
             )}
           </div>
 
-          <div className="mt-4">
+          <div className="mt-28">
             <Blocks blocks={project.blocks} />
           </div>
 
@@ -165,7 +165,7 @@ export default async function CaseStudyPage({
             <p className="eyebrow text-grey">Next project</p>
             <Link
               href={`/work/${next.slug}`}
-              className="mt-2 inline-block text-[32px] leading-[40px] font-bold text-ink transition-opacity hover:opacity-80"
+              className="eyebrow mt-2 inline-block text-ink transition-opacity hover:opacity-80"
             >
               {next.title} →
             </Link>
