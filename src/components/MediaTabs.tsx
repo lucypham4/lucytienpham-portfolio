@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { TabItem } from "@/content/types";
 import MediaBlock from "./MediaBlock";
 
@@ -24,6 +24,32 @@ export default function MediaTabs({
 }) {
   const [active, setActive] = useState(0);
 
+  // Which button is mid-shine. `press` counts up so that pressing the same
+  // button again still re-runs the effect below.
+  const [shine, setShine] = useState<{ index: number; press: number } | null>(
+    null,
+  );
+  const buttons = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const press = (i: number) => {
+    setActive(i);
+    setShine((previous) => ({ index: i, press: (previous?.press ?? 0) + 1 }));
+  };
+
+  // Rewind the animation by hand rather than waiting on a frame callback:
+  // requestAnimationFrame does not fire in a backgrounded tab, which would
+  // leave the shine stuck off until the tab was looked at again.
+  useEffect(() => {
+    if (!shine) return;
+    for (const animation of buttons.current[shine.index]?.getAnimations({
+      subtree: true,
+    }) ?? []) {
+      if ((animation as CSSAnimation).animationName !== "shine-spin") continue;
+      animation.currentTime = 0;
+      animation.play();
+    }
+  }, [shine]);
+
   return (
     <figure className="mt-8">
       <div
@@ -39,10 +65,17 @@ export default function MediaTabs({
               type="button"
               role="tab"
               aria-selected={isActive}
-              onClick={() => setActive(i)}
-              className={`relative rounded-pill px-5 py-2 text-base leading-6 transition-colors ${
+              onClick={() => press(i)}
+              ref={(el) => {
+                buttons.current[i] = el;
+              }}
+              data-shine={shine?.index === i ? "on" : undefined}
+              onAnimationEnd={(e) => {
+                if (e.animationName === "shine-spin") setShine(null);
+              }}
+              className={`shine-border rounded-pill px-5 py-2 text-base leading-6 transition-colors ${
                 isActive
-                  ? "shine-border bg-shell font-semibold text-ink"
+                  ? "bg-pressed font-semibold text-white"
                   : "text-grey hover:text-ink"
               }`}
             >
