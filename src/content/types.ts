@@ -4,6 +4,8 @@ export type Media =
 
 export type MediaSize = "sm" | "md";
 
+export type TabItem = { label: string; media: Media[]; cols?: 2 | 3 | 4 };
+
 export type Block =
   /**
    * Opens a case-study section. `label` is the short name the side nav shows;
@@ -25,6 +27,8 @@ export type Block =
   | { kind: "cards"; items: { title: string; body?: string; icon?: string }[] }
   | { kind: "list"; items: string[] }
   | { kind: "beforeAfter"; before: Media; after: Media }
+  /** A group of media shown one panel at a time behind centred tabs. */
+  | { kind: "tabs"; items: TabItem[] }
   | { kind: "embed"; src: string; title: string; ratio?: number };
 
 export type Meta = { label: string; value: string }[];

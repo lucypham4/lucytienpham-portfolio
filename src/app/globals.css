@@ -32,6 +32,55 @@ body {
   line-height: 28px;
 }
 
+/* Animated hairline that travels around a rounded control. The angle needs
+   @property so it can be interpolated; without it the gradient would jump. */
+@property --shine-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes shine-spin {
+  to {
+    --shine-angle: 360deg;
+  }
+}
+
+.shine-border {
+  position: relative;
+}
+
+.shine-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--shine-angle),
+    transparent 0deg,
+    var(--color-ink) 50deg,
+    transparent 110deg
+  );
+  /* Punch out the middle so only the ring paints. */
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: shine-spin 4s linear infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shine-border::before {
+    animation: none;
+  }
+}
+
 @layer components {
   /* Small uppercase label: Overview, Impact, the metadata headings. Sized to
      match the body copy it introduces. */

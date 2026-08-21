@@ -9,12 +9,14 @@ import type { Media } from "@/content/types";
  * - `contain` — whole asset fitted inside a fixed box, for panelled splashes
  * - `fill`    — fills a fixed box edge to edge, for full-bleed splashes
  */
-type Fit = "cover" | "contain" | "fill";
+type Fit = "cover" | "contain" | "fill" | "bounded";
 
 const fitClassNames: Record<Fit, string> = {
   cover: "h-auto w-full rounded-card object-cover",
   contain: "h-full w-full object-contain",
   fill: "h-full w-full object-cover",
+  // Keeps tall screenshots inside the viewport instead of running past it.
+  bounded: "mx-auto h-auto max-h-[70vh] w-auto max-w-full rounded-card",
 };
 
 export default function MediaBlock({

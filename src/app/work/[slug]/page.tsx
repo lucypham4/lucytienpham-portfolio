@@ -85,7 +85,7 @@ export default async function CaseStudyPage({
         <div className="min-w-0">
           {/* Title lives in the content column so it lines up with the copy
               below it rather than spanning across the side nav. */}
-          <h1 className="text-[40px] leading-[48px] font-bold text-ink">
+          <h1 className="text-[40px] leading-[48px] font-normal text-ink">
             {project.hero.headline}
           </h1>
           {showTagline && (

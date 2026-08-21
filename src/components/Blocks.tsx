@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type { Block } from "@/content/types";
 import { slugify } from "@/lib/slug";
-import BeforeAfter from "./BeforeAfter";
+import MediaTabs from "./MediaTabs";
 import MediaBlock from "./MediaBlock";
 
 const gridCols = {
@@ -32,7 +32,7 @@ function BlockView({ block }: { block: Block }) {
     case "quote":
       return (
         <figure className="mt-8">
-          <blockquote className="rounded-xl2 border border-line px-8 py-6 text-lg leading-8 text-ink">
+          <blockquote className="rounded-xl2 border border-line px-8 py-6 text-center text-lg leading-8 text-ink">
             &ldquo;{block.text}&rdquo;
           </blockquote>
           {block.attribution && (
@@ -132,7 +132,18 @@ function BlockView({ block }: { block: Block }) {
       );
 
     case "beforeAfter":
-      return <BeforeAfter before={block.before} after={block.after} />;
+      return (
+        <MediaTabs
+          ariaLabel="Before and after"
+          items={[
+            { label: "Before", media: [block.before] },
+            { label: "After", media: [block.after] },
+          ]}
+        />
+      );
+
+    case "tabs":
+      return <MediaTabs ariaLabel="Project views" items={block.items} />;
 
     case "embed":
       return (

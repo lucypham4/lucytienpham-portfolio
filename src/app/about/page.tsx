@@ -28,7 +28,7 @@ export default function AboutPage() {
         />
 
         <div>
-          <h1 className="text-[40px] leading-[48px] font-bold text-ink">
+          <h1 className="text-[40px] leading-[48px] font-normal text-ink">
             Hello I&apos;m Lucy,
           </h1>
           <p className="mt-6 text-2xl leading-9 text-ink">

@@ -45,13 +45,11 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "After meeting with stakeholders, I found that non-artistic directors struggle to manage content, feeling <strong>constrained by the design system</strong> and often breaking things when they try to update it.",
+        html: "After meeting with stakeholders, I found that non-artistic directors struggle to manage content, feeling <strong>constrained by the design system</strong> and often breaking things when they try to update it. The old site was not optimized for VTC&rsquo;s mission. How might we create a site that empowers the current staff?",
       },
       {
         kind: "media",
         media: { type: "image", src: `${A}/desktop-1.png`, alt: "The previous Voyage Theater Company website" },
-        caption:
-          "The old site was not optimized for VTC's mission. How might we create a site that empowers the current staff?",
       },
 
       {
@@ -98,23 +96,28 @@ export const projects: Project[] = [
         html: "In nonprofit theater, operational independence is everything. I redesigned the site to <strong>empower a small, non-technical team</strong> to manage their own content without breaking the design system, giving VTC a digital presence built to last beyond launch. To reinforce long-term success, I introduced a templated CMS architecture paired with hands-on training, transforming a once fragile, developer-dependent website into a <strong>maintainable, brand-consistent</strong> platform.",
       },
 
-      { kind: "heading", text: "Branding & Logo" },
       {
-        kind: "grid",
-        cols: 2,
-        media: [
-          { type: "image", src: `${A}/screenshot-2026-02-13-at-1-38-38-pm-1-1-1.png`, alt: "Brand exploration" },
-          { type: "image", src: `${A}/screenshot-2026-02-13-at-1-37-49-pm-1-1.png`, alt: "Logo system" },
+        kind: "tabs",
+        items: [
+          {
+            label: "Branding & Logo",
+            cols: 2,
+            media: [
+              { type: "image", src: `${A}/screenshot-2026-02-13-at-1-38-38-pm-1-1-1.png`, alt: "Brand exploration" },
+              { type: "image", src: `${A}/screenshot-2026-02-13-at-1-37-49-pm-1-1.png`, alt: "Logo system" },
+            ],
+          },
+          {
+            label: "Live Site",
+            media: [{ type: "image", src: `${A}/frame-8-9.png`, alt: "Live site" }],
+          },
+          {
+            label: "CMS & Site Training",
+            media: [
+              { type: "image", src: `${A}/screenshot-2026-02-13-at-12-47-40-pm-1.png`, alt: "CMS training materials" },
+            ],
+          },
         ],
-      },
-
-      { kind: "heading", text: "Live Site" },
-      { kind: "media", media: { type: "image", src: `${A}/frame-8-9.png`, alt: "Live site" } },
-
-      { kind: "heading", text: "CMS & Site Training" },
-      {
-        kind: "media",
-        media: { type: "image", src: `${A}/screenshot-2026-02-13-at-12-47-40-pm-1.png`, alt: "CMS training materials" },
       },
 
       { kind: "section", label: "Reflection" },
