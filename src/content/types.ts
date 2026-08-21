@@ -37,6 +37,8 @@ export type Project = {
     fullBleed?: boolean;
     /** Sit the splash on a rounded tinted panel rather than bare on the page. */
     panel?: boolean;
+    /** Suppress the tagline under the headline where it adds nothing. */
+    hideTagline?: boolean;
   };
   accent?: "grad" | "none";
   overview?: {

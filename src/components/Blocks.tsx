@@ -10,9 +10,10 @@ const gridCols = {
 } as const;
 
 // Caps for tall screenshots that would otherwise fill the whole column.
+// Centred so a narrowed image sits under the middle of the copy above it.
 const sizeCap = {
-  sm: "max-w-[320px]",
-  md: "max-w-[560px]",
+  sm: "max-w-[320px] mx-auto",
+  md: "max-w-[560px] mx-auto",
 } as const;
 
 function BlockView({ block }: { block: Block }) {

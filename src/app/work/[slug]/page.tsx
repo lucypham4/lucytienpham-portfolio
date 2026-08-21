@@ -48,7 +48,8 @@ export default async function CaseStudyPage({
   ];
 
   // Several projects use the same sentence for both, so only show it once.
-  const showTagline = project.tagline !== project.hero.headline;
+  const showTagline =
+    !project.hero.hideTagline && project.tagline !== project.hero.headline;
 
   return (
     <article className="pb-24">
@@ -64,12 +65,24 @@ export default async function CaseStudyPage({
             </div>
           ) : (
             <div className="shell pt-10">
+              {/* Panelled splashes match the plain ones' 16:9 footprint so
+                  every case study opens at the same height. */}
               <div
                 className={
-                  project.hero.panel ? "rounded-xl2 bg-shell px-6 py-10" : ""
+                  project.hero.panel
+                    ? "flex aspect-video items-center justify-center rounded-xl2 bg-shell px-6 py-10"
+                    : ""
                 }
               >
-                <MediaBlock media={project.hero.media} priority />
+                <MediaBlock
+                  media={project.hero.media}
+                  priority
+                  className={
+                    project.hero.panel
+                      ? "max-h-full w-auto max-w-full object-contain"
+                      : ""
+                  }
+                />
               </div>
             </div>
           ))}
@@ -87,7 +100,7 @@ export default async function CaseStudyPage({
       </header>
 
       <div className="shell grid grid-cols-1 gap-12 lg:grid-cols-[190px_1fr] lg:gap-16">
-        <CaseStudyNav title={project.title} sections={sections} />
+        <CaseStudyNav sections={sections} />
 
         <div className="min-w-0">
           <div id="overview" className="scroll-mt-28">

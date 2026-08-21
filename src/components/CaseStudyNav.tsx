@@ -1,41 +1,44 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type NavSection = { id: string; label: string };
 
-export default function CaseStudyNav({
-  title,
-  sections,
-}: {
-  title: string;
-  sections: NavSection[];
-}) {
+/**
+ * Distance below the viewport top that counts as "you are reading here".
+ * Must clear the sticky site header plus the sections' scroll-margin, or a
+ * clicked section lands just above the marker and the previous one lights up.
+ */
+const READING_LINE = 200;
+
+export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
   const [active, setActive] = useState(sections[0]?.id ?? "");
 
-  useEffect(() => {
-    const targets = sections
-      .map((s) => document.getElementById(s.id))
-      .filter((el): el is HTMLElement => el !== null);
+  // While a click-triggered smooth scroll is in flight the intermediate
+  // positions would drag the highlight backwards, so the spy pauses.
+  const lockedUntil = useRef(0);
 
-    if (!targets.length) return;
+  const measure = useCallback(() => {
+    if (Date.now() < lockedUntil.current) return;
 
-    // Track which section heading sits closest above the top of the viewport,
-    // so the highlight follows reading position rather than whatever happens
-    // to be intersecting.
-    const onScroll = () => {
-      const marker = window.scrollY + 140;
-      let current = targets[0];
-      for (const el of targets) {
-        if (el.offsetTop <= marker) current = el;
-      }
-      setActive(current.id);
-    };
+    const marker = window.scrollY + READING_LINE;
+    let current = sections[0]?.id ?? "";
 
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    for (const section of sections) {
+      const el = document.getElementById(section.id);
+      if (!el) continue;
+      const top = el.getBoundingClientRect().top + window.scrollY;
+      if (top <= marker) current = section.id;
+    }
+
+    setActive(current);
   }, [sections]);
+
+  useEffect(() => {
+    measure();
+    window.addEventListener("scroll", measure, { passive: true });
+    return () => window.removeEventListener("scroll", measure);
+  }, [measure]);
 
   return (
     <aside className="hidden lg:block">
@@ -43,9 +46,6 @@ export default function CaseStudyNav({
         aria-label="Case study sections"
         className="sticky top-28 flex flex-col gap-4 self-start"
       >
-        <p className="text-xs font-semibold tracking-[1px] text-grey uppercase">
-          {title}
-        </p>
         {sections.map((section) => {
           const isActive = section.id === active;
           return (
@@ -53,6 +53,10 @@ export default function CaseStudyNav({
               key={section.id}
               href={`#${section.id}`}
               aria-current={isActive ? "true" : undefined}
+              onClick={() => {
+                setActive(section.id);
+                lockedUntil.current = Date.now() + 900;
+              }}
               className={`text-base leading-6 transition-colors ${
                 isActive ? "font-semibold text-ink" : "text-grey hover:text-ink"
               }`}

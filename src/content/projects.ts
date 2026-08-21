@@ -29,9 +29,13 @@ export const projects: Project[] = [
         "Replaced a decade-old WordPress build with a templated CMS and trained the staff to run it, so a small non-technical team can update the site without breaking it.",
     },
     meta: [
-      // TODO: the old Webflow site never listed a duration or team for this
-      // contract — fill these in and the strip becomes three columns.
+      { label: "Duration", value: "Oct 2025 – Feb 2026" },
       { label: "My Role", value: "Product Designer\nContract" },
+      {
+        label: "Team",
+        value:
+          "Wayne Maugans, Founding Artistic Director\nKathleen Salazar, Associate Artistic Director\nCharles C. Bales, Founding Executive Director",
+      },
     ],
     stats: [
       {
@@ -152,9 +156,9 @@ export const projects: Project[] = [
       headline: "Designing an AI-powered Live Activity Feed",
       media: { type: "image", src: `${A}/group-1-1.png`, alt: "Live Activity concept" },
       panel: true,
+      hideTagline: true,
     },
     overview: {
-      media: { type: "image", src: `${A}/image-1.png`, alt: "" },
       html: "To elevate real-time mobile engagement, The Washington Post&rsquo;s Content XP team set out to integrate iOS Live Activities with its Live Update Feed (LUFs). Our goal was to design a scalable, AI-powered experience that delivers glanceable news updates directly on the lock screen, boosting engagement and shaping reader habit.",
       impact:
         "Approved for a Q1 2026 launch and added to the roadmap, with projected gains of 17% to 25% opt-ins, 3+ average views per user, and 60-second sessions.",
