@@ -1,15 +1,14 @@
-import Image from "next/image";
+"use client";
 
-export const metadata = {
-  title: "Play",
-  description: "Personal and experimental work by Lucy Pham.",
-};
+import Image from "next/image";
+import { useState } from "react";
+import Lightbox from "@/components/Lightbox";
 
 type PlayItem = {
   labels: string[];
   href?: string;
   media:
-    | { type: "image"; src: string }
+    | { type: "image"; src: string; group?: string[] }
     | { type: "video"; poster: string; mp4: string; webm?: string }
     | { type: "embed"; src: string };
 };
@@ -27,7 +26,14 @@ const items: PlayItem[] = [
   },
   {
     labels: ["Still Life, Charcoal"],
-    media: { type: "image", src: "/assets/2025-08-28-12-36-5.jpeg" },
+    media: {
+      type: "image",
+      src: "/assets/2025-08-28-12-36-5.jpeg",
+      group: [
+        "/assets/2025-08-28-12-36-5.jpeg",
+        "/assets/2025-08-28-12-36-page-1.jpeg",
+      ],
+    },
   },
   {
     labels: ["Human Generated"],
@@ -35,7 +41,15 @@ const items: PlayItem[] = [
   },
   {
     labels: ["Typography Project", "Poster Design"],
-    media: { type: "image", src: "/assets/type-specimen-posters3.png" },
+    media: {
+      type: "image",
+      src: "/assets/type-specimen-posters3.png",
+      group: [
+        "/assets/type-specimen-posters3.png",
+        "/assets/type-specimen-posters2.png",
+        "/assets/type-specimen-posters.png",
+      ],
+    },
   },
   {
     labels: [],
@@ -50,7 +64,11 @@ const items: PlayItem[] = [
   },
   {
     labels: ["Album Cover"],
-    media: { type: "image", src: "/assets/album-cover.webp" },
+    media: {
+      type: "image",
+      src: "/assets/album-cover.webp",
+      group: ["/assets/album-cover.webp", "/assets/2-album-cover.webp"],
+    },
   },
   {
     labels: ["Massimo Vignelli Posters"],
@@ -113,6 +131,8 @@ function Media({ media }: { media: PlayItem["media"] }) {
 }
 
 export default function PlayPage() {
+  const [viewing, setViewing] = useState<string[] | null>(null);
+
   return (
     <div className="shell py-20">
       <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4">
@@ -123,23 +143,56 @@ export default function PlayPage() {
               <Labels labels={item.labels} />
             </div>
           );
-          return item.href ? (
-            <a
-              key={i}
-              href={item.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block break-inside-avoid"
-            >
-              {inner}
-            </a>
-          ) : (
+
+          // Links go to their project; every still opens up close instead.
+          if (item.href) {
+            return (
+              <a
+                key={i}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block break-inside-avoid"
+              >
+                {inner}
+              </a>
+            );
+          }
+
+          if (item.media.type === "image") {
+            const group = item.media.group ?? [item.media.src];
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => setViewing(group)}
+                aria-label={
+                  item.labels[0]
+                    ? `View ${item.labels[0]} up close`
+                    : "View image up close"
+                }
+                className="block w-full cursor-zoom-in break-inside-avoid text-left"
+              >
+                {inner}
+              </button>
+            );
+          }
+
+          return (
             <div key={i} className="break-inside-avoid">
               {inner}
             </div>
           );
         })}
       </div>
+
+      {viewing && (
+        <Lightbox
+          images={viewing}
+          startAt={0}
+          onClose={() => setViewing(null)}
+        />
+      )}
     </div>
   );
 }
