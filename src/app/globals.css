@@ -118,6 +118,69 @@ body {
   }
 }
 
+/* Logo mark: the ridges draw themselves and the sun rises, once when the page
+   loads and again on hover. The hover keyframes are duplicates under another
+   name — reusing the load animation would not restart it. */
+@keyframes logo-draw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes logo-draw-replay {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+
+@keyframes logo-rise {
+  from { opacity: 0; transform: translateY(14px) scale(0.4); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes logo-rise-replay {
+  from { opacity: 0; transform: translateY(14px) scale(0.4); }
+  to { opacity: 1; transform: none; }
+}
+
+.logo-mark .logo-stroke {
+  stroke: #ffffff;
+  stroke-dasharray: 1;
+  animation: logo-draw 700ms ease-out both;
+}
+
+[data-theme="dark"] .logo-mark .logo-stroke {
+  stroke: #000000;
+}
+
+.logo-mark .logo-stroke-ridge {
+  animation-delay: 140ms;
+}
+
+.logo-mark .logo-sun {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: logo-rise 620ms 320ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+.logo-mark:hover .logo-stroke {
+  animation: logo-draw-replay 620ms ease-out both;
+}
+
+.logo-mark:hover .logo-sun {
+  animation: logo-rise-replay 520ms 200ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-mark .logo-stroke,
+  .logo-mark .logo-sun,
+  .logo-mark:hover .logo-stroke,
+  .logo-mark:hover .logo-sun {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @layer components {
   /* Small uppercase label: Overview, Impact, the metadata headings. Sized to
      match the body copy it introduces. */
