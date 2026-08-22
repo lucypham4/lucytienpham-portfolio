@@ -185,6 +185,54 @@ body {
   }
 }
 
+/* ASCII diamonds on the home page. Two stacked layers of the same art: the
+   base sits underneath, and a green copy on top is revealed only where the
+   cursor trail's mask is opaque. */
+.ascii-art {
+  perspective: 900px;
+}
+
+.ascii-rotor {
+  position: relative;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.ascii-layer {
+  margin: 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 11px;
+  line-height: 13px;
+  letter-spacing: 0.5px;
+  white-space: pre;
+  transition: color 240ms ease;
+}
+
+.ascii-base {
+  color: var(--color-ink-soft);
+}
+
+/* Hovering tints the whole piece, with the trail burning brighter over it. */
+.ascii-art:hover .ascii-base {
+  color: rgb(2 170 75 / 0.45);
+}
+
+.ascii-glow {
+  position: absolute;
+  inset: 0;
+  color: var(--color-green);
+  pointer-events: none;
+  /* No trail yet means nothing shows through. */
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ascii-glow {
+    display: none;
+  }
+}
+
 @layer components {
   /* Small uppercase label: Overview, Impact, the metadata headings. Sized to
      match the body copy it introduces. */

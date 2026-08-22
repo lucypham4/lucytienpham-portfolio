@@ -1,4 +1,5 @@
 import Link from "next/link";
+import HomeIntro from "@/components/HomeIntro";
 import MediaBlock from "@/components/MediaBlock";
 import { projects } from "@/content/projects";
 
@@ -6,14 +7,7 @@ export default function Home() {
   return (
     <>
       <section className="shell-wide pt-5 pb-24 sm:pt-8">
-        {/* Same grid as the work below, so the line occupies exactly the right
-            column and lines up with the second card. */}
-        <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
-          {/* Sits between body copy and the 28px project titles below. */}
-          <h1 className="text-2xl leading-9 font-normal text-ink sm:col-start-2">
-            Multi-disciplinary designer creating and reimagining experiences.
-          </h1>
-        </div>
+        <HomeIntro />
       </section>
 
       <section id="work" className="shell-wide pb-5 sm:pb-8">

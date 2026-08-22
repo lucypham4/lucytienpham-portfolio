@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Open_Sans } from "next/font/google";
+import { Open_Sans, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
@@ -9,6 +9,13 @@ const openSans = Open_Sans({
   variable: "--font-open-sans",
   subsets: ["latin"],
   weight: ["300", "400", "600", "700", "800"],
+});
+
+// The ASCII piece is a Roboto Mono specimen, so it is set in the real face.
+const robotoMono = Roboto_Mono({
+  variable: "--font-mono",
+  subsets: ["latin"],
+  weight: ["400"],
 });
 
 export const metadata: Metadata = {
@@ -37,7 +44,7 @@ export default function RootLayout({
     // the server markup and the client tree differ here by design.
     <html
       lang="en"
-      className={`${openSans.variable} h-full antialiased`}
+      className={`${openSans.variable} ${robotoMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="font-sans min-h-full flex flex-col">
