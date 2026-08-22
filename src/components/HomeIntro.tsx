@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AsciiDiamonds from "./AsciiDiamonds";
+import AsciiFlower from "./AsciiFlower";
 
 /** Cycled rather than picked at random, so every click changes the line and
  *  all three are reachable. */
@@ -16,7 +16,7 @@ export default function HomeIntro() {
 
   return (
     <div className="grid grid-cols-1 items-center gap-x-8 gap-y-8 sm:grid-cols-2">
-      <AsciiDiamonds onPick={() => setIndex((i) => (i + 1) % LINES.length)} />
+      <AsciiFlower onPick={() => setIndex((i) => (i + 1) % LINES.length)} />
 
       <h1
         // Announce the swap to screen readers, since the control that changes

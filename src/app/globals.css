@@ -185,10 +185,10 @@ body {
   }
 }
 
-/* ASCII diamonds on the home page. The shape is projected in JS each frame;
-   this only styles the two text layers and the glow behind them. The base sits
-   underneath and a green copy on top is revealed where the cursor trail's mask
-   is opaque. */
+/* ASCII spider lily on the home page. The drawing is generated in JS each
+   frame; this only styles the layers. Petals and stem are separate <pre>s so
+   each can take its own colour, and each has an alternate copy on top that the
+   cursor trail's mask reveals — so hovering shows whichever palette is hidden. */
 .ascii-art {
   position: relative;
   isolation: isolate;
@@ -196,17 +196,17 @@ body {
 
 .ascii-halo {
   position: absolute;
-  inset: 8% 12%;
+  inset: 4% 10% 22%;
   z-index: -1;
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    rgb(2 170 75 / 0.16) 0%,
-    rgb(2 170 75 / 0.06) 45%,
-    transparent 72%
+    rgb(2 170 75 / 0.13) 0%,
+    rgb(2 170 75 / 0.05) 48%,
+    transparent 74%
   );
-  filter: blur(14px);
-  opacity: 0.75;
+  filter: blur(16px);
+  opacity: 0.7;
   transition: opacity 300ms ease;
   pointer-events: none;
 }
@@ -218,35 +218,40 @@ body {
 .ascii-layer {
   margin: 0;
   font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 10px;
-  line-height: 11px;
+  font-size: 9px;
+  line-height: 10px;
   letter-spacing: 0.5px;
   white-space: pre;
-  transition: color 240ms ease;
+  transition: color 260ms ease;
 }
 
-.ascii-base {
-  color: var(--color-ink-soft);
-}
-
-/* Hovering tints the whole piece, with the trail burning brighter over it. */
-.ascii-art:hover .ascii-base {
-  color: rgb(2 170 75 / 0.5);
-}
-
-.ascii-glow {
+/* Every layer after the first is stacked over the one before it. */
+.ascii-layer + .ascii-layer {
   position: absolute;
   inset: 0;
-  color: var(--color-green);
   pointer-events: none;
-  mask-image: none;
-  -webkit-mask-image: none;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .ascii-glow {
-    display: none;
-  }
+.ascii-petals {
+  color: var(--petal-now);
+}
+
+.ascii-stem {
+  color: var(--stem-now);
+}
+
+/* Hidden until the cursor paints a trail over them. A transparent mask hides
+   the layer; `none` would remove the mask and show all of it. */
+.ascii-petals-alt {
+  color: var(--petal-alt);
+  mask-image: linear-gradient(#0000, #0000);
+  -webkit-mask-image: linear-gradient(#0000, #0000);
+}
+
+.ascii-stem-alt {
+  color: var(--stem-alt);
+  mask-image: linear-gradient(#0000, #0000);
+  -webkit-mask-image: linear-gradient(#0000, #0000);
 }
 
 @layer components {
