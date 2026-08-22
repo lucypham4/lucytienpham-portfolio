@@ -49,10 +49,9 @@ export default function RootLayout({
     >
       <body className="font-sans min-h-full flex flex-col">
         {/* Runs before first paint so the page never flashes the wrong
-            palette. Falls back to the operating system preference until the
-            visitor picks a side. */}
+            palette. Dark is the default; only an explicit choice moves off it. */}
         <Script id="theme-init" strategy="beforeInteractive">
-          {`(function(){try{var s=localStorage.getItem('theme');var d=s?s==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.dataset.theme=d?'dark':'light';}catch(e){}})();`}
+          {`(function(){try{var s=localStorage.getItem('theme');document.documentElement.dataset.theme=s==='light'?'light':'dark';}catch(e){document.documentElement.dataset.theme='dark';}})();`}
         </Script>
         <Nav />
         <main className="flex-1">{children}</main>

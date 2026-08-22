@@ -38,9 +38,11 @@ function decode(rle: string) {
 const FRAMES = FLOWER_FRAMES.map(decode);
 
 export default function AsciiFlower({ onPick }: { onPick: () => void }) {
-  // Opens in a single contrasting ink; a click hands it back the clip's own
-  // colours. The hover trail always reveals whichever of the two is hidden.
-  const [trueColour, setTrueColour] = useState(false);
+  // Opens in the clip's own colours; a click flips it to a single contrasting
+  // ink. The hover trail always reveals whichever of the two is hidden.
+  const [trueColour, setTrueColour] = useState(true);
+  // Bumped on every click to replay the bloom from the bud.
+  const [run, setRun] = useState(0);
 
   const base = useRef<HTMLCanvasElement>(null);
   const reveal = useRef<HTMLCanvasElement>(null);
@@ -99,6 +101,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     }
 
     let raf = 0;
+    frame.current = 0;
+    repaint();
     const opened = performance.now();
 
     const tick = (now: number) => {
@@ -138,7 +142,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [trueColour]);
+  }, [trueColour, run]);
 
   const track = (e: React.MouseEvent) => {
     const box = stage.current?.getBoundingClientRect();
@@ -157,6 +161,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       type="button"
       onClick={() => {
         setTrueColour((on) => !on);
+        setRun((n) => n + 1);
         onPick();
       }}
       onMouseLeave={() => (points.current = [])}

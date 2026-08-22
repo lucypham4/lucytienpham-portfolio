@@ -42,7 +42,7 @@ export const PALETTE = [
   "#9be582",
   "#27be4d",
   "#7ede5e",
-  "#27be99",
+  "#27be5e",
   "#dede5e",
 ];
 
