@@ -189,7 +189,9 @@ body {
    base sits underneath, and a green copy on top is revealed only where the
    cursor trail's mask is opaque. */
 .ascii-art {
-  perspective: 900px;
+  /* Shallow enough to read as a spin, deep enough that the near edge does not
+     balloon as the piece turns edge-on. */
+  perspective: 2200px;
 }
 
 .ascii-rotor {

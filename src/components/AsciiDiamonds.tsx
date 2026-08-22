@@ -3,7 +3,8 @@
 import { useEffect, useRef } from "react";
 
 /** Rows per diamond; columns are twice that so the shape reads square, since
- *  a monospace cell is roughly half as wide as it is tall. */
+ *  a monospace cell is roughly half as wide as it is tall. The piece spins
+ *  about its vertical axis, passing edge-on twice a turn. */
 const ROWS = 15;
 const COLS = ROWS * 2;
 
@@ -62,7 +63,7 @@ export default function AsciiDiamonds({ onPick }: { onPick: () => void }) {
       if (!hovered.current) angle = (angle + dt * 0.028) % 360;
 
       if (rotor.current) {
-        rotor.current.style.transform = `rotateX(${angle * (1 - settle)}deg)`;
+        rotor.current.style.transform = `rotateY(${angle * (1 - settle)}deg)`;
       }
 
       if (glow.current) {
