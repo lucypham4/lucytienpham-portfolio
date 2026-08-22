@@ -185,26 +185,41 @@ body {
   }
 }
 
-/* ASCII diamonds on the home page. Two stacked layers of the same art: the
-   base sits underneath, and a green copy on top is revealed only where the
-   cursor trail's mask is opaque. */
+/* ASCII diamonds on the home page. The shape is projected in JS each frame;
+   this only styles the two text layers and the glow behind them. The base sits
+   underneath and a green copy on top is revealed where the cursor trail's mask
+   is opaque. */
 .ascii-art {
-  /* Shallow enough to read as a spin, deep enough that the near edge does not
-     balloon as the piece turns edge-on. */
-  perspective: 2200px;
+  position: relative;
+  isolation: isolate;
 }
 
-.ascii-rotor {
-  position: relative;
-  transform-style: preserve-3d;
-  will-change: transform;
+.ascii-halo {
+  position: absolute;
+  inset: 8% 12%;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgb(2 170 75 / 0.16) 0%,
+    rgb(2 170 75 / 0.06) 45%,
+    transparent 72%
+  );
+  filter: blur(14px);
+  opacity: 0.75;
+  transition: opacity 300ms ease;
+  pointer-events: none;
+}
+
+.ascii-art:hover .ascii-halo {
+  opacity: 1;
 }
 
 .ascii-layer {
   margin: 0;
   font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 11px;
-  line-height: 13px;
+  font-size: 10px;
+  line-height: 11px;
   letter-spacing: 0.5px;
   white-space: pre;
   transition: color 240ms ease;
@@ -216,7 +231,7 @@ body {
 
 /* Hovering tints the whole piece, with the trail burning brighter over it. */
 .ascii-art:hover .ascii-base {
-  color: rgb(2 170 75 / 0.45);
+  color: rgb(2 170 75 / 0.5);
 }
 
 .ascii-glow {
@@ -224,7 +239,6 @@ body {
   inset: 0;
   color: var(--color-green);
   pointer-events: none;
-  /* No trail yet means nothing shows through. */
   mask-image: none;
   -webkit-mask-image: none;
 }

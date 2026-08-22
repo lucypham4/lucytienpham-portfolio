@@ -2,39 +2,47 @@
 
 import { useEffect, useRef } from "react";
 
-/** Rows per diamond; columns are twice that so the shape reads square, since
- *  a monospace cell is roughly half as wide as it is tall. The piece spins
- *  about its vertical axis, passing edge-on twice a turn. */
-const ROWS = 15;
-const COLS = ROWS * 2;
+const COLS = 62;
+const ROWS = 38;
 
-function diamond(char: string) {
-  const cy = (ROWS - 1) / 2;
-  const cx = (COLS - 1) / 2;
-  const lines: string[] = [];
+/** Two octahedra stacked point to point — the poster's pair of diamonds, given
+ *  depth so they can actually turn rather than just squash. */
+const CENTRES = [-0.98, 0.98];
 
-  for (let r = 0; r < ROWS; r++) {
-    let line = "";
-    for (let c = 0; c < COLS; c++) {
-      const inside = Math.abs(c - cx) / cx + Math.abs(r - cy) / cy <= 1;
-      line += inside ? char : " ";
+/** Surface points of an octahedron: any direction, pushed out to |x|+|y|+|z|=1. */
+function octahedron(step: number) {
+  const points: [number, number, number][] = [];
+
+  for (let i = 0; i <= step; i++) {
+    const phi = (i / step) * Math.PI - Math.PI / 2;
+    // Fewer samples near the poles, where the rings shrink to nothing.
+    const ring = Math.max(4, Math.round(Math.cos(phi) * step * 2));
+
+    for (let j = 0; j < ring; j++) {
+      const theta = (j / ring) * Math.PI * 2;
+      const x = Math.cos(phi) * Math.cos(theta);
+      const y = Math.sin(phi);
+      const z = Math.cos(phi) * Math.sin(theta);
+      const norm = Math.abs(x) + Math.abs(y) + Math.abs(z);
+      points.push([x / norm, y / norm, z / norm]);
     }
-    lines.push(line);
   }
-  return lines.join("\n");
+  return points;
 }
 
-// Built once at module load — a pure function of the constants above, so the
-// server and client always produce identical markup.
-const ART = `${diamond("a")}\n\n${diamond("a")}`;
+const SHAPE = octahedron(26);
+
+/** Denser glyphs read as nearer, which is what gives the form its shading. */
+const RAMP = "·:aaAA";
 
 type Point = { x: number; y: number; born: number };
 
 const TRAIL_MS = 520;
 const TRAIL_RADIUS = 90;
+const FOCAL = 3.4;
 
 export default function AsciiDiamonds({ onPick }: { onPick: () => void }) {
-  const rotor = useRef<HTMLDivElement>(null);
+  const base = useRef<HTMLPreElement>(null);
   const glow = useRef<HTMLPreElement>(null);
   const stage = useRef<HTMLButtonElement>(null);
   const points = useRef<Point[]>([]);
@@ -42,34 +50,63 @@ export default function AsciiDiamonds({ onPick }: { onPick: () => void }) {
 
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    if (reduced.matches) return;
-
     let frame = 0;
     let last = performance.now();
     let angle = 0;
-    // 0 while spinning, 1 once settled flat under the cursor.
-    let settle = 0;
+
+    const cells = new Array<string>(COLS * ROWS);
+    const depth = new Float32Array(COLS * ROWS);
+
+    const render = (a: number) => {
+      cells.fill(" ");
+      depth.fill(-Infinity);
+
+      const cos = Math.cos(a);
+      const sin = Math.sin(a);
+
+      for (const centre of CENTRES) {
+        for (const [px, py, pz] of SHAPE) {
+          // Spin about the vertical axis, so x and z mix and y is untouched.
+          const x = px * cos + pz * sin;
+          const z = -px * sin + pz * cos;
+          const y = py + centre;
+
+          const scale = FOCAL / (FOCAL - z);
+          const col = Math.round((COLS - 1) / 2 + x * scale * (COLS / 2.6));
+          const row = Math.round((ROWS - 1) / 2 + y * scale * (ROWS / 4.4));
+          if (col < 0 || col >= COLS || row < 0 || row >= ROWS) continue;
+
+          const at = row * COLS + col;
+          if (z <= depth[at]) continue;
+          depth[at] = z;
+          const shade = Math.min(
+            RAMP.length - 1,
+            Math.max(0, Math.round(((z + 1) / 2) * (RAMP.length - 1))),
+          );
+          cells[at] = RAMP[shade];
+        }
+      }
+
+      let out = "";
+      for (let r = 0; r < ROWS; r++) {
+        out += cells.slice(r * COLS, (r + 1) * COLS).join("") + "\n";
+      }
+      if (base.current) base.current.textContent = out;
+      if (glow.current) glow.current.textContent = out;
+    };
+
+    render(0);
+    if (reduced.matches) return;
 
     const tick = (now: number) => {
       const dt = Math.min(now - last, 64);
       last = now;
 
-      // Hovering eases the spin to flat, so the trail lands where the cursor
-      // actually is rather than on a foreshortened, moving surface.
-      settle = hovered.current
-        ? Math.min(1, settle + dt / 260)
-        : Math.max(0, settle - dt / 420);
-
-      if (!hovered.current) angle = (angle + dt * 0.028) % 360;
-
-      if (rotor.current) {
-        rotor.current.style.transform = `rotateY(${angle * (1 - settle)}deg)`;
-      }
+      if (!hovered.current) angle += dt * 0.00042;
+      render(angle);
 
       if (glow.current) {
-        points.current = points.current.filter(
-          (p) => now - p.born < TRAIL_MS,
-        );
+        points.current = points.current.filter((p) => now - p.born < TRAIL_MS);
 
         const mask = points.current
           .map((p) => {
@@ -99,7 +136,6 @@ export default function AsciiDiamonds({ onPick }: { onPick: () => void }) {
       y: e.clientY - box.top,
       born: performance.now(),
     });
-    // Cap the trail so a fast drag cannot pile up hundreds of gradients.
     if (points.current.length > 18) points.current.shift();
   };
 
@@ -115,16 +151,11 @@ export default function AsciiDiamonds({ onPick }: { onPick: () => void }) {
       }}
       onMouseMove={track}
       aria-label="Change the intro line"
-      className="ascii-art group relative block w-full cursor-pointer select-none"
+      className="ascii-art relative block w-full cursor-pointer select-none"
     >
-      <div ref={rotor} className="ascii-rotor">
-        <pre aria-hidden className="ascii-layer ascii-base">
-          {ART}
-        </pre>
-        <pre ref={glow} aria-hidden className="ascii-layer ascii-glow">
-          {ART}
-        </pre>
-      </div>
+      <span aria-hidden className="ascii-halo" />
+      <pre ref={base} aria-hidden className="ascii-layer ascii-base" />
+      <pre ref={glow} aria-hidden className="ascii-layer ascii-glow" />
     </button>
   );
 }
