@@ -100,7 +100,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       ctx.textBaseline = "top";
 
       const at = cursor.current;
-      const cells = FRAMES[frame.current];
+      const cells = FRAMES[Math.min(frame.current, FRAMES.length - 1)];
+      if (!cells) return;
       for (let row = 0; row < FLOWER_ROWS; row++) {
         for (let col = 0; col < FLOWER_COLS; col++) {
           const slot = cells[row * FLOWER_COLS + col];
@@ -141,14 +142,14 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     let lastScatter = 0;
     let leaning = "";
 
-    repaint();
-
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       frame.current = FRAMES.length - 1;
       repaint();
       return;
     }
 
+    // Rewind before painting: a click replays the bloom from the bud, and
+    // painting first would draw with whatever index the last run left behind.
     let raf = 0;
     frame.current = 0;
     repaint();
