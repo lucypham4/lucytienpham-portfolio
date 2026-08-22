@@ -17,11 +17,12 @@ const photos = [
 export default function AboutPage() {
   return (
     <div className="shell-wide py-5 sm:py-8">
-      {/* Same grid and type as the home intro, so the two pages open alike.
-          The bio is written first so a narrow screen reads it before the
-          photographs, then placed into the right column on a wide one. */}
+      {/* Body-copy size, but in full-contrast ink rather than the softer grey
+          running text uses. The bio is written first so a narrow screen reads
+          it before the photographs, then placed into the right column on a
+          wide one. */}
       <section className="grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2">
-        <div className="text-2xl leading-9 font-normal text-ink sm:col-start-2 sm:row-start-1 sm:sticky sm:top-[136px] sm:self-start">
+        <div className="text-lg leading-8 font-normal text-ink sm:col-start-2 sm:row-start-1 sm:sticky sm:top-[136px] sm:self-start">
           {/* The opening line doubles as the page heading, as on the home
               page, so the page keeps exactly one. */}
           <h1>
