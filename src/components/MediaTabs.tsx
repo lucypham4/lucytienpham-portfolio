@@ -24,11 +24,13 @@ export default function MediaTabs({
 }) {
   const [active, setActive] = useState(0);
 
-  // Which button is mid-shine. `press` counts up so that pressing the same
-  // button again still re-runs the effect below.
-  const [shine, setShine] = useState<{ index: number; press: number } | null>(
-    null,
-  );
+  // Which button is mid-shine. Starts on the opening tab so the control
+  // announces itself, then runs again on each press; `press` counts up so
+  // pressing the same button twice still re-runs the effect below.
+  const [shine, setShine] = useState<{ index: number; press: number } | null>({
+    index: 0,
+    press: 0,
+  });
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
 
   const press = (i: number) => {

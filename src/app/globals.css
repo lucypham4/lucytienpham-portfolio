@@ -36,8 +36,8 @@ body {
    same colour. The angle needs @property so it can be interpolated; without it
    the gradient would jump rather than sweep.
 
-   The ring is the brand green from the logo. It runs only when data-shine is
-   set, which the component turns on for three rotations after a press. */
+   The ring runs only when data-shine is set, which the component turns on for
+   two rotations — once on load for the opening tab, then again on each press. */
 @property --shine-angle {
   syntax: "<angle>";
   initial-value: 0deg;
@@ -63,7 +63,7 @@ body {
   background: conic-gradient(
     from var(--shine-angle),
     transparent 0deg,
-    var(--color-green) 50deg,
+    var(--color-ink) 50deg,
     transparent 110deg
   );
   /* Punch out the middle so only the ring paints. */
@@ -75,7 +75,7 @@ body {
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
-  filter: drop-shadow(0 0 5px var(--color-green));
+  filter: drop-shadow(0 0 5px var(--color-ink));
   opacity: 0;
   pointer-events: none;
   transition: opacity 200ms ease-out;
@@ -83,7 +83,7 @@ body {
 
 .shine-border[data-shine="on"]::before {
   opacity: 1;
-  animation: shine-spin 4.4s linear 3;
+  animation: shine-spin 4.4s linear 2;
 }
 
 @media (prefers-reduced-motion: reduce) {
