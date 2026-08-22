@@ -104,7 +104,7 @@ export default function MediaTabs({
               className={`shine-border rounded-pill px-5 py-2 text-base leading-6 transition-colors ${
                 isActive
                   ? "bg-shell font-semibold text-ink"
-                  : "text-grey hover:text-ink"
+                  : "cursor-pointer text-grey hover:text-ink"
               }`}
             >
               {item.label}
