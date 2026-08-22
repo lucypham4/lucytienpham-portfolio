@@ -15,11 +15,10 @@ const PHRASE = "lucy cat tien pham ";
  *  disturbed cells read as static rather than as words. */
 const NOISE = "0]M%bBhqZdpr#Q\\uX!k&@aWJZvC<K^9z;~+\"{}|/$IwvY*=?3T7";
 
-/** Character cell. Small enough that the grid reads as the clip rather than as
- *  lettering, while each glyph is still legible up close. */
-const CELL_W = 3.9;
-const CELL_H = 6;
-const FONT_PX = 6;
+/** Character cells are about half again as tall as they are wide. The width
+ *  itself comes from whatever room the column gives the piece, so the flower
+ *  fills it rather than sitting at a fixed size. */
+const CELL_ASPECT = 6 / 3.9;
 
 const TRAIL_MS = 520;
 const TRAIL_RADIUS = 45;
@@ -56,6 +55,32 @@ function decode(rle: string) {
 
 const FRAMES = FLOWER_FRAMES.map(decode);
 const LAST = FRAMES.length - 1;
+
+/** The box the drawing actually occupies across every frame, so the empty
+ *  columns down one side are not paid for in width. */
+const BOX = (() => {
+  let minCol = FLOWER_COLS;
+  let maxCol = 0;
+  let minRow = FLOWER_ROWS;
+  let maxRow = 0;
+  for (const cells of FRAMES) {
+    for (let row = 0; row < FLOWER_ROWS; row++) {
+      for (let col = 0; col < FLOWER_COLS; col++) {
+        if (!cells[row * FLOWER_COLS + col]) continue;
+        if (col < minCol) minCol = col;
+        if (col > maxCol) maxCol = col;
+        if (row < minRow) minRow = row;
+        if (row > maxRow) maxRow = row;
+      }
+    }
+  }
+  return {
+    col: minCol,
+    row: minRow,
+    cols: maxCol - minCol + 1,
+    rows: maxRow - minRow + 1,
+  };
+})();
 
 /**
  * How far each cell sits from the heart of the bloom, as 0 to 1. The colour
@@ -113,17 +138,32 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   });
 
   useEffect(() => {
-    const width = FLOWER_COLS * CELL_W;
-    const height = FLOWER_ROWS * CELL_H;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    let cellW = 3.9;
+    let cellH = cellW * CELL_ASPECT;
+    let width = BOX.cols * cellW;
+    let height = BOX.rows * cellH;
+
+    const measure = () => {
+      const room = stage.current?.clientWidth;
+      if (!room) return false;
+      const next = room / BOX.cols;
+      if (Math.abs(next - cellW) < 0.01) return false;
+      cellW = next;
+      cellH = cellW * CELL_ASPECT;
+      width = room;
+      height = BOX.rows * cellH;
+      return true;
+    };
 
     const token = (name: string) =>
       getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
     const size = (canvas: HTMLCanvasElement) => {
-      if (canvas.width === width * dpr) return;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
+      if (canvas.width === Math.round(width * dpr)) return;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
     };
@@ -143,7 +183,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       size(canvas);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
-      ctx.font = `${FONT_PX}px var(--font-mono, ui-monospace, monospace)`;
+      ctx.font = `${cellH}px var(--font-mono, ui-monospace, monospace)`;
       ctx.textBaseline = "top";
 
       const now = shot.current;
@@ -158,8 +198,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
           const slot = cells[i];
           if (!slot) continue;
 
-          const x = col * CELL_W;
-          const y = row * CELL_H;
+          const x = (col - BOX.col) * cellW;
+          const y = (row - BOX.row) * cellH;
 
           // Lean toward the cursor, falling off with distance and capped so a
           // letter never drifts far from its own cell.
@@ -288,9 +328,20 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       raf = requestAnimationFrame(tick);
     };
 
+    measure();
     repaint();
+
+    // Follow the column: the flower is sized from the room it is given.
+    const onResize = () => {
+      if (measure()) repaint();
+    };
+    window.addEventListener("resize", onResize);
+
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("resize", onResize);
+    };
   }, []);
 
   const track = (e: React.MouseEvent) => {
