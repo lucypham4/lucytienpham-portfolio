@@ -134,7 +134,7 @@ export default function PlayPage() {
   const [viewing, setViewing] = useState<string[] | null>(null);
 
   return (
-    <div className="shell py-20">
+    <div className="shell py-6 md:py-10">
       <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4">
         {items.map((item, i) => {
           const inner = (

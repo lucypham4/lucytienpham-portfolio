@@ -52,7 +52,7 @@ export default async function CaseStudyPage({
     !project.hero.hideTagline && project.tagline !== project.hero.headline;
 
   return (
-    <article className="pb-24">
+    <article className="pb-6 md:pb-10">
       <header className={accentBg[project.accent ?? "none"]}>
         {project.hero.media &&
           (project.hero.fullBleed ? (
@@ -60,7 +60,7 @@ export default async function CaseStudyPage({
               <MediaBlock media={project.hero.media} priority fit="fill" />
             </div>
           ) : (
-            <div className="shell pt-10">
+            <div className="shell pt-6 md:pt-10">
               {/* Panelled splashes match the plain ones' 16:9 footprint so
                   every case study opens at the same height. The asset is
                   contained inside the padding rather than filling the panel. */}

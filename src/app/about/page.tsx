@@ -16,7 +16,7 @@ const photos = [
 
 export default function AboutPage() {
   return (
-    <div className="shell py-20">
+    <div className="shell py-6 md:py-10">
       <section className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_1.2fr] md:items-start">
         <Image
           src="/assets/lp-headshot-1-5x.avif"

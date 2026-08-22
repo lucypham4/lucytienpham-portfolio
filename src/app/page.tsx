@@ -5,14 +5,14 @@ import { projects } from "@/content/projects";
 export default function Home() {
   return (
     <>
-      <section className="shell-wide pt-20 pb-24">
+      <section className="shell-wide pt-5 pb-24 sm:pt-8">
         <h1 className="max-w-4xl text-[40px] leading-[52px] font-normal text-ink">
           Lucy is a designer <strong className="font-bold">bridging the gap</strong>{" "}
           between business objectives and user experiences.
         </h1>
       </section>
 
-      <section id="work" className="shell-wide pb-24">
+      <section id="work" className="shell-wide pb-5 sm:pb-8">
         <div className="grid grid-cols-1 gap-x-8 gap-y-16 sm:grid-cols-2">
           {projects.map((project, i) => (
             <Link

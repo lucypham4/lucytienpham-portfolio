@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer className="bg-bg py-10 text-ink">
+    <footer className="bg-bg py-5 text-ink sm:py-8">
       {/* Same container as the nav and page body, so the two ends line up. */}
       <div className="shell-wide flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs leading-5 uppercase">© 2025 Lucy-Tien Pham</p>
