@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import {
   FLOWER_COLS,
   FLOWER_FRAMES,
@@ -23,13 +23,21 @@ const FONT_PX = 6;
 
 const TRAIL_MS = 520;
 const TRAIL_RADIUS = 45;
-const BLOOM_MS = 3200;
 /** How often the disturbed letters re-roll while hovered. */
 const SCATTER_MS = 70;
 /** Letters lean toward the cursor, never straying more than this from where
  *  they belong, and only within reach of it. */
 const PULL_MAX = 2;
 const PULL_RADIUS = 110;
+
+/**
+ * A press runs one unbroken cycle: the flower closes back to a bud, the new
+ * colour spreads out through it from the heart, and it opens again.
+ */
+const WILT_MS = 1100;
+const SPREAD_MS = 800;
+const BLOOM_MS = 1700;
+const CYCLE_MS = WILT_MS + SPREAD_MS + BLOOM_MS;
 
 type Point = { x: number; y: number; born: number };
 
@@ -46,20 +54,62 @@ function decode(rle: string) {
 }
 
 const FRAMES = FLOWER_FRAMES.map(decode);
+const LAST = FRAMES.length - 1;
+
+/**
+ * How far each cell sits from the heart of the bloom, as 0 to 1. The colour
+ * change is released from the centre and washes outward along this.
+ */
+const REACH = (() => {
+  const open = FRAMES[LAST];
+  let sumX = 0;
+  let sumY = 0;
+  let n = 0;
+  for (let row = 0; row < FLOWER_ROWS; row++) {
+    for (let col = 0; col < FLOWER_COLS; col++) {
+      if (!open[row * FLOWER_COLS + col]) continue;
+      sumX += col;
+      sumY += row;
+      n++;
+    }
+  }
+  const heartX = n ? sumX / n : FLOWER_COLS / 2;
+  const heartY = n ? sumY / n : FLOWER_ROWS / 2;
+
+  const out = new Float32Array(FLOWER_COLS * FLOWER_ROWS);
+  let far = 1;
+  for (let row = 0; row < FLOWER_ROWS; row++) {
+    for (let col = 0; col < FLOWER_COLS; col++) {
+      // Columns are about half as wide as rows are tall, so the sweep stays
+      // round rather than stretching sideways.
+      const d = Math.hypot((col - heartX) * 0.5, row - heartY);
+      out[row * FLOWER_COLS + col] = d;
+      if (d > far) far = d;
+    }
+  }
+  for (let i = 0; i < out.length; i++) out[i] /= far;
+  return out;
+})();
 
 export default function AsciiFlower({ onPick }: { onPick: () => void }) {
-  // Opens in the clip's own colours; a click flips it to a single contrasting
-  // ink. Hovering scatters the letters into the background colour.
-  const [trueColour, setTrueColour] = useState(true);
-  // Bumped on every click to replay the bloom from the bud.
-  const [run, setRun] = useState(0);
-
   const base = useRef<HTMLCanvasElement>(null);
   const reveal = useRef<HTMLCanvasElement>(null);
   const stage = useRef<HTMLButtonElement>(null);
   const points = useRef<Point[]>([]);
   const cursor = useRef<{ x: number; y: number } | null>(null);
-  const frame = useRef(0);
+
+  /** Everything the loop needs, held in refs so a press never restarts it. */
+  const shot = useRef({
+    frame: 0,
+    /** Opens in the clip's own colours. */
+    colour: true,
+    /** Colour the spread is moving toward, while a cycle runs. */
+    next: true,
+    /** How far the colour has washed out from the heart, 0 to 1. */
+    spread: 1,
+    /** When the running cycle began; null once it has finished. */
+    began: null as number | null,
+  });
 
   useEffect(() => {
     const width = FLOWER_COLS * CELL_W;
@@ -82,16 +132,12 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
      * background colour, so where the cursor passes the flower reads as having
      * been scattered away rather than recoloured.
      */
-    const paint = (
-      canvas: HTMLCanvasElement | null,
-      colours: boolean,
-      scatter = false,
-    ) => {
+    const paint = (canvas: HTMLCanvasElement | null, scatter = false) => {
       const ctx = canvas?.getContext("2d");
       if (!canvas || !ctx) return;
 
-      // Read per paint so the colours follow a theme change without a remount.
-      const fill = scatter ? token("--color-bg") : token("--color-ink");
+      const ink = token("--color-ink");
+      const bg = token("--color-bg");
 
       size(canvas);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -99,13 +145,18 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       ctx.font = `${FONT_PX}px var(--font-mono, ui-monospace, monospace)`;
       ctx.textBaseline = "top";
 
-      const at = cursor.current;
-      const cells = FRAMES[Math.min(frame.current, FRAMES.length - 1)];
+      const now = shot.current;
+      const cells = FRAMES[Math.min(Math.max(now.frame, 0), LAST)];
       if (!cells) return;
+
+      const at = cursor.current;
+
       for (let row = 0; row < FLOWER_ROWS; row++) {
         for (let col = 0; col < FLOWER_COLS; col++) {
-          const slot = cells[row * FLOWER_COLS + col];
+          const i = row * FLOWER_COLS + col;
+          const slot = cells[i];
           if (!slot) continue;
+
           const x = col * CELL_W;
           const y = row * CELL_H;
 
@@ -122,7 +173,16 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
             leanY = (dy / away) * pull;
           }
 
-          ctx.fillStyle = scatter || !colours ? fill : PALETTE[slot - 1];
+          if (scatter) {
+            ctx.fillStyle = bg;
+          } else {
+            // Cells the wash has already reached wear the new colour.
+            const turned = REACH[i] <= now.spread;
+            ctx.fillStyle = (turned ? now.next : now.colour)
+              ? PALETTE[slot - 1]
+              : ink;
+          }
+
           ctx.fillText(
             scatter
               ? NOISE[(Math.random() * NOISE.length) | 0]
@@ -135,46 +195,67 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     };
 
     const repaint = () => {
-      paint(base.current, trueColour);
-      paint(reveal.current, !trueColour, true);
+      paint(base.current);
+      paint(reveal.current, true);
     };
 
-    let lastScatter = 0;
-    let leaning = "";
+    // Open on load the same way a press does, minus the wilt.
+    shot.current.began = performance.now() - WILT_MS - SPREAD_MS;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      frame.current = FRAMES.length - 1;
+      shot.current.frame = LAST;
+      shot.current.began = null;
       repaint();
       return;
     }
 
-    // Rewind before painting: a click replays the bloom from the bud, and
-    // painting first would draw with whatever index the last run left behind.
     let raf = 0;
-    frame.current = 0;
-    repaint();
-    const opened = performance.now();
+    let lastScatter = 0;
+    let leaning = "";
+    let drawn = -1;
 
     const tick = (now: number) => {
-      // Blooms once and holds on the last frame; only a reload replays it.
-      const progress = Math.min(1, (now - opened) / BLOOM_MS);
-      const next = Math.min(
-        FRAMES.length - 1,
-        Math.floor(progress * FRAMES.length),
-      );
-      if (next !== frame.current) {
-        frame.current = next;
-        repaint();
+      const s = shot.current;
+      let dirty = false;
+
+      if (s.began !== null) {
+        const t = now - s.began;
+
+        if (t < WILT_MS) {
+          // Closing: the recorded bloom, played backwards.
+          s.frame = Math.round(LAST * (1 - t / WILT_MS));
+          s.spread = 0;
+        } else if (t < WILT_MS + SPREAD_MS) {
+          s.frame = 0;
+          s.spread = (t - WILT_MS) / SPREAD_MS;
+          dirty = true; // the wash moves even while the frame holds
+        } else if (t < CYCLE_MS) {
+          s.frame = Math.round(
+            LAST * ((t - WILT_MS - SPREAD_MS) / BLOOM_MS),
+          );
+          s.spread = 1;
+        } else {
+          s.frame = LAST;
+          s.spread = 1;
+          s.colour = s.next;
+          s.began = null;
+        }
       }
 
-      // Redraw only when the cursor has actually moved, so the letters follow
-      // it without the piece repainting itself forever while idle.
+      if (s.frame !== drawn) {
+        drawn = s.frame;
+        dirty = true;
+      }
+
+      // Redraw when the pointer moves, so the letters follow it.
       const at = cursor.current;
       const where = at ? `${Math.round(at.x)},${Math.round(at.y)}` : "";
       if (where !== leaning) {
         leaning = where;
-        paint(base.current, trueColour);
+        dirty = true;
       }
+
+      if (dirty) paint(base.current);
 
       points.current = points.current.filter((p) => now - p.born < TRAIL_MS);
 
@@ -182,7 +263,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       // rate so the static reads as flicker rather than a blur.
       if (points.current.length && now - lastScatter > SCATTER_MS) {
         lastScatter = now;
-        paint(reveal.current, !trueColour, true);
+        paint(reveal.current, true);
       }
 
       const mask = points.current
@@ -206,9 +287,10 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       raf = requestAnimationFrame(tick);
     };
 
+    repaint();
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [trueColour, run]);
+  }, []);
 
   const track = (e: React.MouseEvent) => {
     const box = stage.current?.getBoundingClientRect();
@@ -220,15 +302,21 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     if (points.current.length > 18) points.current.shift();
   };
 
+  const press = () => {
+    const s = shot.current;
+    // A press during a cycle restarts it rather than stacking another.
+    s.colour = s.next;
+    s.next = !s.colour;
+    s.spread = 0;
+    s.began = performance.now();
+    onPick();
+  };
+
   return (
     <button
       ref={stage}
       type="button"
-      onClick={() => {
-        setTrueColour((on) => !on);
-        setRun((n) => n + 1);
-        onPick();
-      }}
+      onClick={press}
       onMouseLeave={() => {
         points.current = [];
         cursor.current = null;
