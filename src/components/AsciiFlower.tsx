@@ -5,19 +5,21 @@ import {
   FLOWER_COLS,
   FLOWER_FRAMES,
   FLOWER_ROWS,
+  PALETTE,
 } from "@/content/flower-frames";
 
 /** Tiled through the drawing so the flower is spelled out of her name. */
 const PHRASE = "lucy cat tien pham ";
 
+/** Character cell. Small enough that the grid reads as the clip rather than as
+ *  lettering, while each glyph is still legible up close. */
+const CELL_W = 3.9;
+const CELL_H = 6;
+const FONT_PX = 6;
+
 const TRAIL_MS = 520;
 const TRAIL_RADIUS = 90;
-/** Long enough to read as a bloom rather than a flicker between stills. */
-const BLOOM_MS = 3400;
-
-/** One layer per colour band: a <pre> can only be one colour, so each of the
- *  five bands the footage was sorted into gets its own copy of the grid. */
-const BANDS = [1, 2, 3, 4, 5] as const;
+const BLOOM_MS = 3200;
 
 type Point = { x: number; y: number; born: number };
 
@@ -25,76 +27,90 @@ function decode(rle: string) {
   const cells = new Uint8Array(FLOWER_COLS * FLOWER_ROWS);
   let at = 0;
   for (let i = 0; i < rle.length; i += 2) {
-    const code = rle.charCodeAt(i) - 48;
+    const slot = parseInt(rle[i], 36);
     const run = parseInt(rle[i + 1], 36);
-    cells.fill(code, at, at + run);
+    cells.fill(slot, at, at + run);
     at += run;
   }
   return cells;
 }
 
-/** Split one frame into a string per colour band, spelled out of the phrase. */
-function split(cells: Uint8Array) {
-  return BANDS.map((band) => {
-    let out = "";
-    for (let row = 0; row < FLOWER_ROWS; row++) {
-      for (let col = 0; col < FLOWER_COLS; col++) {
-        const at = row * FLOWER_COLS + col;
-        out +=
-          cells[at] === band ? PHRASE[(col + row * 5) % PHRASE.length] : " ";
-      }
-      out += "\n";
-    }
-    return out;
-  });
-}
-
-const SPLIT = FLOWER_FRAMES.map((rle) => split(decode(rle)));
+const FRAMES = FLOWER_FRAMES.map(decode);
 
 export default function AsciiFlower({ onPick }: { onPick: () => void }) {
-  // Opens contrasting with the page; a click flips it to the flower's own
-  // colours, sampled from the footage.
+  // Opens in a single contrasting ink; a click hands it back the clip's own
+  // colours. The hover trail always reveals whichever of the two is hidden.
   const [trueColour, setTrueColour] = useState(false);
 
-  const nowLayers = useRef<(HTMLPreElement | null)[]>([]);
-  const altLayers = useRef<(HTMLPreElement | null)[]>([]);
+  const base = useRef<HTMLCanvasElement>(null);
+  const reveal = useRef<HTMLCanvasElement>(null);
   const stage = useRef<HTMLButtonElement>(null);
   const points = useRef<Point[]>([]);
+  const frame = useRef(0);
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const width = FLOWER_COLS * CELL_W;
+    const height = FLOWER_ROWS * CELL_H;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    const paint = (index: number) => {
-      SPLIT[index].forEach((text, i) => {
-        const now = nowLayers.current[i];
-        const alt = altLayers.current[i];
-        if (now) now.textContent = text;
-        if (alt) alt.textContent = text;
-      });
+    const ink = getComputedStyle(document.documentElement)
+      .getPropertyValue("--color-ink")
+      .trim();
+
+    const paint = (canvas: HTMLCanvasElement | null, colours: boolean) => {
+      const ctx = canvas?.getContext("2d");
+      if (!canvas || !ctx) return;
+
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, width, height);
+      ctx.font = `${FONT_PX}px var(--font-mono, ui-monospace, monospace)`;
+      ctx.textBaseline = "top";
+
+      const cells = FRAMES[frame.current];
+      for (let row = 0; row < FLOWER_ROWS; row++) {
+        for (let col = 0; col < FLOWER_COLS; col++) {
+          const slot = cells[row * FLOWER_COLS + col];
+          if (!slot) continue;
+          ctx.fillStyle = colours ? PALETTE[slot - 1] : ink;
+          ctx.fillText(
+            PHRASE[(col + row * 5) % PHRASE.length],
+            col * CELL_W,
+            row * CELL_H,
+          );
+        }
+      }
     };
 
-    if (reduced.matches) {
-      paint(SPLIT.length - 1);
+    const repaint = () => {
+      paint(base.current, trueColour);
+      paint(reveal.current, !trueColour);
+    };
+
+    repaint();
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      frame.current = FRAMES.length - 1;
+      repaint();
       return;
     }
 
     let raf = 0;
-    // Paint the bud straight away: waiting for the first animation frame
-    // leaves the piece blank if that frame is delayed.
-    paint(0);
-    let shown = 0;
     const opened = performance.now();
 
     const tick = (now: number) => {
       // Blooms once and holds on the last frame; only a reload replays it.
       const progress = Math.min(1, (now - opened) / BLOOM_MS);
-      const index = Math.min(
-        SPLIT.length - 1,
-        Math.floor(progress * SPLIT.length),
+      const next = Math.min(
+        FRAMES.length - 1,
+        Math.floor(progress * FRAMES.length),
       );
-      if (index !== shown) {
-        paint(index);
-        shown = index;
+      if (next !== frame.current) {
+        frame.current = next;
+        repaint();
       }
 
       points.current = points.current.filter((p) => now - p.born < TRAIL_MS);
@@ -111,8 +127,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       // An empty trail must hide the layer, so fall back to a transparent mask
       // rather than "none", which would remove the mask and reveal all of it.
       const applied = mask || "linear-gradient(#0000, #0000)";
-      for (const node of altLayers.current) {
-        if (!node) continue;
+      const node = reveal.current;
+      if (node) {
         node.style.maskImage = applied;
         node.style.webkitMaskImage = applied;
       }
@@ -122,7 +138,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
+  }, [trueColour]);
 
   const track = (e: React.MouseEvent) => {
     const box = stage.current?.getBoundingClientRect();
@@ -146,32 +162,11 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       onMouseLeave={() => (points.current = [])}
       onMouseMove={track}
       aria-label="Change the intro line and the flower's colours"
-      data-true={trueColour ? "" : undefined}
       className="ascii-art relative block w-full cursor-pointer select-none"
     >
       <span aria-hidden className="ascii-halo" />
-
-      {BANDS.map((band, i) => (
-        <pre
-          key={`now-${band}`}
-          aria-hidden
-          ref={(el) => {
-            nowLayers.current[i] = el;
-          }}
-          className={`ascii-layer ascii-band-${band}`}
-        />
-      ))}
-
-      {BANDS.map((band, i) => (
-        <pre
-          key={`alt-${band}`}
-          aria-hidden
-          ref={(el) => {
-            altLayers.current[i] = el;
-          }}
-          className={`ascii-layer ascii-alt ascii-band-${band}`}
-        />
-      ))}
+      <canvas ref={base} aria-hidden className="ascii-canvas" />
+      <canvas ref={reveal} aria-hidden className="ascii-canvas ascii-reveal" />
     </button>
   );
 }

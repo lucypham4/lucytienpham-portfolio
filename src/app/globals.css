@@ -185,11 +185,10 @@ body {
   }
 }
 
-/* ASCII spider lily on the home page. Each frame of the bloom was sampled from
-   the footage into five colour bands, and each band gets its own <pre> because
-   a text node can only carry one colour. Every band has a second copy stacked
-   on top in the other palette, which the cursor trail reveals — so hovering
-   always shows whichever palette is currently hidden. */
+/* The flower is painted to a canvas so every cell can carry its own colour
+   from the clip — a text node can only hold one. A second canvas above it
+   holds the other palette, revealed only where the cursor trail's mask is
+   opaque, so hovering shows whichever palette is currently hidden. */
 .ascii-art {
   position: relative;
   isolation: isolate;
@@ -197,17 +196,17 @@ body {
 
 .ascii-halo {
   position: absolute;
-  inset: 2% 6% 26%;
+  inset: 4% 8% 20%;
   z-index: -1;
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    rgb(224 82 45 / 0.1) 0%,
-    rgb(224 82 45 / 0.04) 48%,
+    rgb(215 58 58 / 0.1) 0%,
+    rgb(215 58 58 / 0.04) 48%,
     transparent 74%
   );
   filter: blur(18px);
-  opacity: 0.6;
+  opacity: 0.55;
   transition: opacity 300ms ease;
   pointer-events: none;
 }
@@ -216,56 +215,18 @@ body {
   opacity: 1;
 }
 
-.ascii-layer {
-  margin: 0;
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 9px;
-  line-height: 10px;
-  letter-spacing: 0.2px;
-  white-space: pre;
-  transition: color 260ms ease;
+.ascii-canvas {
+  display: block;
+  max-width: 100%;
 }
 
-/* Every layer after the first stacks over the one before it. */
-.ascii-layer + .ascii-layer {
+.ascii-reveal {
   position: absolute;
   inset: 0;
   pointer-events: none;
-}
-
-/* Contrasting by default: the three reds become three weights of ink and the
-   two greens two more, so the depth survives without the colour. */
-.ascii-band-1 { color: var(--color-ink); }
-.ascii-band-2 { color: var(--color-ink-soft); }
-.ascii-band-3 { color: var(--color-grey); }
-.ascii-band-4 { color: var(--color-ink); }
-.ascii-band-5 { color: var(--color-ink-soft); }
-
-/* Traced from the clip. The source is built for a black background, so its
-   hues are kept but lifted to carry on a light page. */
-.ascii-art[data-true] .ascii-band-1 { color: #87121a; }
-.ascii-art[data-true] .ascii-band-2 { color: #a4222a; }
-.ascii-art[data-true] .ascii-band-3 { color: #b95e49; }
-.ascii-art[data-true] .ascii-band-4 { color: #3e4e2c; }
-.ascii-art[data-true] .ascii-band-5 { color: #7fae60; }
-
-/* The reveal copies carry the opposite palette. */
-.ascii-alt {
   mask-image: linear-gradient(#0000, #0000);
   -webkit-mask-image: linear-gradient(#0000, #0000);
 }
-
-.ascii-alt.ascii-band-1 { color: #87121a; }
-.ascii-alt.ascii-band-2 { color: #a4222a; }
-.ascii-alt.ascii-band-3 { color: #b95e49; }
-.ascii-alt.ascii-band-4 { color: #3e4e2c; }
-.ascii-alt.ascii-band-5 { color: #7fae60; }
-
-.ascii-art[data-true] .ascii-alt.ascii-band-1 { color: var(--color-ink); }
-.ascii-art[data-true] .ascii-alt.ascii-band-2 { color: var(--color-ink-soft); }
-.ascii-art[data-true] .ascii-alt.ascii-band-3 { color: var(--color-grey); }
-.ascii-art[data-true] .ascii-alt.ascii-band-4 { color: var(--color-ink); }
-.ascii-art[data-true] .ascii-alt.ascii-band-5 { color: var(--color-ink-soft); }
 
 @layer components {
   /* Small uppercase label: Overview, Impact, the metadata headings. Sized to
