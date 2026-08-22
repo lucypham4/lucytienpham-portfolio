@@ -9,8 +9,9 @@ export default function Home() {
         {/* Same grid as the work below, so the line occupies exactly the right
             column and lines up with the second card. */}
         <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
-          <h1 className="text-lg leading-8 font-normal text-ink sm:col-start-2">
-            Designing, creating, and reimagining
+          {/* Sits between body copy and the 28px project titles below. */}
+          <h1 className="text-2xl leading-9 font-normal text-ink sm:col-start-2">
+            Multi-disciplinary designer creating and reimagining
           </h1>
         </div>
       </section>
