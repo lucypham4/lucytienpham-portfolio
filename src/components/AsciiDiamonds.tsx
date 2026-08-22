@@ -32,8 +32,9 @@ function octahedron(step: number) {
 
 const SHAPE = octahedron(26);
 
-/** Denser glyphs read as nearer, which is what gives the form its shading. */
-const RAMP = "·:aaAA";
+/** Tiled across the form so the shape is spelled out of her name. The trailing
+ *  space keeps the phrase from running into itself on repeat. */
+const PHRASE = "lucy cat tien pham ";
 
 type Point = { x: number; y: number; born: number };
 
@@ -79,11 +80,12 @@ export default function AsciiDiamonds({ onPick }: { onPick: () => void }) {
           const at = row * COLS + col;
           if (z <= depth[at]) continue;
           depth[at] = z;
-          const shade = Math.min(
-            RAMP.length - 1,
-            Math.max(0, Math.round(((z + 1) / 2) * (RAMP.length - 1))),
-          );
-          cells[at] = RAMP[shade];
+
+          // Stagger each row so the letters do not stack into columns.
+          const letter = PHRASE[(col + row * 5) % PHRASE.length];
+          // Near half in caps, far half lowercase — the same words carry the
+          // shading that a density ramp would have.
+          cells[at] = z > 0 ? letter.toUpperCase() : letter;
         }
       }
 
