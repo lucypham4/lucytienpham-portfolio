@@ -6,13 +6,11 @@ export default function Home() {
   return (
     <>
       <section className="shell-wide pt-5 pb-24 sm:pt-8">
-        {/* Same grid as the work below, so the line occupies exactly the left
-            column and wraps where the first card does. */}
+        {/* Same grid as the work below, so the line occupies exactly the right
+            column and lines up with the second card. */}
         <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
-          <h1 className="text-lg leading-8 font-normal text-ink">
-            Lucy is a designer{" "}
-            <strong className="font-bold">bridging the gap</strong> between
-            business objectives and user experiences.
+          <h1 className="text-lg leading-8 font-normal text-ink sm:col-start-2">
+            Designing, creating, and reimagining
           </h1>
         </div>
       </section>
