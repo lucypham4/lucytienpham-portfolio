@@ -15,9 +15,9 @@
 
   --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
 
-  --radius-pill: 20px;
-  --radius-card: 16px;
-  --radius-xl2: 40px;
+  --radius-pill: 12px;
+  --radius-card: 10px;
+  --radius-xl2: 20px;
 }
 
 html {
