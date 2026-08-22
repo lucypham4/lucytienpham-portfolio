@@ -79,7 +79,10 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     }
 
     let raf = 0;
-    let shown = -1;
+    // Paint the bud straight away: waiting for the first animation frame
+    // leaves the piece blank if that frame is delayed.
+    paint(0);
+    let shown = 0;
     const opened = performance.now();
 
     const tick = (now: number) => {

@@ -241,13 +241,13 @@ body {
 .ascii-band-4 { color: var(--color-ink); }
 .ascii-band-5 { color: var(--color-ink-soft); }
 
-/* True colours, averaged from the footage: dark stamen tips, mid petal, bright
-   petal edge, and the two greens of the stem. */
-.ascii-art[data-true] .ascii-band-1 { color: #7e2f16; }
-.ascii-art[data-true] .ascii-band-2 { color: #be522d; }
-.ascii-art[data-true] .ascii-band-3 { color: #e8763f; }
-.ascii-art[data-true] .ascii-band-4 { color: #4f5417; }
-.ascii-art[data-true] .ascii-band-5 { color: #8a9a4a; }
+/* Traced from the clip. The source is built for a black background, so its
+   hues are kept but lifted to carry on a light page. */
+.ascii-art[data-true] .ascii-band-1 { color: #87121a; }
+.ascii-art[data-true] .ascii-band-2 { color: #a4222a; }
+.ascii-art[data-true] .ascii-band-3 { color: #b95e49; }
+.ascii-art[data-true] .ascii-band-4 { color: #3e4e2c; }
+.ascii-art[data-true] .ascii-band-5 { color: #7fae60; }
 
 /* The reveal copies carry the opposite palette. */
 .ascii-alt {
@@ -255,11 +255,11 @@ body {
   -webkit-mask-image: linear-gradient(#0000, #0000);
 }
 
-.ascii-alt.ascii-band-1 { color: #7e2f16; }
-.ascii-alt.ascii-band-2 { color: #be522d; }
-.ascii-alt.ascii-band-3 { color: #e8763f; }
-.ascii-alt.ascii-band-4 { color: #4f5417; }
-.ascii-alt.ascii-band-5 { color: #8a9a4a; }
+.ascii-alt.ascii-band-1 { color: #87121a; }
+.ascii-alt.ascii-band-2 { color: #a4222a; }
+.ascii-alt.ascii-band-3 { color: #b95e49; }
+.ascii-alt.ascii-band-4 { color: #3e4e2c; }
+.ascii-alt.ascii-band-5 { color: #7fae60; }
 
 .ascii-art[data-true] .ascii-alt.ascii-band-1 { color: var(--color-ink); }
 .ascii-art[data-true] .ascii-alt.ascii-band-2 { color: var(--color-ink-soft); }
