@@ -24,7 +24,7 @@ export async function generateMetadata({
 
 const accentBg = {
   mint: "bg-mint",
-  grad: "bg-linear-to-b from-grad-blue/20 to-white",
+  grad: "bg-linear-to-b from-grad-blue/20 to-bg",
   none: "",
 } as const;
 
@@ -131,7 +131,7 @@ export default async function CaseStudyPage({
                 {project.stats.map((stat, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-3 rounded-pill bg-ink px-6 py-3 text-white"
+                    className="flex items-center gap-3 rounded-pill bg-ink px-6 py-3 text-bg"
                   >
                     {stat.icon && (
                       <Image src={stat.icon} alt="" width={24} height={24} />

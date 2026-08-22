@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 const links = [
   { label: "Home", href: "/" },
@@ -45,11 +46,11 @@ export default function Nav() {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-white/80 backdrop-blur-md transition-transform duration-300 ${
+      className={`sticky top-0 z-50 bg-bg/80 backdrop-blur-md transition-transform duration-300 ${
         hidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-2.5 md:px-[100px]">
+      <div className="shell-wide flex items-center justify-between py-2.5">
         <Link
           href="/"
           className="transition-opacity hover:opacity-80"
@@ -85,33 +86,37 @@ export default function Nav() {
           })}
         </nav>
 
-        <button
-          type="button"
-          aria-label="Toggle menu"
-          aria-expanded={open}
-          onClick={toggleMenu}
-          className="flex h-10 w-10 flex-col items-center justify-center gap-1.5 md:hidden"
-        >
-          <span
-            className={`block h-0.5 w-5 bg-ink transition-transform ${
-              open ? "translate-y-2 rotate-45" : ""
-            }`}
-          />
-          <span
-            className={`block h-0.5 w-5 bg-ink transition-opacity ${
-              open ? "opacity-0" : ""
-            }`}
-          />
-          <span
-            className={`block h-0.5 w-5 bg-ink transition-transform ${
-              open ? "-translate-y-2 -rotate-45" : ""
-            }`}
-          />
-        </button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+
+          <button
+            type="button"
+            aria-label="Toggle menu"
+            aria-expanded={open}
+            onClick={toggleMenu}
+            className="flex h-10 w-10 cursor-pointer flex-col items-center justify-center gap-1.5 md:hidden"
+          >
+            <span
+              className={`block h-0.5 w-5 bg-ink transition-transform ${
+                open ? "translate-y-2 rotate-45" : ""
+              }`}
+            />
+            <span
+              className={`block h-0.5 w-5 bg-ink transition-opacity ${
+                open ? "opacity-0" : ""
+              }`}
+            />
+            <span
+              className={`block h-0.5 w-5 bg-ink transition-transform ${
+                open ? "-translate-y-2 -rotate-45" : ""
+              }`}
+            />
+          </button>
+        </div>
       </div>
 
       {open && (
-        <nav className="flex flex-col border-t border-line bg-white px-6 pb-4 md:hidden">
+        <nav className="flex flex-col border-t border-line bg-bg px-6 pb-4 md:hidden">
           {links.map((link) => (
             <Link
               key={link.label}

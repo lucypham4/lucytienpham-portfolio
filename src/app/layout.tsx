@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
@@ -32,8 +33,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${openSans.variable} h-full antialiased`}>
+    // The theme script stamps data-theme on <html> before React hydrates, so
+    // the server markup and the client tree differ here by design.
+    <html
+      lang="en"
+      className={`${openSans.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
       <body className="font-sans min-h-full flex flex-col">
+        {/* Runs before first paint so the page never flashes the wrong
+            palette. Falls back to the operating system preference until the
+            visitor picks a side. */}
+        <Script id="theme-init" strategy="beforeInteractive">
+          {`(function(){try{var s=localStorage.getItem('theme');var d=s?s==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.dataset.theme=d?'dark':'light';}catch(e){}})();`}
+        </Script>
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />

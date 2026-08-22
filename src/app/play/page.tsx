@@ -65,7 +65,7 @@ function Labels({ labels }: { labels: string[] }) {
       {labels.map((label) => (
         <span
           key={label}
-          className="rounded-card bg-white/95 px-3 py-1.5 text-xs font-semibold tracking-[0.5px] text-ink uppercase shadow-sm"
+          className="rounded-card bg-bg/95 px-3 py-1.5 text-xs font-semibold tracking-[0.5px] text-ink uppercase shadow-sm"
         >
           {label}
         </span>

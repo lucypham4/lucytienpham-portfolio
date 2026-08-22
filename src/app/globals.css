@@ -1,6 +1,11 @@
 @import "tailwindcss";
 
+/* Dark mode is driven by data-theme on <html>, set before paint by the inline
+   script in layout.tsx so the page never flashes the wrong palette. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 @theme {
+  --color-bg: #ffffff;
   --color-ink: #1a1b1f;
   --color-ink-soft: #4f4f4f;
   --color-grey: #6e6e6e;
@@ -20,14 +25,27 @@
   --radius-xl2: 20px;
 }
 
+[data-theme="dark"] {
+  --color-bg: #101114;
+  --color-ink: #f0f0f2;
+  --color-ink-soft: #c2c2c8;
+  --color-grey: #9a9aa2;
+  --color-line: #2a2b30;
+  --color-line-soft: #2a2b30;
+  --color-shell: #1b1c21;
+  --color-mint: #12241f;
+  --color-violet: #241f2b;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 96px;
 }
 
 body {
-  background: #ffffff;
+  background: var(--color-bg);
   color: var(--color-ink);
+  transition: background-color 200ms ease, color 200ms ease;
   font-size: 16px;
   line-height: 28px;
 }
