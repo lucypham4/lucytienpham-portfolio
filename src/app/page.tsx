@@ -11,7 +11,7 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
           {/* Sits between body copy and the 28px project titles below. */}
           <h1 className="text-2xl leading-9 font-normal text-ink sm:col-start-2">
-            Multi-disciplinary designer creating and reimagining
+            Multi-disciplinary designer creating and reimagining experiences.
           </h1>
         </div>
       </section>
