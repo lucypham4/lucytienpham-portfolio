@@ -24,14 +24,39 @@ export default function MediaTabs({
 }) {
   const [active, setActive] = useState(0);
 
-  // Which button is mid-shine. Starts on the opening tab so the control
-  // announces itself, then runs again on each press; `press` counts up so
-  // pressing the same button twice still re-runs the effect below.
-  const [shine, setShine] = useState<{ index: number; press: number } | null>({
-    index: 0,
-    press: 0,
-  });
+  // Which button is mid-shine. `press` counts up so that pressing the same
+  // button again still re-runs the effect below.
+  const [shine, setShine] = useState<{ index: number; press: number } | null>(
+    null,
+  );
   const buttons = useRef<(HTMLButtonElement | null)[]>([]);
+  const tablist = useRef<HTMLDivElement | null>(null);
+
+  // Introduce the control the first time it is actually on screen. Running it
+  // at mount instead would spend the animation while the group is still
+  // thousands of pixels down the page, so nobody would see it.
+  useEffect(() => {
+    const el = tablist.current;
+    if (!el) return;
+
+    let introduced = false;
+
+    const check = () => {
+      if (introduced) return;
+      const box = el.getBoundingClientRect();
+      // Wait until the buttons are properly up the page, not just peeking in.
+      const onScreen = box.top < window.innerHeight * 0.85 && box.bottom > 0;
+      if (!onScreen) return;
+
+      introduced = true;
+      window.removeEventListener("scroll", check);
+      setShine({ index: 0, press: 0 });
+    };
+
+    check();
+    window.addEventListener("scroll", check, { passive: true });
+    return () => window.removeEventListener("scroll", check);
+  }, []);
 
   const press = (i: number) => {
     setActive(i);
@@ -55,6 +80,7 @@ export default function MediaTabs({
   return (
     <figure className="mt-8">
       <div
+        ref={tablist}
         role="tablist"
         aria-label={ariaLabel}
         className="flex flex-wrap justify-center gap-3"
