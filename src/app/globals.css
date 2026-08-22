@@ -7,13 +7,11 @@
   --color-line: #e6e6e6;
   --color-line-soft: #e7e7e7;
   --color-shell: #f7f7f7;
-  /* Brand green, kept as a token but no longer applied to text or accents. */
+  /* Brand green, taken from the logo mark. */
   --color-green: #02aa4b;
   --color-mint: #e9fff9;
   --color-grad-blue: #339af0;
   --color-violet: #eee6f3;
-  /* Pressed state for tab controls — dark grey, just short of black. */
-  --color-pressed: #2b2c31;
 
   --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
 
@@ -38,9 +36,8 @@ body {
    same colour. The angle needs @property so it can be interpolated; without it
    the gradient would jump rather than sweep.
 
-   The ring inherits currentColor, so it reads dark on the pale resting buttons
-   and light on the near-black pressed one. It runs only when data-shine is set,
-   which the component turns on for three rotations after a press. */
+   The ring is the brand green from the logo. It runs only when data-shine is
+   set, which the component turns on for three rotations after a press. */
 @property --shine-angle {
   syntax: "<angle>";
   initial-value: 0deg;
@@ -66,7 +63,7 @@ body {
   background: conic-gradient(
     from var(--shine-angle),
     transparent 0deg,
-    currentColor 50deg,
+    var(--color-green) 50deg,
     transparent 110deg
   );
   /* Punch out the middle so only the ring paints. */
@@ -78,7 +75,7 @@ body {
     linear-gradient(#000 0 0) content-box,
     linear-gradient(#000 0 0);
   mask-composite: exclude;
-  filter: drop-shadow(0 0 5px currentColor);
+  filter: drop-shadow(0 0 5px var(--color-green));
   opacity: 0;
   pointer-events: none;
   transition: opacity 200ms ease-out;
