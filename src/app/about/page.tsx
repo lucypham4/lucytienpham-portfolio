@@ -36,8 +36,9 @@ export default function AboutPage() {
           </p>
         </div>
 
-        {/* One column of photographs, scrolled past the pinned bio. */}
-        <div className="flex flex-col gap-4 sm:col-start-1 sm:row-start-1">
+        {/* One column of photographs, centred in its half of the grid and
+            scrolled past the pinned bio. */}
+        <div className="flex flex-col items-center gap-8 sm:col-start-1 sm:row-start-1">
           {photos.map((src) => (
             <Image
               key={src}
@@ -45,7 +46,7 @@ export default function AboutPage() {
               alt=""
               width={900}
               height={1200}
-              className="h-auto w-full rounded-card object-cover"
+              className="h-auto w-1/2 rounded-card object-cover"
             />
           ))}
         </div>
