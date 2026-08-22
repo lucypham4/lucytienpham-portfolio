@@ -7,10 +7,13 @@ import Lightbox from "@/components/Lightbox";
 type PlayItem = {
   labels: string[];
   href?: string;
-  media:
+  /* Every tile carries its media's proportions so its frame can hold its own
+     size while the media grows on hover — see `.grow-frame` in globals.css. */
+  media: { width: number; height: number } & (
     | { type: "image"; src: string; group?: string[] }
     | { type: "video"; poster: string; mp4: string; webm?: string }
-    | { type: "embed"; src: string };
+    | { type: "embed"; src: string }
+  );
 };
 
 const items: PlayItem[] = [
@@ -19,6 +22,8 @@ const items: PlayItem[] = [
     href: "https://lucypham4.github.io/Fear-Greed-Visualizer/",
     media: {
       type: "video",
+      width: 1280,
+      height: 662,
       poster: "/assets/screen-recording-2026-04-30-at-12-55-15-am-poster-0000000.jpg",
       mp4: "/assets/screen-recording-2026-04-30-at-12-55-15-am-mp4.mp4",
       webm: "/assets/screen-recording-2026-04-30-at-12-55-15-am-webm.webm",
@@ -28,6 +33,8 @@ const items: PlayItem[] = [
     labels: ["Still Life, Charcoal"],
     media: {
       type: "image",
+      width: 1094,
+      height: 794,
       src: "/assets/2025-08-28-12-36-5.jpeg",
       group: [
         "/assets/2025-08-28-12-36-5.jpeg",
@@ -37,12 +44,19 @@ const items: PlayItem[] = [
   },
   {
     labels: ["Human Generated"],
-    media: { type: "image", src: "/assets/human-generated.webp" },
+    media: {
+      type: "image",
+      width: 1024,
+      height: 768,
+      src: "/assets/human-generated.webp",
+    },
   },
   {
     labels: ["Typography Project", "Poster Design"],
     media: {
       type: "image",
+      width: 1296,
+      height: 1728,
       src: "/assets/type-specimen-posters3.png",
       group: [
         "/assets/type-specimen-posters3.png",
@@ -55,24 +69,39 @@ const items: PlayItem[] = [
     labels: [],
     media: {
       type: "image",
+      width: 733,
+      height: 1024,
       src: "/assets/1757023079568-e1078af3-f26a-435c-bff0-8228110fa901-1.jpg",
     },
   },
   {
     labels: ["Cat Face", "Personal Brand, Motion Concept"],
-    media: { type: "embed", src: "https://cdn.lottielab.com/l/4bqRgEy2H6HrbW.html" },
+    media: {
+      type: "embed",
+      // The animation has no size of its own; the tile sets it square.
+      width: 1000,
+      height: 1000,
+      src: "https://cdn.lottielab.com/l/4bqRgEy2H6HrbW.html",
+    },
   },
   {
     labels: ["Album Cover"],
     media: {
       type: "image",
+      width: 1024,
+      height: 768,
       src: "/assets/album-cover.webp",
       group: ["/assets/album-cover.webp", "/assets/2-album-cover.webp"],
     },
   },
   {
     labels: ["Massimo Vignelli Posters"],
-    media: { type: "image", src: "/assets/massimo-vignelli-posters.webp" },
+    media: {
+      type: "image",
+      width: 1024,
+      height: 768,
+      src: "/assets/massimo-vignelli-posters.webp",
+    },
   },
 ];
 
@@ -96,7 +125,7 @@ function Media({ media }: { media: PlayItem["media"] }) {
   if (media.type === "video") {
     return (
       <video
-        className="w-full rounded-card"
+        className="grow-media rounded-card"
         poster={media.poster}
         autoPlay
         loop
@@ -108,24 +137,24 @@ function Media({ media }: { media: PlayItem["media"] }) {
       </video>
     );
   }
+  // The animation is a live document, so it fills its frame but does not grow
+  // with the rest: resizing an <iframe> under the cursor makes it thrash.
   if (media.type === "embed") {
     return (
-      <div className="aspect-square w-full overflow-hidden rounded-card bg-shell">
-        <iframe
-          src={media.src}
-          title="Cat Face"
-          className="h-full w-full border-0"
-        />
-      </div>
+      <iframe
+        src={media.src}
+        title="Cat Face"
+        className="frame-media rounded-card border-0 bg-shell"
+      />
     );
   }
   return (
     <Image
       src={media.src}
       alt=""
-      width={1200}
-      height={1200}
-      className="h-auto w-full rounded-card"
+      width={media.width}
+      height={media.height}
+      className="grow-media rounded-card"
     />
   );
 }
@@ -138,7 +167,12 @@ export default function PlayPage() {
       <div className="columns-1 gap-4 sm:columns-2 lg:columns-3 [&>*]:mb-4">
         {items.map((item, i) => {
           const inner = (
-            <div className="group relative break-inside-avoid overflow-hidden rounded-card">
+            <div
+              className="group grow-frame break-inside-avoid"
+              style={{
+                aspectRatio: `${item.media.width} / ${item.media.height}`,
+              }}
+            >
               <Media media={item.media} />
               <Labels labels={item.labels} />
             </div>

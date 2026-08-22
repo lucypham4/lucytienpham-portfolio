@@ -8,13 +8,16 @@ import type { Media } from "@/content/types";
  * - `cover`   — natural height at full width, rounded (the default in-flow look)
  * - `contain` — whole asset fitted inside a fixed box, for panelled splashes
  * - `fill`    — fills a fixed box edge to edge, for full-bleed splashes
+ * - `grow`    — fills a `.grow-frame` from outside the flow, so hovering can
+ *               push it past the frame's edges without moving the layout
  */
-type Fit = "cover" | "contain" | "fill" | "bounded";
+type Fit = "cover" | "contain" | "fill" | "bounded" | "grow";
 
 const fitClassNames: Record<Fit, string> = {
   cover: "h-auto w-full rounded-card object-cover",
   contain: "h-full w-full object-contain",
   fill: "h-full w-full object-cover",
+  grow: "grow-media",
   // Keeps tall screenshots inside the viewport instead of running past it.
   bounded: "mx-auto h-auto max-h-[70vh] w-auto max-w-full rounded-card",
 };

@@ -262,3 +262,60 @@ body {
     @apply decoration-ink;
   }
 }
+
+/* The About page's photograph notes. Once the layout is wide enough for three
+   columns, a note is hidden until its own photograph reaches the line the bio
+   is pinned to, then rides that line until the photograph has passed it. The
+   active note is marked by AboutPhotos. */
+@layer components {
+  .photo-note {
+    transition: opacity 300ms ease;
+  }
+
+  @media (width >= 64rem) {
+    .photo-note {
+      opacity: 0;
+    }
+
+    .photo-note[data-active="true"] {
+      opacity: 1;
+    }
+  }
+}
+
+/* Media that fills a frame of its own proportions from outside the flow.
+   `.grow-media` adds the hover: the picture pushes 2px past every edge — 4px
+   larger each way — while the frame holds its size, so nothing around it
+   reflows under the cursor. A frame must not clip its contents.
+
+   A live embed keeps the plain `.frame-media`: resizing an <iframe> on every
+   frame of a transition makes the document inside it thrash. */
+@layer components {
+  .grow-frame {
+    position: relative;
+  }
+
+  .frame-media,
+  .grow-media {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+    /* Preflight caps images at their container; the hover has to pass it. */
+    max-width: none;
+    object-fit: cover;
+  }
+
+  .grow-media {
+    transition:
+      inset 300ms ease,
+      height 300ms ease,
+      width 300ms ease;
+  }
+
+  .grow-frame:hover .grow-media {
+    inset: -2px;
+    height: calc(100% + 4px);
+    width: calc(100% + 4px);
+  }
+}

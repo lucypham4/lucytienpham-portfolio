@@ -16,15 +16,17 @@ export default function Home() {
             <Link
               key={project.slug}
               href={`/work/${project.slug}`}
-              className="group block"
+              className="block"
             >
               {/* Every thumbnail is 16:9, so this frame aligns the rows
-                  without cropping any of them. */}
-              <div className="aspect-video overflow-hidden rounded-xl2">
+                  without cropping any of them. It also holds its size while
+                  the thumbnail grows on hover — see `.grow-frame`. */}
+              <div className="grow-frame aspect-video">
                 <MediaBlock
                   media={project.thumb}
                   priority={i === 0}
-                  className="h-full rounded-xl2 transition-opacity group-hover:opacity-80"
+                  fit="grow"
+                  className="rounded-xl2"
                 />
               </div>
 
