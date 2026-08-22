@@ -23,7 +23,7 @@ function BlockView({ block }: { block: Block }) {
       return (
         <h2
           id={slugify(block.label)}
-          className="mt-20 scroll-mt-28 text-[32px] leading-10 font-normal text-ink-soft first:mt-0"
+          className="mt-20 scroll-mt-[112px] sm:scroll-mt-[136px] text-[32px] leading-10 font-normal text-ink-soft first:mt-0"
         >
           {block.heading ?? block.label}
         </h2>

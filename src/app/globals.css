@@ -39,7 +39,14 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 96px;
+  /* Clears the sticky bar: 96px tall on mobile, 120px from sm up. */
+  scroll-padding-top: 112px;
+}
+
+@media (width >= 40rem) {
+  html {
+    scroll-padding-top: 136px;
+  }
 }
 
 body {

@@ -50,7 +50,7 @@ export default function Nav() {
         hidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
-      <div className="shell-wide flex items-center justify-between py-2.5">
+      <div className="shell-wide flex items-center justify-between py-5 sm:py-8">
         <Link
           href="/"
           className="transition-opacity hover:opacity-80"

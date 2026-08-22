@@ -94,7 +94,7 @@ export default async function CaseStudyPage({
             </p>
           )}
 
-          <div id="overview" className="mt-12 scroll-mt-28">
+          <div id="overview" className="mt-12 scroll-mt-[112px] sm:scroll-mt-[136px]">
             {project.overview && (
               <section
                 className={

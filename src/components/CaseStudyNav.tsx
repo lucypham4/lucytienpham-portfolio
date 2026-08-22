@@ -9,7 +9,7 @@ export type NavSection = { id: string; label: string };
  * Must clear the sticky site header plus the sections' scroll-margin, or a
  * clicked section lands just above the marker and the previous one lights up.
  */
-const READING_LINE = 200;
+const READING_LINE = 220;
 
 export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
   const [active, setActive] = useState(sections[0]?.id ?? "");
@@ -44,7 +44,7 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
     <aside className="hidden lg:block">
       <nav
         aria-label="Case study sections"
-        className="sticky top-28 flex flex-col gap-4 self-start"
+        className="sticky top-[136px] flex flex-col gap-4 self-start"
       >
         {sections.map((section) => {
           const isActive = section.id === active;
