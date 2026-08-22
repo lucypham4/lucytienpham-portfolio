@@ -185,10 +185,11 @@ body {
   }
 }
 
-/* ASCII spider lily on the home page. The drawing is generated in JS each
-   frame; this only styles the layers. Petals and stem are separate <pre>s so
-   each can take its own colour, and each has an alternate copy on top that the
-   cursor trail's mask reveals — so hovering shows whichever palette is hidden. */
+/* ASCII spider lily on the home page. Each frame of the bloom was sampled from
+   the footage into five colour bands, and each band gets its own <pre> because
+   a text node can only carry one colour. Every band has a second copy stacked
+   on top in the other palette, which the cursor trail reveals — so hovering
+   always shows whichever palette is currently hidden. */
 .ascii-art {
   position: relative;
   isolation: isolate;
@@ -196,17 +197,17 @@ body {
 
 .ascii-halo {
   position: absolute;
-  inset: 4% 10% 22%;
+  inset: 2% 6% 26%;
   z-index: -1;
   border-radius: 50%;
   background: radial-gradient(
     ellipse at center,
-    rgb(2 170 75 / 0.13) 0%,
-    rgb(2 170 75 / 0.05) 48%,
+    rgb(224 82 45 / 0.1) 0%,
+    rgb(224 82 45 / 0.04) 48%,
     transparent 74%
   );
-  filter: blur(16px);
-  opacity: 0.7;
+  filter: blur(18px);
+  opacity: 0.6;
   transition: opacity 300ms ease;
   pointer-events: none;
 }
@@ -220,39 +221,51 @@ body {
   font-family: var(--font-mono, ui-monospace, monospace);
   font-size: 9px;
   line-height: 10px;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.2px;
   white-space: pre;
   transition: color 260ms ease;
 }
 
-/* Every layer after the first is stacked over the one before it. */
+/* Every layer after the first stacks over the one before it. */
 .ascii-layer + .ascii-layer {
   position: absolute;
   inset: 0;
   pointer-events: none;
 }
 
-.ascii-petals {
-  color: var(--petal-now);
-}
+/* Contrasting by default: the three reds become three weights of ink and the
+   two greens two more, so the depth survives without the colour. */
+.ascii-band-1 { color: var(--color-ink); }
+.ascii-band-2 { color: var(--color-ink-soft); }
+.ascii-band-3 { color: var(--color-grey); }
+.ascii-band-4 { color: var(--color-ink); }
+.ascii-band-5 { color: var(--color-ink-soft); }
 
-.ascii-stem {
-  color: var(--stem-now);
-}
+/* True colours, averaged from the footage: dark stamen tips, mid petal, bright
+   petal edge, and the two greens of the stem. */
+.ascii-art[data-true] .ascii-band-1 { color: #7e2f16; }
+.ascii-art[data-true] .ascii-band-2 { color: #be522d; }
+.ascii-art[data-true] .ascii-band-3 { color: #e8763f; }
+.ascii-art[data-true] .ascii-band-4 { color: #4f5417; }
+.ascii-art[data-true] .ascii-band-5 { color: #8a9a4a; }
 
-/* Hidden until the cursor paints a trail over them. A transparent mask hides
-   the layer; `none` would remove the mask and show all of it. */
-.ascii-petals-alt {
-  color: var(--petal-alt);
+/* The reveal copies carry the opposite palette. */
+.ascii-alt {
   mask-image: linear-gradient(#0000, #0000);
   -webkit-mask-image: linear-gradient(#0000, #0000);
 }
 
-.ascii-stem-alt {
-  color: var(--stem-alt);
-  mask-image: linear-gradient(#0000, #0000);
-  -webkit-mask-image: linear-gradient(#0000, #0000);
-}
+.ascii-alt.ascii-band-1 { color: #7e2f16; }
+.ascii-alt.ascii-band-2 { color: #be522d; }
+.ascii-alt.ascii-band-3 { color: #e8763f; }
+.ascii-alt.ascii-band-4 { color: #4f5417; }
+.ascii-alt.ascii-band-5 { color: #8a9a4a; }
+
+.ascii-art[data-true] .ascii-alt.ascii-band-1 { color: var(--color-ink); }
+.ascii-art[data-true] .ascii-alt.ascii-band-2 { color: var(--color-ink-soft); }
+.ascii-art[data-true] .ascii-alt.ascii-band-3 { color: var(--color-grey); }
+.ascii-art[data-true] .ascii-alt.ascii-band-4 { color: var(--color-ink); }
+.ascii-art[data-true] .ascii-alt.ascii-band-5 { color: var(--color-ink-soft); }
 
 @layer components {
   /* Small uppercase label: Overview, Impact, the metadata headings. Sized to
