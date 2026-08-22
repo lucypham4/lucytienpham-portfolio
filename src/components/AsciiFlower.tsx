@@ -31,13 +31,14 @@ const PULL_MAX = 2;
 const PULL_RADIUS = 110;
 
 /**
- * A press runs one unbroken cycle: the flower closes back to a bud, the new
- * colour spreads out through it from the heart, and it opens again.
+ * A press runs one unbroken cycle: the flower closes back to a bud and opens
+ * again. The new colour is released from the heart the instant it is pressed
+ * and washes outward while that happens, rather than waiting its turn.
  */
 const WILT_MS = 1100;
-const SPREAD_MS = 800;
 const BLOOM_MS = 1700;
-const CYCLE_MS = WILT_MS + SPREAD_MS + BLOOM_MS;
+const CYCLE_MS = WILT_MS + BLOOM_MS;
+const SPREAD_MS = 900;
 
 type Point = { x: number; y: number; born: number };
 
@@ -199,8 +200,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       paint(reveal.current, true);
     };
 
-    // Open on load the same way a press does, minus the wilt.
-    shot.current.began = performance.now() - WILT_MS - SPREAD_MS;
+    // Open on load the same way a press does, minus the closing half.
+    shot.current.began = performance.now() - WILT_MS;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       shot.current.frame = LAST;
@@ -221,19 +222,19 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       if (s.began !== null) {
         const t = now - s.began;
 
+        // The wash runs from the moment of the press, alongside the closing
+        // and opening rather than between them.
+        const spread = Math.min(1, t / SPREAD_MS);
+        if (spread !== s.spread) {
+          s.spread = spread;
+          dirty = true;
+        }
+
         if (t < WILT_MS) {
           // Closing: the recorded bloom, played backwards.
           s.frame = Math.round(LAST * (1 - t / WILT_MS));
-          s.spread = 0;
-        } else if (t < WILT_MS + SPREAD_MS) {
-          s.frame = 0;
-          s.spread = (t - WILT_MS) / SPREAD_MS;
-          dirty = true; // the wash moves even while the frame holds
         } else if (t < CYCLE_MS) {
-          s.frame = Math.round(
-            LAST * ((t - WILT_MS - SPREAD_MS) / BLOOM_MS),
-          );
-          s.spread = 1;
+          s.frame = Math.round(LAST * ((t - WILT_MS) / BLOOM_MS));
         } else {
           s.frame = LAST;
           s.spread = 1;
