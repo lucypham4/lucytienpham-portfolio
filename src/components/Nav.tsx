@@ -56,13 +56,24 @@ export default function Nav() {
           className="transition-opacity hover:opacity-80"
           onClick={() => setOpen(false)}
         >
+          {/* Two marks, swapped in CSS by the same data-theme attribute the
+              rest of the palette uses — the black tile reads on the light
+              page, the white one on the dark. */}
           <Image
-            src="/assets/frame-17.svg"
+            src="/assets/logo-lightmode.svg"
             alt="Lucy Pham"
             width={56}
             height={56}
-            className="h-14 w-14"
+            className="h-14 w-14 dark:hidden"
             priority
+          />
+          <Image
+            src="/assets/logo-darkmode.svg"
+            alt=""
+            aria-hidden
+            width={56}
+            height={56}
+            className="hidden h-14 w-14 dark:block"
           />
         </Link>
 
