@@ -41,7 +41,7 @@ export default function Home() {
                     </span>
                   ))}
                 </div>
-                <h2 className="text-[28px] leading-9 font-bold text-ink">
+                <h2 className="text-[28px] leading-9 font-normal text-ink">
                   {project.title}
                 </h2>
                 <p className="text-base leading-7 text-grey">
