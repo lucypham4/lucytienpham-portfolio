@@ -127,10 +127,10 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   /** Everything the loop needs, held in refs so a press never restarts it. */
   const shot = useRef({
     frame: 0,
-    /** Opens in the clip's own colours. */
-    colour: true,
+    /** Opens contrasted against the page; a press hands it the clip's colours. */
+    colour: false,
     /** Colour the spread is moving toward, while a cycle runs. */
-    next: true,
+    next: false,
     /** How far the colour has washed out from the heart, 0 to 1. */
     spread: 1,
     /** When the running cycle began; null once it has finished. */
@@ -296,6 +296,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         dirty = true;
       }
 
+
       if (dirty) paint(base.current);
 
       points.current = points.current.filter((p) => now - p.born < TRAIL_MS);
@@ -337,10 +338,20 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     };
     window.addEventListener("resize", onResize);
 
+    // The ink and background are read per paint, so without this the flower
+    // keeps the old palette after a theme switch until something else asks
+    // for a repaint.
+    const watchTheme = new MutationObserver(repaint);
+    watchTheme.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["data-theme"],
+    });
+
     raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
+      watchTheme.disconnect();
     };
   }, []);
 

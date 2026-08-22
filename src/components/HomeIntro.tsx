@@ -7,7 +7,7 @@ import GlitchLine from "./GlitchLine";
 /** Cycled rather than picked at random, so every click changes the line and
  *  all three are reachable. */
 const LINES = [
-  "Multi-disciplinary designer creating and reimagining experiences.",
+  "Multidisciplinary designer creating and reimagining experiences.",
   "Bridging the gap between business objectives and user experiences.",
   "Probably making art with questionable posture.",
 ];
