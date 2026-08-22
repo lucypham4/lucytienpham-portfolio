@@ -187,8 +187,9 @@ body {
 
 /* The flower is painted to a canvas so every cell can carry its own colour
    from the clip — a text node can only hold one. A second canvas above it
-   holds the other palette, revealed only where the cursor trail's mask is
-   opaque, so hovering shows whichever palette is currently hidden. */
+   holds the same cells as random glyphs in the page background colour,
+   revealed only where the cursor trail's mask is opaque, so hovering scatters
+   the letters away rather than recolouring them. */
 .ascii-art {
   position: relative;
   isolation: isolate;

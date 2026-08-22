@@ -11,6 +11,10 @@ import {
 /** Tiled through the drawing so the flower is spelled out of her name. */
 const PHRASE = "lucy cat tien pham ";
 
+/** What the cursor scatters the letters into: a spread of glyph weights so the
+ *  disturbed cells read as static rather than as words. */
+const NOISE = "0]M%bBhqZdpr#Q\\uX!k&@aWJZvC<K^9z;~+\"{}|/$IwvY*=?3T7";
+
 /** Character cell. Small enough that the grid reads as the clip rather than as
  *  lettering, while each glyph is still legible up close. */
 const CELL_W = 3.9;
@@ -18,8 +22,14 @@ const CELL_H = 6;
 const FONT_PX = 6;
 
 const TRAIL_MS = 520;
-const TRAIL_RADIUS = 90;
+const TRAIL_RADIUS = 45;
 const BLOOM_MS = 3200;
+/** How often the disturbed letters re-roll while hovered. */
+const SCATTER_MS = 70;
+/** The whole drawing trembles: every glyph is nudged a fraction off its cell,
+ *  re-rolled on this interval so the flower never sits perfectly still. */
+const JITTER = 0.7;
+const VIBRATE_MS = 80;
 
 type Point = { x: number; y: number; born: number };
 
@@ -39,7 +49,7 @@ const FRAMES = FLOWER_FRAMES.map(decode);
 
 export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   // Opens in the clip's own colours; a click flips it to a single contrasting
-  // ink. The hover trail always reveals whichever of the two is hidden.
+  // ink. Hovering scatters the letters into the background colour.
   const [trueColour, setTrueColour] = useState(true);
   // Bumped on every click to replay the bloom from the bud.
   const [run, setRun] = useState(0);
@@ -55,18 +65,34 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     const height = FLOWER_ROWS * CELL_H;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    const ink = getComputedStyle(document.documentElement)
-      .getPropertyValue("--color-ink")
-      .trim();
+    const token = (name: string) =>
+      getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
-    const paint = (canvas: HTMLCanvasElement | null, colours: boolean) => {
-      const ctx = canvas?.getContext("2d");
-      if (!canvas || !ctx) return;
-
+    const size = (canvas: HTMLCanvasElement) => {
+      if (canvas.width === width * dpr) return;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
+    };
+
+    /**
+     * `scatter` paints the disturbed layer: random glyphs in the page's own
+     * background colour, so where the cursor passes the flower reads as having
+     * been scattered away rather than recoloured.
+     */
+    const paint = (
+      canvas: HTMLCanvasElement | null,
+      colours: boolean,
+      scatter = false,
+    ) => {
+      const ctx = canvas?.getContext("2d");
+      if (!canvas || !ctx) return;
+
+      // Read per paint so the colours follow a theme change without a remount.
+      const fill = scatter ? token("--color-bg") : token("--color-ink");
+
+      size(canvas);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
       ctx.font = `${FONT_PX}px var(--font-mono, ui-monospace, monospace)`;
@@ -77,11 +103,13 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         for (let col = 0; col < FLOWER_COLS; col++) {
           const slot = cells[row * FLOWER_COLS + col];
           if (!slot) continue;
-          ctx.fillStyle = colours ? PALETTE[slot - 1] : ink;
+          ctx.fillStyle = scatter || !colours ? fill : PALETTE[slot - 1];
           ctx.fillText(
-            PHRASE[(col + row * 5) % PHRASE.length],
-            col * CELL_W,
-            row * CELL_H,
+            scatter
+              ? NOISE[(Math.random() * NOISE.length) | 0]
+              : PHRASE[(col + row * 5) % PHRASE.length],
+            col * CELL_W + (Math.random() - 0.5) * JITTER * 2,
+            row * CELL_H + (Math.random() - 0.5) * JITTER * 2,
           );
         }
       }
@@ -89,8 +117,11 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
 
     const repaint = () => {
       paint(base.current, trueColour);
-      paint(reveal.current, !trueColour);
+      paint(reveal.current, !trueColour, true);
     };
+
+    let lastScatter = 0;
+    let lastVibrate = 0;
 
     repaint();
 
@@ -117,7 +148,20 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         repaint();
       }
 
+      // Keep the whole flower trembling whether or not anyone is looking at it.
+      if (now - lastVibrate > VIBRATE_MS) {
+        lastVibrate = now;
+        paint(base.current, trueColour);
+      }
+
       points.current = points.current.filter((p) => now - p.born < TRAIL_MS);
+
+      // Re-scatter while the cursor is over the piece, slower than the frame
+      // rate so the static reads as flicker rather than a blur.
+      if (points.current.length && now - lastScatter > SCATTER_MS) {
+        lastScatter = now;
+        paint(reveal.current, !trueColour, true);
+      }
 
       const mask = points.current
         .map((p) => {
