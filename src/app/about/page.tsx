@@ -16,31 +16,19 @@ const photos = [
 
 export default function AboutPage() {
   return (
-    <div className="shell py-6 md:py-10">
-      <section className="grid grid-cols-1 gap-12 md:grid-cols-[1fr_1.2fr] md:items-start">
-        <Image
-          src="/assets/lp-headshot-1-5x.avif"
-          alt="Lucy Pham"
-          width={900}
-          height={1100}
-          priority
-          className="h-auto w-full rounded-xl2 object-cover"
-        />
-
-        <div>
-          <h1 className="text-[40px] leading-[48px] font-normal text-ink">
-            Hello I&apos;m Lucy,
-          </h1>
-          <p className="mt-6 text-2xl leading-9 text-ink">
-            a multidisciplinary designer.
-          </p>
-          <p className="prose-body mt-6 text-lg leading-8">
+    <div className="shell-wide py-5 sm:py-8">
+      {/* Same grid and type as the home intro, so the two pages open alike. */}
+      <section className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+        <div className="text-2xl leading-9 font-normal text-ink sm:col-start-2">
+          <h1>Hello I&apos;m Lucy,</h1>
+          <p className="mt-6">a multidisciplinary designer.</p>
+          <p className="mt-6">
             My experience comes from roles in brand development, graphic design,
             UX research and design, and data visualization. I base all of my
             decisions on user research and business value, whether I&apos;m
             designing a marketing flyer or a webpage.
           </p>
-          <p className="prose-body mt-4 text-lg leading-8">
+          <p className="mt-6">
             Fun fact: My Vietnamese name is Cát Tiên Phạm, and the accent marks
             were used to create my logo!
           </p>
