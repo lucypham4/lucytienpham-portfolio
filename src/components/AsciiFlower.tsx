@@ -26,10 +26,10 @@ const TRAIL_RADIUS = 45;
 const BLOOM_MS = 3200;
 /** How often the disturbed letters re-roll while hovered. */
 const SCATTER_MS = 70;
-/** The whole drawing trembles: every glyph is nudged a fraction off its cell,
- *  re-rolled on this interval so the flower never sits perfectly still. */
-const JITTER = 0.7;
-const VIBRATE_MS = 80;
+/** Letters lean toward the cursor, never straying more than this from where
+ *  they belong, and only within reach of it. */
+const PULL_MAX = 2;
+const PULL_RADIUS = 110;
 
 type Point = { x: number; y: number; born: number };
 
@@ -58,6 +58,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   const reveal = useRef<HTMLCanvasElement>(null);
   const stage = useRef<HTMLButtonElement>(null);
   const points = useRef<Point[]>([]);
+  const cursor = useRef<{ x: number; y: number } | null>(null);
   const frame = useRef(0);
 
   useEffect(() => {
@@ -98,18 +99,35 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       ctx.font = `${FONT_PX}px var(--font-mono, ui-monospace, monospace)`;
       ctx.textBaseline = "top";
 
+      const at = cursor.current;
       const cells = FRAMES[frame.current];
       for (let row = 0; row < FLOWER_ROWS; row++) {
         for (let col = 0; col < FLOWER_COLS; col++) {
           const slot = cells[row * FLOWER_COLS + col];
           if (!slot) continue;
+          const x = col * CELL_W;
+          const y = row * CELL_H;
+
+          // Lean toward the cursor, falling off with distance and capped so a
+          // letter never drifts far from its own cell.
+          let leanX = 0;
+          let leanY = 0;
+          if (at) {
+            const dx = at.x - x;
+            const dy = at.y - y;
+            const away = Math.hypot(dx, dy) || 1;
+            const pull = Math.max(0, 1 - away / PULL_RADIUS) * PULL_MAX;
+            leanX = (dx / away) * pull;
+            leanY = (dy / away) * pull;
+          }
+
           ctx.fillStyle = scatter || !colours ? fill : PALETTE[slot - 1];
           ctx.fillText(
             scatter
               ? NOISE[(Math.random() * NOISE.length) | 0]
               : PHRASE[(col + row * 5) % PHRASE.length],
-            col * CELL_W + (Math.random() - 0.5) * JITTER * 2,
-            row * CELL_H + (Math.random() - 0.5) * JITTER * 2,
+            x + leanX,
+            y + leanY,
           );
         }
       }
@@ -121,7 +139,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     };
 
     let lastScatter = 0;
-    let lastVibrate = 0;
+    let leaning = "";
 
     repaint();
 
@@ -148,9 +166,12 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         repaint();
       }
 
-      // Keep the whole flower trembling whether or not anyone is looking at it.
-      if (now - lastVibrate > VIBRATE_MS) {
-        lastVibrate = now;
+      // Redraw only when the cursor has actually moved, so the letters follow
+      // it without the piece repainting itself forever while idle.
+      const at = cursor.current;
+      const where = at ? `${Math.round(at.x)},${Math.round(at.y)}` : "";
+      if (where !== leaning) {
+        leaning = where;
         paint(base.current, trueColour);
       }
 
@@ -191,11 +212,10 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   const track = (e: React.MouseEvent) => {
     const box = stage.current?.getBoundingClientRect();
     if (!box) return;
-    points.current.push({
-      x: e.clientX - box.left,
-      y: e.clientY - box.top,
-      born: performance.now(),
-    });
+    const x = e.clientX - box.left;
+    const y = e.clientY - box.top;
+    cursor.current = { x, y };
+    points.current.push({ x, y, born: performance.now() });
     if (points.current.length > 18) points.current.shift();
   };
 
@@ -208,7 +228,10 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         setRun((n) => n + 1);
         onPick();
       }}
-      onMouseLeave={() => (points.current = [])}
+      onMouseLeave={() => {
+        points.current = [];
+        cursor.current = null;
+      }}
       onMouseMove={track}
       aria-label="Change the intro line and the flower's colours"
       className="ascii-art relative block w-full cursor-pointer select-none"
