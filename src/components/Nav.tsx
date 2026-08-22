@@ -37,6 +37,17 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Going "home" from the home page is not a navigation, so Next has nothing
+  // to scroll. Clear any #work left in the address bar and return to the top
+  // by hand.
+  const goHome = (e: React.MouseEvent) => {
+    setOpen(false);
+    if (pathname !== "/") return;
+    e.preventDefault();
+    window.history.replaceState(null, "", "/");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   // A hidden bar must not swallow the menu that is open inside it.
   const toggleMenu = () =>
     setOpen((wasOpen) => {
@@ -54,7 +65,7 @@ export default function Nav() {
         <Link
           href="/"
           className="transition-opacity hover:opacity-80"
-          onClick={() => setOpen(false)}
+          onClick={goHome}
         >
           <LogoMark className="h-14 w-14" />
         </Link>
@@ -69,6 +80,7 @@ export default function Nav() {
               <Link
                 key={link.label}
                 href={link.href}
+                onClick={link.href === "/" ? goHome : undefined}
                 className={`rounded-card px-4 py-2 text-base uppercase tracking-[1px] transition-colors hover:bg-line ${
                   active ? "text-ink" : "text-ink"
                 }`}
@@ -114,7 +126,7 @@ export default function Nav() {
             <Link
               key={link.label}
               href={link.href}
-              onClick={() => setOpen(false)}
+              onClick={link.href === "/" ? goHome : () => setOpen(false)}
               className="py-3 text-base uppercase tracking-[1px]"
             >
               {link.label}

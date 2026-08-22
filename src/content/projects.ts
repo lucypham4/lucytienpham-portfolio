@@ -24,7 +24,7 @@ export const projects: Project[] = [
       },
     },
     overview: {
-      html: 'To modernize a decade-old digital presence and eliminate technical fragility, I led the transformation of Voyage Theater Company&rsquo;s &ldquo;messy patchwork&rdquo; WordPress site into a professional digital stage.',
+      html: 'To modernize a decade-old digital presence and eliminate technical fragility, I led the transformation of <a href="https://voyagetheatercompany.org/" target="_blank" rel="noopener noreferrer">Voyage Theater Company</a>&rsquo;s &ldquo;messy patchwork&rdquo; WordPress site into a professional digital stage.',
       impact:
         "Replaced a decade-old WordPress build with a templated CMS and trained the staff to run it, so a small non-technical team can update the site without breaking it.",
     },

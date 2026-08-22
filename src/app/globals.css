@@ -253,4 +253,12 @@ body {
   .prose-body strong {
     @apply text-ink font-semibold;
   }
+
+  .prose-body a {
+    @apply text-ink underline decoration-line-soft underline-offset-4 transition-colors;
+  }
+
+  .prose-body a:hover {
+    @apply decoration-ink;
+  }
 }
