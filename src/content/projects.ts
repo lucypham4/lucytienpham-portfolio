@@ -665,11 +665,11 @@ export const projects: Project[] = [
     tagline:
       "A 64-page informational coffee table book that makes an invisible element legible.",
     categories: ["Editorial Design", "Personal Project"],
-    // TODO: swap for a collage of the three spreads once the exports land:
-    // { type: "collage", items: [{ src: `${A}/silicon-page-1.png`, alt: "…" }, …] }
+    // TODO: swap in the three page exports once they land:
+    // { type: "slideshow", items: [{ src: `${A}/silicon-page-1.png`, alt: "…" }, …] }
     thumb: {
       type: "pending",
-      note: "Thumbnail — the three pages you are proudest of, as three separate exports.",
+      note: "Thumbnail — the three pages you are proudest of, as three separate exports, cycled one per second.",
     },
     hero: {
       headline: "Designing 64 pages about an element nobody pictures.",

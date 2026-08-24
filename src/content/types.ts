@@ -2,10 +2,15 @@ export type Media =
   | { type: "image"; src: string; alt?: string }
   | { type: "video"; poster: string; mp4: string; webm?: string }
   /**
-   * Several assets shown side by side inside one 16:9 frame, for thumbnails
-   * that need to stand for a whole artefact rather than a single screen.
+   * Stills cycled in place the way a GIF would, for a thumbnail that has to
+   * stand for a whole artefact rather than a single screen. `interval` is the
+   * hold per still in milliseconds.
    */
-  | { type: "collage"; items: { src: string; alt?: string }[] }
+  | {
+      type: "slideshow";
+      items: { src: string; alt?: string }[];
+      interval?: number;
+    }
   /**
    * A slot whose artwork has not been handed over yet. It renders as a labelled
    * dashed box so an in-progress case study can be laid out and reviewed
