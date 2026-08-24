@@ -661,34 +661,34 @@ export const projects: Project[] = [
 
   {
     slug: "silicon",
-    title: "Silicon",
+    title: "Si: Silicon",
     tagline:
-      "A 64-page informational coffee table book that makes an invisible element legible.",
+      "A 64-page informational coffee table book about the element hiding inside everything.",
     categories: ["Editorial Design", "Personal Project"],
-    // TODO: swap in the three page exports once they land:
-    // { type: "slideshow", items: [{ src: `${A}/silicon-page-1.png`, alt: "…" }, …] }
+    // TODO: replace the pending slots below once the exports land. Each note
+    // names the file it is waiting for.
     thumb: {
       type: "pending",
-      note: "Thumbnail — the three pages you are proudest of, as three separate exports, cycled one per second.",
+      note: "Thumbnail — silicon-spread-silicates.jpg, silicon-spread-terminology.jpg, silicon-spread-society.jpg, cut one per second.",
     },
     hero: {
-      headline: "Designing 64 pages about an element nobody pictures.",
-      fullBleed: true,
+      headline: "Sixty-four pages on the element hiding inside everything.",
+      panel: true,
       media: {
         type: "pending",
-        note: "Hero — one wide photograph or render of the finished book.",
+        note: "Hero — silicon-cover.jpg (the periodic-table cover shot).",
       },
     },
     overview: {
-      html: "Silicon is everywhere and almost never seen: in the rock under a quarry, the glass in a window, and the chip inside the phone this is being read on. Over a single academic semester I researched, designed, and produced a <strong>64-page informational coffee table book</strong> about it, using <strong>iconography as the book&rsquo;s navigation system</strong> rather than page numbers alone.",
+      html: "Silicon is the second most abundant element in the Earth&rsquo;s crust and almost none of it is ever seen: it is the sand on a beach, the glass in a window, the lens in an eye implant, and the chip inside the phone this is being read on. Over one semester I researched, wrote, designed, and produced <strong>Si: Silicon</strong> &mdash; a <strong>64-page informational coffee table book</strong> that follows the element from geology to geopolitics, built around an <strong>icon system that doubles as the book&rsquo;s navigation</strong>.",
       impact:
-        "A finished 64-page book designed solo in roughly 2.5 months, carrying an original icon system, a series of topographic maps built from real elevation data in QGIS, and 3D-rendered chapter openers.",
+        "A finished, printed 64-page book made solo in 2.5 months — 50 spreads across five parts, an original icon set rendered in 3D for every chapter opener, and topographic line work generated from real elevation data in QGIS.",
     },
     meta: [
-      { label: "Duration", value: "One academic semester (~2.5 months)" },
+      { label: "Duration", value: "October – December 2026\nOne semester (~2.5 months)" },
       {
         label: "My Role",
-        value: "Sole designer\nResearch, editorial structure, illustration, production",
+        value: "Sole designer\nResearch, writing, editorial structure, illustration, production",
       },
       {
         label: "Tools",
@@ -703,42 +703,58 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "A coffee table book is read the way nobody reads a textbook: opened anywhere, put down after two spreads, picked up again a week later. That makes it the hardest possible home for a technical subject, and the reason I chose one. Silicon touches geology, manufacturing, and everyday objects at once, so the challenge was never finding material &mdash; it was <strong>giving a reader a way back in on every page</strong>.",
+        html: "A coffee table book is read the way nobody reads a textbook: opened anywhere, put down after two spreads, picked up again a week later. That makes it the hardest possible home for a technical subject, and the reason I chose one. Silicon runs from quartz to wafers to supply chains, so the challenge was never finding material &mdash; it was <strong>giving a reader a way in on whichever page they happened to open</strong>.",
       },
       {
         kind: "callout",
-        html: "How might a reader move through 64 pages on a single element and always know where they are, no matter which page they open to?",
+        html: "How might a reader move through 64 pages on a single element and always know where they are, no matter which spread they open to?",
+      },
+      { kind: "heading", text: "Image research" },
+      {
+        kind: "text",
+        html: "I started by collecting the element visually rather than verbally &mdash; quartz, thin-section photomicrographs, server halls, cleanroom suits, silicone sheeting, solar fields, a chest x-ray, the lunar surface. Laid out together, the collection made the book&rsquo;s real argument obvious before a word was written: <strong>these images have nothing in common except silicon</strong>, and that range is the story.",
       },
       {
         kind: "media",
-        media: {
-          type: "pending",
-          note: "Subject research — moodboard, reference collection, or early sketches.",
-        },
+        media: { type: "pending", note: "silicon-moodboard.jpg — the image research grid." },
       },
 
       {
         kind: "section",
         label: "Structure & Flatplan",
-        heading: "Sixty-Four Pages, Planned Before A Single One Was Designed.",
+        heading: "Fifty Spreads, Planned Before A Single One Was Designed.",
       },
       {
         kind: "text",
-        html: "Before designing anything, I mapped all 64 pages as a flatplan. Working at the spread level first meant I was <strong>designing a reading experience rather than a stack of layouts</strong> &mdash; I could see where the book got heavy with text, where it needed a full-bleed image to breathe, and whether every chapter got a fair share of the page count.",
+        html: "Before designing anything, I built a flatplan of the whole book &mdash; every spread, its working title, its content, and the reference images pinned underneath it. Working at the spread level first meant I was <strong>designing a reading experience rather than a stack of layouts</strong>: I could see where the book got heavy with text, where it needed a full-bleed image to breathe, and whether each part earned its page count.",
       },
       {
         kind: "media",
-        media: { type: "pending", note: "Flatplan or page map for all 64 pages." },
+        media: { type: "pending", note: "silicon-flatplan.jpg — the full flatplan board." },
       },
-      { kind: "heading", text: "What the plan had to settle" },
+      { kind: "heading", text: "Five parts, and a route through them" },
+      {
+        kind: "text",
+        html: "The research resolved into five parts that move outward from the rock to the world it built:",
+      },
       {
         kind: "list",
         items: [
-          "How to divide the research into chapters a reader could enter in any order",
-          "How many spreads each chapter earned, and where the pacing needed a break",
-          "Which ideas were better carried by a diagram than by a paragraph",
-          "How the chapter openers would announce a shift without restating it in words",
+          "Part 01: Origins — sand to silicon, the geology of the crust, silica and the silicates",
+          "Part 02: Transformations — semiconductor physics, extraction, zone refining, silicones, and the terminology that separates silicon from silica, silicate, and silicone",
+          "Part 03: Tech & Beyond — sand to wafer, the transistor revolution, chips to circuits, the global supply chain, and chips as geopolitics",
+          "Part 04: Challenges — the physical limits of silicon, environmental costs, the hidden labour behind it, and the digital divide",
+          "Part 05: Futures — quantum, graphene, and AI hardware, silicon and energy, and silicon and society",
         ],
+      },
+      { kind: "heading", text: "Composing at the spread level" },
+      {
+        kind: "text",
+        html: "I wireframed the spreads as grey blocks before any image or line of copy went in. Designing the rhythm first &mdash; full-bleed against half-page against a single column of text &mdash; is what keeps 50 spreads from settling into the same shape, and it let me <strong>fix the pacing while it was still cheap to change</strong>.",
+      },
+      {
+        kind: "media",
+        media: { type: "pending", note: "silicon-layout-grid.jpg — the wireframed spread compositions." },
       },
 
       {
@@ -748,27 +764,24 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "The system had to hold across 64 pages built over 2.5 months, so I settled it early: a single grid, a fixed type hierarchy, and a palette that could survive both dense diagram pages and full-bleed imagery. Once those were locked, every later spread became a question of <strong>composition rather than reinvention</strong>.",
+        html: "The system had to hold across 64 pages built over 2.5 months, so I settled it early: a square trim, a single grid, a fixed type hierarchy, and a monospaced voice for anything technical &mdash; molecular diagrams, contour labels, figure references. The cover states the whole logic in one mark: <strong>the element rendered as its periodic-table cell</strong>, 14 &middot; Si &middot; 28.085, white on black. Once those decisions were locked, every later spread became a question of <strong>composition rather than reinvention</strong>.",
       },
       {
         kind: "grid",
         cols: 2,
         media: [
-          { type: "pending", note: "Grid and layout system." },
-          { type: "pending", note: "Type specimen and colour palette." },
+          { type: "pending", note: "silicon-type-specimen.jpg — type hierarchy and palette." },
+          { type: "pending", note: "silicon-grid.jpg — the grid and margins." },
         ],
       },
       { kind: "heading", text: "Iconography as the navigation system" },
       {
         kind: "text",
-        html: "Rather than leaning on page numbers, I built an <strong>icon set that doubles as wayfinding</strong>. Each chapter owns a mark; the mark recurs at the chapter opener and in the running elements, so a reader opening to a random spread can place themselves in the book before reading a word. The same visual language then does explanatory work inside the pages &mdash; the icons carry the diagrams too, which is what keeps the book feeling like one voice instead of illustration bolted onto text.",
+        html: "Rather than leaning on page numbers, I built an <strong>icon set that doubles as wayfinding</strong>. Each part owns a mark, and the mark recurs at its opener, so a reader landing on a random spread can place themselves in the book before reading a word. Keeping the icons in the same visual language as the diagrams is what stops the book feeling like illustration bolted onto text.",
       },
       {
         kind: "media",
-        media: {
-          type: "pending",
-          note: "The full icon set — the navigational marks laid out together.",
-        },
+        media: { type: "pending", note: "silicon-icons.jpg — the five navigational marks laid out together." },
       },
 
       {
@@ -778,41 +791,49 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "Each chapter opens on a rendered title page, then moves between full-bleed imagery, diagram spreads, and text pages at the pace the flatplan set. Below is a walk through the book, chapter by chapter.",
+        html: "Each part opens on a rendered title page, then moves between full-bleed imagery, diagram spreads, and text pages at the pace the flatplan set.",
       },
       {
         kind: "tabs",
         items: [
           {
-            label: "Chapter 01",
+            label: "01 Origins",
             cols: 2,
             media: [
-              { type: "pending", note: "Chapter 01 — title page." },
-              { type: "pending", note: "Chapter 01 — a spread from inside." },
+              { type: "pending", note: "Part 01 — title page." },
+              { type: "pending", note: "silicon-spread-silicates.jpg — the Silicates spread." },
             ],
           },
           {
-            label: "Chapter 02",
+            label: "02 Transformations",
             cols: 2,
             media: [
-              { type: "pending", note: "Chapter 02 — title page." },
-              { type: "pending", note: "Chapter 02 — a spread from inside." },
+              { type: "pending", note: "Part 02 — title page." },
+              { type: "pending", note: "silicon-spread-terminology.jpg — the Terminology spread." },
             ],
           },
           {
-            label: "Chapter 03",
+            label: "03 Tech & Beyond",
             cols: 2,
             media: [
-              { type: "pending", note: "Chapter 03 — title page." },
-              { type: "pending", note: "Chapter 03 — a spread from inside." },
+              { type: "pending", note: "Part 03 — title page." },
+              { type: "pending", note: "Part 03 — a spread from inside." },
             ],
           },
           {
-            label: "Chapter 04",
+            label: "04 Challenges",
             cols: 2,
             media: [
-              { type: "pending", note: "Chapter 04 — title page." },
-              { type: "pending", note: "Chapter 04 — a spread from inside." },
+              { type: "pending", note: "Part 04 — title page." },
+              { type: "pending", note: "Part 04 — a spread from inside." },
+            ],
+          },
+          {
+            label: "05 Futures",
+            cols: 2,
+            media: [
+              { type: "pending", note: "Part 05 — title page." },
+              { type: "pending", note: "silicon-spread-society.jpg — the Silicon and Society spread." },
             ],
           },
         ],
@@ -825,32 +846,32 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "Two spreads in the walkthrough above are not drawn by hand, and neither is made in the software this project is normally credited to. Both were skills I picked up during the semester specifically because the book needed them.",
+        html: "Two of the things holding the book together are not drawn by hand, and neither is made in the software this project would normally be credited to. Both were skills I picked up mid-semester, specifically because the book needed them.",
       },
       { kind: "heading", text: "Coding topography in QGIS" },
       {
         kind: "text",
-        html: "The book&rsquo;s landscape pages are built from real elevation data. I used <strong>QGIS</strong> to generate contour layers from that data, then exported them and <strong>rebuilt the output as clean vectors in Adobe Illustrator</strong> &mdash; reweighting the line work, cutting the density down to what a printed page could actually hold, and recolouring it into the book&rsquo;s palette. The result is topography that is accurate at the source and still reads as part of the design system rather than as a screenshot dropped into a layout.",
+        html: "The book&rsquo;s contour line work is generated from real elevation data rather than drawn. I used <strong>QGIS</strong> to build contour layers from that data &mdash; Mt. Etna, whose basalt supplies the silicate photomicrograph the lines sit against &mdash; then <strong>exported them and rebuilt the output as clean vectors in Adobe Illustrator</strong>: reweighting the strokes, thinning the density down to what a printed page can actually hold, and setting the elevation labels in the book&rsquo;s own type. The result is topography that is accurate at the source and still reads as part of the design system rather than a screenshot dropped into a layout.",
       },
       {
         kind: "grid",
         cols: 2,
         media: [
-          { type: "pending", note: "QGIS — the contour output before it was vectorised." },
-          { type: "pending", note: "The finished topographic spread in the book." },
+          { type: "pending", note: "silicon-qgis.png — the QGIS contour output before vectorising." },
+          { type: "pending", note: "silicon-spread-silicates.jpg — the finished topographic spread." },
         ],
       },
       { kind: "heading", text: "Rendering the navigation icons in 3D" },
       {
         kind: "text",
-        html: "The chapter marks live twice. Flat, they are the navigation system. At each chapter opener they appear as <strong>3D renders built in Adobe Dimension</strong>, given material and lighting so the title pages carry visual weight the flat marks could not. It gives every chapter a moment of arrival while keeping the icon set the reader already recognises.",
+        html: "The part marks live twice. Flat, they are the navigation system. At each opener they appear as <strong>3D renders built in Adobe Dimension</strong> &mdash; given material, lighting, and depth &mdash; so the title pages carry visual weight the flat marks could not. Every part gets a moment of arrival, using an icon the reader already knows.",
       },
       {
         kind: "grid",
         cols: 2,
         media: [
-          { type: "pending", note: "Adobe Dimension — an icon mid-render, or the flat vs. 3D pair." },
-          { type: "pending", note: "A finished chapter title page using the 3D icon." },
+          { type: "pending", note: "silicon-dimension.png — a Dimension render, or the flat vs. 3D pair." },
+          { type: "pending", note: "silicon-title-page.jpg — a finished title page using the 3D icon." },
         ],
       },
       {
@@ -858,15 +879,15 @@ export const projects: Project[] = [
         items: [
           {
             title: "QGIS → Illustrator",
-            body: "Generating contour data in a GIS tool and rebuilding it as editable vector artwork that obeys the book's grid and palette.",
+            body: "Generating contour layers from real elevation data in a GIS tool, then rebuilding them as editable vector artwork that obeys the book's grid, weights, and type.",
           },
           {
             title: "Adobe Dimension",
-            body: "Modelling, texturing, and lighting the flat icon set so every chapter opener gets a rendered counterpart.",
+            body: "Modelling, texturing, and lighting the flat icon set so every part opener gets a rendered counterpart of its navigational mark.",
           },
           {
             title: "InDesign production",
-            body: "Master pages, paragraph and object styles, and a print-ready file that holds 64 pages together without drift.",
+            body: "Master pages, paragraph and object styles, and a print-ready file that holds 50 spreads together without drift.",
           },
         ],
       },
@@ -878,14 +899,14 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "A book only really exists once it is printed. The final stretch of the semester went into production: master pages and styles in InDesign so a late change propagated instead of being retyped 40 times, image resolution and colour checked against print rather than screen, and margins and bleed set so nothing important died in the gutter.",
+        html: "A book only really exists once it is printed. The last stretch of the semester went into production: master pages and styles in InDesign so a late change propagated instead of being retyped fifty times, image resolution and colour checked against print rather than screen, and margins and bleed set so nothing important died in the gutter &mdash; which matters more than usual in a book whose spreads routinely run an image across both pages.",
       },
       {
         kind: "grid",
         cols: 2,
         media: [
-          { type: "pending", note: "The printed book — cover or a held spread." },
-          { type: "pending", note: "The printed book — a second angle or detail." },
+          { type: "pending", note: "silicon-cover.jpg — the printed cover." },
+          { type: "pending", note: "silicon-print-detail.jpg — a held spread or binding detail." },
         ],
       },
 
