@@ -668,15 +668,21 @@ export const projects: Project[] = [
     // TODO: replace the pending slots below once the exports land. Each note
     // names the file it is waiting for.
     thumb: {
-      type: "pending",
-      note: "Thumbnail — silicon-spread-silicates.jpg, silicon-spread-terminology.jpg, silicon-spread-society.jpg, cut one per second.",
+      type: "slideshow",
+      interval: 1000,
+      items: [
+        { src: `${A}/silicon-spread-silicates.jpg`, alt: "A spread from Si: Silicon on silicate minerals, topographic vectors beside a mineral thin-section photograph" },
+        { src: `${A}/silicon-spread-terminology.jpg`, alt: "A spread from Si: Silicon distinguishing silicon, silica, silicate, and silicone" },
+        { src: `${A}/silicon-spread-society.jpg`, alt: "A spread from Si: Silicon on AI and surveillance, object-detection labels over a street scene" },
+      ],
     },
     hero: {
       headline: "Sixty-four pages on the element hiding inside everything.",
       panel: true,
       media: {
-        type: "pending",
-        note: "Hero — silicon-cover.jpg (the periodic-table cover shot).",
+        type: "image",
+        src: `${A}/silicon-cover.jpg`,
+        alt: "The printed cover of Si: Silicon, styled as the element's periodic table cell",
       },
     },
     overview: {
@@ -716,7 +722,11 @@ export const projects: Project[] = [
       },
       {
         kind: "media",
-        media: { type: "pending", note: "silicon-moodboard.jpg — the image research grid." },
+        media: {
+          type: "image",
+          src: `${A}/silicon-moodboard.jpg`,
+          alt: "A 24-image research grid spanning geology, semiconductors, cleanrooms, and everyday silicon objects",
+        },
       },
 
       {
@@ -730,7 +740,11 @@ export const projects: Project[] = [
       },
       {
         kind: "media",
-        media: { type: "pending", note: "silicon-flatplan.jpg — the full flatplan board." },
+        media: {
+          type: "image",
+          src: `${A}/silicon-flatplan.jpg`,
+          alt: "The full 64-page flatplan, spread by spread, with working titles and reference images",
+        },
       },
       { kind: "heading", text: "Five parts, and a route through them" },
       {
@@ -754,7 +768,11 @@ export const projects: Project[] = [
       },
       {
         kind: "media",
-        media: { type: "pending", note: "silicon-layout-grid.jpg — the wireframed spread compositions." },
+        media: {
+          type: "image",
+          src: `${A}/silicon-layout-grid.jpg`,
+          alt: "Grey-block wireframes for every spread, composed before any image or copy went in",
+        },
       },
 
       {
@@ -801,7 +819,11 @@ export const projects: Project[] = [
             cols: 2,
             media: [
               { type: "pending", note: "Part 01 — title page." },
-              { type: "pending", note: "silicon-spread-silicates.jpg — the Silicates spread." },
+              {
+                type: "image",
+                src: `${A}/silicon-spread-silicates.jpg`,
+                alt: "The Silicates spread, topographic vectors beside a mineral thin-section photograph",
+              },
             ],
           },
           {
@@ -809,7 +831,11 @@ export const projects: Project[] = [
             cols: 2,
             media: [
               { type: "pending", note: "Part 02 — title page." },
-              { type: "pending", note: "silicon-spread-terminology.jpg — the Terminology spread." },
+              {
+                type: "image",
+                src: `${A}/silicon-spread-terminology.jpg`,
+                alt: "The Terminology spread, distinguishing silicon, silica, silicate, and silicone",
+              },
             ],
           },
           {
@@ -833,7 +859,11 @@ export const projects: Project[] = [
             cols: 2,
             media: [
               { type: "pending", note: "Part 05 — title page." },
-              { type: "pending", note: "silicon-spread-society.jpg — the Silicon and Society spread." },
+              {
+                type: "image",
+                src: `${A}/silicon-spread-society.jpg`,
+                alt: "The Silicon and Society spread, object-detection labels over a street scene",
+              },
             ],
           },
         ],
@@ -858,7 +888,11 @@ export const projects: Project[] = [
         cols: 2,
         media: [
           { type: "pending", note: "silicon-qgis.png — the QGIS contour output before vectorising." },
-          { type: "pending", note: "silicon-spread-silicates.jpg — the finished topographic spread." },
+          {
+            type: "image",
+            src: `${A}/silicon-spread-silicates.jpg`,
+            alt: "The finished Silicates spread pairing QGIS contour data with a mineral thin-section photograph",
+          },
         ],
       },
       { kind: "heading", text: "Rendering the navigation icons in 3D" },
