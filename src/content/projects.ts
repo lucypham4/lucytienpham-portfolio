@@ -685,7 +685,7 @@ export const projects: Project[] = [
         "A finished, printed 64-page book made solo in 2.5 months — 50 spreads across five parts, an original icon set rendered in 3D for every chapter opener, and topographic line work generated from real elevation data in QGIS.",
     },
     meta: [
-      { label: "Duration", value: "October – December 2026\nOne semester (~2.5 months)" },
+      { label: "Duration", value: "October – December 2025\nOne semester (~2.5 months)" },
       {
         label: "My Role",
         value: "Sole designer\nResearch, writing, editorial structure, illustration, production",
