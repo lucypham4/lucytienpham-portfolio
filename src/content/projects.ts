@@ -660,6 +660,257 @@ export const projects: Project[] = [
   },
 
   {
+    slug: "silicon",
+    title: "Silicon",
+    tagline:
+      "A 64-page informational coffee table book that makes an invisible element legible.",
+    categories: ["Editorial Design", "Personal Project"],
+    // TODO: swap for a collage of the three spreads once the exports land:
+    // { type: "collage", items: [{ src: `${A}/silicon-page-1.png`, alt: "…" }, …] }
+    thumb: {
+      type: "pending",
+      note: "Thumbnail — the three pages you are proudest of, as three separate exports.",
+    },
+    hero: {
+      headline: "Designing 64 pages about an element nobody pictures.",
+      fullBleed: true,
+      media: {
+        type: "pending",
+        note: "Hero — one wide photograph or render of the finished book.",
+      },
+    },
+    overview: {
+      html: "Silicon is everywhere and almost never seen: in the rock under a quarry, the glass in a window, and the chip inside the phone this is being read on. Over a single academic semester I researched, designed, and produced a <strong>64-page informational coffee table book</strong> about it, using <strong>iconography as the book&rsquo;s navigation system</strong> rather than page numbers alone.",
+      impact:
+        "A finished 64-page book designed solo in roughly 2.5 months, carrying an original icon system, a series of topographic maps built from real elevation data in QGIS, and 3D-rendered chapter openers.",
+    },
+    meta: [
+      { label: "Duration", value: "One academic semester (~2.5 months)" },
+      {
+        label: "My Role",
+        value: "Sole designer\nResearch, editorial structure, illustration, production",
+      },
+      {
+        label: "Tools",
+        value: "Adobe Illustrator, Photoshop, InDesign, Adobe Dimension, QGIS",
+      },
+    ],
+    blocks: [
+      {
+        kind: "section",
+        label: "Why Silicon",
+        heading: "An Element Nobody Pictures, In A Format Built Entirely For Pictures.",
+      },
+      {
+        kind: "text",
+        html: "A coffee table book is read the way nobody reads a textbook: opened anywhere, put down after two spreads, picked up again a week later. That makes it the hardest possible home for a technical subject, and the reason I chose one. Silicon touches geology, manufacturing, and everyday objects at once, so the challenge was never finding material &mdash; it was <strong>giving a reader a way back in on every page</strong>.",
+      },
+      {
+        kind: "callout",
+        html: "How might a reader move through 64 pages on a single element and always know where they are, no matter which page they open to?",
+      },
+      {
+        kind: "media",
+        media: {
+          type: "pending",
+          note: "Subject research — moodboard, reference collection, or early sketches.",
+        },
+      },
+
+      {
+        kind: "section",
+        label: "Structure & Flatplan",
+        heading: "Sixty-Four Pages, Planned Before A Single One Was Designed.",
+      },
+      {
+        kind: "text",
+        html: "Before designing anything, I mapped all 64 pages as a flatplan. Working at the spread level first meant I was <strong>designing a reading experience rather than a stack of layouts</strong> &mdash; I could see where the book got heavy with text, where it needed a full-bleed image to breathe, and whether every chapter got a fair share of the page count.",
+      },
+      {
+        kind: "media",
+        media: { type: "pending", note: "Flatplan or page map for all 64 pages." },
+      },
+      { kind: "heading", text: "What the plan had to settle" },
+      {
+        kind: "list",
+        items: [
+          "How to divide the research into chapters a reader could enter in any order",
+          "How many spreads each chapter earned, and where the pacing needed a break",
+          "Which ideas were better carried by a diagram than by a paragraph",
+          "How the chapter openers would announce a shift without restating it in words",
+        ],
+      },
+
+      {
+        kind: "section",
+        label: "The Design System",
+        heading: "A Grid, A Type Hierarchy, And An Icon Language.",
+      },
+      {
+        kind: "text",
+        html: "The system had to hold across 64 pages built over 2.5 months, so I settled it early: a single grid, a fixed type hierarchy, and a palette that could survive both dense diagram pages and full-bleed imagery. Once those were locked, every later spread became a question of <strong>composition rather than reinvention</strong>.",
+      },
+      {
+        kind: "grid",
+        cols: 2,
+        media: [
+          { type: "pending", note: "Grid and layout system." },
+          { type: "pending", note: "Type specimen and colour palette." },
+        ],
+      },
+      { kind: "heading", text: "Iconography as the navigation system" },
+      {
+        kind: "text",
+        html: "Rather than leaning on page numbers, I built an <strong>icon set that doubles as wayfinding</strong>. Each chapter owns a mark; the mark recurs at the chapter opener and in the running elements, so a reader opening to a random spread can place themselves in the book before reading a word. The same visual language then does explanatory work inside the pages &mdash; the icons carry the diagrams too, which is what keeps the book feeling like one voice instead of illustration bolted onto text.",
+      },
+      {
+        kind: "media",
+        media: {
+          type: "pending",
+          note: "The full icon set — the navigational marks laid out together.",
+        },
+      },
+
+      {
+        kind: "section",
+        label: "The Chapters",
+        heading: "A Tour Through The Book",
+      },
+      {
+        kind: "text",
+        html: "Each chapter opens on a rendered title page, then moves between full-bleed imagery, diagram spreads, and text pages at the pace the flatplan set. Below is a walk through the book, chapter by chapter.",
+      },
+      {
+        kind: "tabs",
+        items: [
+          {
+            label: "Chapter 01",
+            cols: 2,
+            media: [
+              { type: "pending", note: "Chapter 01 — title page." },
+              { type: "pending", note: "Chapter 01 — a spread from inside." },
+            ],
+          },
+          {
+            label: "Chapter 02",
+            cols: 2,
+            media: [
+              { type: "pending", note: "Chapter 02 — title page." },
+              { type: "pending", note: "Chapter 02 — a spread from inside." },
+            ],
+          },
+          {
+            label: "Chapter 03",
+            cols: 2,
+            media: [
+              { type: "pending", note: "Chapter 03 — title page." },
+              { type: "pending", note: "Chapter 03 — a spread from inside." },
+            ],
+          },
+          {
+            label: "Chapter 04",
+            cols: 2,
+            media: [
+              { type: "pending", note: "Chapter 04 — title page." },
+              { type: "pending", note: "Chapter 04 — a spread from inside." },
+            ],
+          },
+        ],
+      },
+
+      {
+        kind: "section",
+        label: "Tools & Techniques",
+        heading: "Two Techniques The Book Would Not Exist Without.",
+      },
+      {
+        kind: "text",
+        html: "Two spreads in the walkthrough above are not drawn by hand, and neither is made in the software this project is normally credited to. Both were skills I picked up during the semester specifically because the book needed them.",
+      },
+      { kind: "heading", text: "Coding topography in QGIS" },
+      {
+        kind: "text",
+        html: "The book&rsquo;s landscape pages are built from real elevation data. I used <strong>QGIS</strong> to generate contour layers from that data, then exported them and <strong>rebuilt the output as clean vectors in Adobe Illustrator</strong> &mdash; reweighting the line work, cutting the density down to what a printed page could actually hold, and recolouring it into the book&rsquo;s palette. The result is topography that is accurate at the source and still reads as part of the design system rather than as a screenshot dropped into a layout.",
+      },
+      {
+        kind: "grid",
+        cols: 2,
+        media: [
+          { type: "pending", note: "QGIS — the contour output before it was vectorised." },
+          { type: "pending", note: "The finished topographic spread in the book." },
+        ],
+      },
+      { kind: "heading", text: "Rendering the navigation icons in 3D" },
+      {
+        kind: "text",
+        html: "The chapter marks live twice. Flat, they are the navigation system. At each chapter opener they appear as <strong>3D renders built in Adobe Dimension</strong>, given material and lighting so the title pages carry visual weight the flat marks could not. It gives every chapter a moment of arrival while keeping the icon set the reader already recognises.",
+      },
+      {
+        kind: "grid",
+        cols: 2,
+        media: [
+          { type: "pending", note: "Adobe Dimension — an icon mid-render, or the flat vs. 3D pair." },
+          { type: "pending", note: "A finished chapter title page using the 3D icon." },
+        ],
+      },
+      {
+        kind: "cards",
+        items: [
+          {
+            title: "QGIS → Illustrator",
+            body: "Generating contour data in a GIS tool and rebuilding it as editable vector artwork that obeys the book's grid and palette.",
+          },
+          {
+            title: "Adobe Dimension",
+            body: "Modelling, texturing, and lighting the flat icon set so every chapter opener gets a rendered counterpart.",
+          },
+          {
+            title: "InDesign production",
+            body: "Master pages, paragraph and object styles, and a print-ready file that holds 64 pages together without drift.",
+          },
+        ],
+      },
+
+      {
+        kind: "section",
+        label: "Print & Production",
+        heading: "From Screen To Sixty-Four Bound Pages.",
+      },
+      {
+        kind: "text",
+        html: "A book only really exists once it is printed. The final stretch of the semester went into production: master pages and styles in InDesign so a late change propagated instead of being retyped 40 times, image resolution and colour checked against print rather than screen, and margins and bleed set so nothing important died in the gutter.",
+      },
+      {
+        kind: "grid",
+        cols: 2,
+        media: [
+          { type: "pending", note: "The printed book — cover or a held spread." },
+          { type: "pending", note: "The printed book — a second angle or detail." },
+        ],
+      },
+
+      { kind: "section", label: "Reflection" },
+      {
+        kind: "cards",
+        items: [
+          {
+            title: "Systems beat spreads",
+            body: "Settling the grid, type, and icon language first turned 64 pages from an impossible workload into a sequence of solvable compositions.",
+          },
+          {
+            title: "Learn the tool the idea needs",
+            body: "QGIS and Dimension were both outside the Adobe workflow I knew. Picking them up mid-semester was faster than compromising the idea to fit the software I already had.",
+          },
+          {
+            title: "Iconography is information design",
+            body: "Treating the icons as navigation rather than decoration gave the book a structure a reader can feel without being told about it.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     slug: "truth-pharm",
     title: "Truth Pharm",
     tagline: "Launching a marketing campaign for a substance use awareness non profit.",

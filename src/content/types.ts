@@ -1,6 +1,17 @@
 export type Media =
   | { type: "image"; src: string; alt?: string }
-  | { type: "video"; poster: string; mp4: string; webm?: string };
+  | { type: "video"; poster: string; mp4: string; webm?: string }
+  /**
+   * Several assets shown side by side inside one 16:9 frame, for thumbnails
+   * that need to stand for a whole artefact rather than a single screen.
+   */
+  | { type: "collage"; items: { src: string; alt?: string }[] }
+  /**
+   * A slot whose artwork has not been handed over yet. It renders as a labelled
+   * dashed box so an in-progress case study can be laid out and reviewed
+   * without broken images. Delete the type once nothing uses it.
+   */
+  | { type: "pending"; note: string };
 
 export type MediaSize = "sm" | "md";
 

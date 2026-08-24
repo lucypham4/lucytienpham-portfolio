@@ -35,6 +35,43 @@ export default function MediaBlock({
 }) {
   const fitClasses = fitClassNames[fit];
 
+  // `cover` sizes itself from the asset's own height, which a composed box has
+  // none of, so those two give themselves the same 16:9 footprint a thumbnail
+  // would have had.
+  const boxClasses = fit === "cover" ? "aspect-video w-full rounded-card" : fitClasses;
+
+  if (media.type === "collage") {
+    return (
+      <div
+        className={`${boxClasses} ${className} flex items-center justify-center gap-3 bg-shell p-5 sm:gap-5 sm:p-8`}
+      >
+        {media.items.map((item, i) => (
+          <Image
+            key={item.src}
+            src={item.src}
+            alt={item.alt ?? ""}
+            width={900}
+            height={1200}
+            priority={priority && i === 0}
+            className="h-full w-auto max-w-[31%] object-contain"
+          />
+        ))}
+      </div>
+    );
+  }
+
+  if (media.type === "pending") {
+    return (
+      <div
+        className={`${boxClasses} ${className} flex items-center justify-center border border-dashed border-line bg-shell p-6`}
+      >
+        <span className="max-w-[36ch] text-center text-sm leading-6 text-grey">
+          {media.note}
+        </span>
+      </div>
+    );
+  }
+
   if (media.type === "video") {
     return (
       <video
