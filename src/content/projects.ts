@@ -624,9 +624,8 @@ export const projects: Project[] = [
       {
         kind: "media",
         media: {
-          type: "image",
-          src: `${A}/silicon-icons.svg`,
-          alt: "The five flat navigational marks, one per part: a circle, a triple ring, an atom, a maze, and an orbit with nodes",
+          type: "pending",
+          note: "silicon-icons.png — the five flat navigational marks laid out together.",
         },
       },
       {
