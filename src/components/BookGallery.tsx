@@ -61,13 +61,20 @@ export default function BookGallery({ parts }: { parts: Part[] }) {
       </div>
 
       <div className="mt-6 rounded-xl2 bg-black p-3 dark:bg-white sm:p-5">
+        {/* Equal padding on every side (`p-3`/`p-5`) and an equal `gap` between
+            cells — the mismatched borders came from cropping each book to a
+            fixed box, not from the padding itself. Nothing here crops: every
+            image keeps its own proportions and is simply scaled down to fit,
+            so a wide spread and a narrower cover sit at different sizes
+            within the same, evenly spaced grid rather than being forced into
+            identical boxes. */}
         <div className="grid grid-cols-2 gap-2 sm:gap-3">
           {part.images.map((media, i) => {
             const key = `${active}-${i}`;
             if (media.type !== "image") {
               return (
-                <div key={key} className="aspect-[4/3] overflow-hidden rounded-card">
-                  <MediaBlock media={media} fit="fill" />
+                <div key={key} className="flex items-center justify-center">
+                  <MediaBlock media={media} />
                 </div>
               );
             }
@@ -77,9 +84,12 @@ export default function BookGallery({ parts }: { parts: Part[] }) {
                 type="button"
                 onClick={() => setLightboxAt(indexOf.get(key) ?? 0)}
                 aria-label={media.alt ? `View ${media.alt} up close` : "View image up close"}
-                className="grow-frame aspect-[4/3] cursor-zoom-in"
+                className="relative flex cursor-zoom-in items-center justify-center hover:z-10"
               >
-                <MediaBlock media={media} fit="grow" className="rounded-card" />
+                <MediaBlock
+                  media={media}
+                  className="rounded-card transition-transform duration-300 hover:scale-105"
+                />
               </button>
             );
           })}
