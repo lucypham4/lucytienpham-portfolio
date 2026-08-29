@@ -499,16 +499,6 @@ export const projects: Project[] = [
         ],
       },
       {
-        kind: "list",
-        items: [
-          "Part 01: Origins — sand to silicon, the geology of the crust, silica and the silicates",
-          "Part 02: Transformations — semiconductor physics, extraction, zone refining, silicones, and the terminology that separates silicon from silica, silicate, and silicone",
-          "Part 03: Tech & Beyond — sand to wafer, the transistor revolution, chips to circuits, the global supply chain, and chips as geopolitics",
-          "Part 04: Challenges — the physical limits of silicon, environmental costs, the hidden labour behind it, and the digital divide",
-          "Part 05: Futures — quantum, graphene, and AI hardware, silicon and energy, and silicon and society",
-        ],
-      },
-      {
         kind: "section",
         label: "The Chapters",
         heading: "A Tour Through The Book",
@@ -523,6 +513,7 @@ export const projects: Project[] = [
           {
             label: "01 Origins",
             cols: 2,
+            caption: "Sand to silicon, the geology of the crust, silica and the silicates.",
             media: [
               { type: "pending", note: "Part 01 — title page." },
               {
@@ -535,6 +526,8 @@ export const projects: Project[] = [
           {
             label: "02 Transformations",
             cols: 2,
+            caption:
+              "Semiconductor physics, extraction, zone refining, silicones, and the terminology that separates silicon from silica, silicate, and silicone.",
             media: [
               { type: "pending", note: "Part 02 — title page." },
               {
@@ -547,6 +540,8 @@ export const projects: Project[] = [
           {
             label: "03 Tech & Beyond",
             cols: 2,
+            caption:
+              "Sand to wafer, the transistor revolution, chips to circuits, the global supply chain, and chips as geopolitics.",
             media: [
               { type: "pending", note: "Part 03 — title page." },
               { type: "pending", note: "Part 03 — a spread from inside." },
@@ -555,6 +550,8 @@ export const projects: Project[] = [
           {
             label: "04 Challenges",
             cols: 2,
+            caption:
+              "The physical limits of silicon, environmental costs, the hidden labour behind it, and the digital divide.",
             media: [
               { type: "pending", note: "Part 04 — title page." },
               { type: "pending", note: "Part 04 — a spread from inside." },
@@ -563,6 +560,7 @@ export const projects: Project[] = [
           {
             label: "05 Futures",
             cols: 2,
+            caption: "Quantum, graphene, and AI hardware, silicon and energy, and silicon and society.",
             media: [
               { type: "pending", note: "Part 05 — title page." },
               {
