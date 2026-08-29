@@ -53,8 +53,9 @@ export default function MediaSlideshow({
           height={1200}
           priority={priority && i === 0}
           // Cut, don't fade: a cross-fade puts both pages on screen at once,
-          // which on a book spread just reads as a smear.
-          className={`absolute inset-0 h-full w-full object-contain p-4 sm:p-6 ${
+          // which on a book spread just reads as a smear. Cover rather than
+          // contain so the still fills the frame edge to edge, no letterboxing.
+          className={`absolute inset-0 h-full w-full object-cover ${
             i === index ? "opacity-100" : "opacity-0"
           }`}
         />

@@ -678,7 +678,7 @@ export const projects: Project[] = [
     },
     hero: {
       headline: "Sixty-four pages on the element hiding inside everything.",
-      panel: true,
+      fullBleed: true,
       media: {
         type: "image",
         src: `${A}/silicon-cover.jpg`,
