@@ -514,16 +514,46 @@ export const projects: Project[] = [
             label: "01 Origins",
             caption: "Sand to silicon, the geology of the crust, silica and the silicates.",
             images: [
-              { type: "pending", note: "Part 01 — front cover." },
-              { type: "pending", note: "Part 01 — table of contents." },
-              { type: "pending", note: "Part 01 — title page." },
               {
                 type: "image",
-                src: `${A}/silicon-spread-silicates.jpg`,
-                alt: "The Silicates spread, topographic vectors beside a mineral thin-section photograph",
+                src: `${A}/silicon-part01-1.webp`,
+                alt: "The front cover of Si: Silicon, styled as the element's periodic table cell",
               },
-              { type: "pending", note: "Part 01 — a spread from inside." },
-              { type: "pending", note: "Part 01 — a spread from inside." },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-2.webp`,
+                alt: "The table of contents, listing all five parts beside their navigational icons",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-3.webp`,
+                alt: "The Part 01: Origins title spread",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-4.webp`,
+                alt: "A spread from Part 01: Origins",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-5.webp`,
+                alt: "A spread from Part 01: Origins",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-6.webp`,
+                alt: "A spread from Part 01: Origins",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-7.webp`,
+                alt: "A spread from Part 01: Origins",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-8.webp`,
+                alt: "A spread from Part 01: Origins",
+              },
             ],
           },
           {
@@ -531,16 +561,36 @@ export const projects: Project[] = [
             caption:
               "Semiconductor physics, extraction, zone refining, silicones, and the terminology that separates silicon from silica, silicate, and silicone.",
             images: [
-              { type: "pending", note: "Part 02 — title page." },
               {
                 type: "image",
-                src: `${A}/silicon-spread-terminology.jpg`,
-                alt: "The Terminology spread, distinguishing silicon, silica, silicate, and silicone",
+                src: `${A}/silicon-part02-1.webp`,
+                alt: "The Part 02: Transformations title spread",
               },
-              { type: "pending", note: "Part 02 — a spread from inside." },
-              { type: "pending", note: "Part 02 — a spread from inside." },
-              { type: "pending", note: "Part 02 — a spread from inside." },
-              { type: "pending", note: "Part 02 — a spread from inside." },
+              {
+                type: "image",
+                src: `${A}/silicon-part02-2.webp`,
+                alt: "A spread from Part 02: Transformations",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part02-3.webp`,
+                alt: "A spread from Part 02: Transformations",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part02-4.webp`,
+                alt: "A spread from Part 02: Transformations",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part02-5.webp`,
+                alt: "A spread from Part 02: Transformations",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part02-6.webp`,
+                alt: "A spread from Part 02: Transformations",
+              },
             ],
           },
           {
@@ -548,12 +598,36 @@ export const projects: Project[] = [
             caption:
               "Sand to wafer, the transistor revolution, chips to circuits, the global supply chain, and chips as geopolitics.",
             images: [
-              { type: "pending", note: "Part 03 — title page." },
-              { type: "pending", note: "Part 03 — a spread from inside." },
-              { type: "pending", note: "Part 03 — a spread from inside." },
-              { type: "pending", note: "Part 03 — a spread from inside." },
-              { type: "pending", note: "Part 03 — a spread from inside." },
-              { type: "pending", note: "Part 03 — a spread from inside." },
+              {
+                type: "image",
+                src: `${A}/silicon-part03-1.webp`,
+                alt: "The Part 03: Tech & Beyond title spread",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part03-2.webp`,
+                alt: "A spread from Part 03: Tech & Beyond",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part03-3.webp`,
+                alt: "A spread from Part 03: Tech & Beyond",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part03-4.webp`,
+                alt: "A spread from Part 03: Tech & Beyond",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part03-5.webp`,
+                alt: "A spread from Part 03: Tech & Beyond",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part03-6.webp`,
+                alt: "A spread from Part 03: Tech & Beyond",
+              },
             ],
           },
           {
@@ -561,28 +635,77 @@ export const projects: Project[] = [
             caption:
               "The physical limits of silicon, environmental costs, the hidden labour behind it, and the digital divide.",
             images: [
-              { type: "pending", note: "Part 04 — title page." },
-              { type: "pending", note: "Part 04 — a spread from inside." },
-              { type: "pending", note: "Part 04 — a spread from inside." },
-              { type: "pending", note: "Part 04 — a spread from inside." },
-              { type: "pending", note: "Part 04 — a spread from inside." },
-              { type: "pending", note: "Part 04 — a spread from inside." },
+              {
+                type: "image",
+                src: `${A}/silicon-part04-1.webp`,
+                alt: "The Part 04: Challenges title spread",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part04-2.webp`,
+                alt: "A spread from Part 04: Challenges",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part04-3.webp`,
+                alt: "A spread from Part 04: Challenges",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part04-4.webp`,
+                alt: "A spread from Part 04: Challenges",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part04-5.webp`,
+                alt: "A spread from Part 04: Challenges",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part04-6.webp`,
+                alt: "A spread from Part 04: Challenges",
+              },
             ],
           },
           {
             label: "05 Futures",
             caption: "Quantum, graphene, and AI hardware, silicon and energy, and silicon and society.",
             images: [
-              { type: "pending", note: "Part 05 — title page." },
               {
                 type: "image",
-                src: `${A}/silicon-spread-society.jpg`,
-                alt: "The Silicon and Society spread, object-detection labels over a street scene",
+                src: `${A}/silicon-part05-1.webp`,
+                alt: "The Part 05: Futures title spread",
               },
-              { type: "pending", note: "Part 05 — a spread from inside." },
-              { type: "pending", note: "Part 05 — a spread from inside." },
-              { type: "pending", note: "Part 05 — a spread from inside." },
-              { type: "pending", note: "Part 05 — back cover." },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-2.webp`,
+                alt: "A spread from Part 05: Futures",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-3.webp`,
+                alt: "A spread from Part 05: Futures",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-4.webp`,
+                alt: "A spread from Part 05: Futures",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-5.webp`,
+                alt: "A spread from Part 05: Futures",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-6.webp`,
+                alt: "The Civilization spread, Earth at night beside city-light maps of the Americas",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-7.webp`,
+                alt: "The closing colophon page, with author, course, and source credits",
+              },
             ],
           },
         ],
