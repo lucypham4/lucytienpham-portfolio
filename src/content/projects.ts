@@ -508,66 +508,81 @@ export const projects: Project[] = [
         html: "Each part opens on a rendered title page, then moves between full-bleed imagery, diagram spreads, and text pages at the pace the flatplan set.",
       },
       {
-        kind: "tabs",
-        items: [
+        kind: "bookGallery",
+        parts: [
           {
             label: "01 Origins",
-            cols: 2,
             caption: "Sand to silicon, the geology of the crust, silica and the silicates.",
-            media: [
+            images: [
+              { type: "pending", note: "Part 01 — front cover." },
+              { type: "pending", note: "Part 01 — table of contents." },
               { type: "pending", note: "Part 01 — title page." },
               {
                 type: "image",
                 src: `${A}/silicon-spread-silicates.jpg`,
                 alt: "The Silicates spread, topographic vectors beside a mineral thin-section photograph",
               },
+              { type: "pending", note: "Part 01 — a spread from inside." },
+              { type: "pending", note: "Part 01 — a spread from inside." },
             ],
           },
           {
             label: "02 Transformations",
-            cols: 2,
             caption:
               "Semiconductor physics, extraction, zone refining, silicones, and the terminology that separates silicon from silica, silicate, and silicone.",
-            media: [
+            images: [
               { type: "pending", note: "Part 02 — title page." },
               {
                 type: "image",
                 src: `${A}/silicon-spread-terminology.jpg`,
                 alt: "The Terminology spread, distinguishing silicon, silica, silicate, and silicone",
               },
+              { type: "pending", note: "Part 02 — a spread from inside." },
+              { type: "pending", note: "Part 02 — a spread from inside." },
+              { type: "pending", note: "Part 02 — a spread from inside." },
+              { type: "pending", note: "Part 02 — a spread from inside." },
             ],
           },
           {
             label: "03 Tech & Beyond",
-            cols: 2,
             caption:
               "Sand to wafer, the transistor revolution, chips to circuits, the global supply chain, and chips as geopolitics.",
-            media: [
+            images: [
               { type: "pending", note: "Part 03 — title page." },
+              { type: "pending", note: "Part 03 — a spread from inside." },
+              { type: "pending", note: "Part 03 — a spread from inside." },
+              { type: "pending", note: "Part 03 — a spread from inside." },
+              { type: "pending", note: "Part 03 — a spread from inside." },
               { type: "pending", note: "Part 03 — a spread from inside." },
             ],
           },
           {
             label: "04 Challenges",
-            cols: 2,
             caption:
               "The physical limits of silicon, environmental costs, the hidden labour behind it, and the digital divide.",
-            media: [
+            images: [
               { type: "pending", note: "Part 04 — title page." },
+              { type: "pending", note: "Part 04 — a spread from inside." },
+              { type: "pending", note: "Part 04 — a spread from inside." },
+              { type: "pending", note: "Part 04 — a spread from inside." },
+              { type: "pending", note: "Part 04 — a spread from inside." },
               { type: "pending", note: "Part 04 — a spread from inside." },
             ],
           },
           {
             label: "05 Futures",
-            cols: 2,
             caption: "Quantum, graphene, and AI hardware, silicon and energy, and silicon and society.",
-            media: [
+            images: [
               { type: "pending", note: "Part 05 — title page." },
               {
                 type: "image",
                 src: `${A}/silicon-spread-society.jpg`,
                 alt: "The Silicon and Society spread, object-detection labels over a street scene",
               },
+              { type: "pending", note: "Part 05 — a spread from inside." },
+              { type: "pending", note: "Part 05 — a spread from inside." },
+              { type: "pending", note: "Part 05 — a spread from inside." },
+              { type: "pending", note: "Part 05 — back cover." },
             ],
           },
         ],
