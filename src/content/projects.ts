@@ -491,7 +491,7 @@ export const projects: Project[] = [
             media: [
               {
                 type: "image",
-                src: `${A}/silicon-moodboard.jpg`,
+                src: `${A}/silicon-contact-sheet.jpg`,
                 alt: "A 24-image research grid spanning geology, semiconductors, cleanrooms, and everyday silicon objects",
               },
             ],
