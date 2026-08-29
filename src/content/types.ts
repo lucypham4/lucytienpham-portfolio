@@ -20,7 +20,13 @@ export type Media =
 
 export type MediaSize = "sm" | "md";
 
-export type TabItem = { label: string; media: Media[]; cols?: 2 | 3 | 4 };
+export type TabItem = {
+  label: string;
+  media: Media[];
+  cols?: 2 | 3 | 4;
+  /** A short line shown under the tab's media, in place of body copy. */
+  caption?: string;
+};
 
 export type Block =
   /**
@@ -75,8 +81,12 @@ export type Project = {
   accent?: "grad" | "none";
   overview?: {
     html: string;
+    /** Eyebrow over `html`. Defaults to "Overview" — override for e.g. "Challenge". */
+    label?: string;
     /** Short outcome statement shown under the overview copy. */
     impact?: string;
+    /** Eyebrow over `impact`. Defaults to "Impact" — override for e.g. "Approach". */
+    impactLabel?: string;
     media?: Media;
   };
   meta?: Meta;

@@ -131,6 +131,15 @@ export default function MediaTabs({
               {item.media.map((m, j) => (
                 <MediaBlock key={j} media={m} fit={many ? "cover" : "bounded"} />
               ))}
+              {item.caption && (
+                <p
+                  className={`text-center text-sm leading-6 text-grey ${
+                    many ? "col-span-full mt-3" : "mt-3"
+                  }`}
+                >
+                  {item.caption}
+                </p>
+              )}
             </div>
           );
         })}

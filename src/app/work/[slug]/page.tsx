@@ -115,14 +115,16 @@ export default async function CaseStudyPage({
                   </div>
                 )}
                 <div>
-                  <p className="eyebrow">Overview</p>
+                  <p className="eyebrow">{project.overview.label ?? "Overview"}</p>
                   <p
                     className="prose-body mt-3"
                     dangerouslySetInnerHTML={{ __html: project.overview.html }}
                   />
                   {project.overview.impact && (
                     <>
-                      <p className="eyebrow mt-8">Impact</p>
+                      <p className="eyebrow mt-8">
+                        {project.overview.impactLabel ?? "Impact"}
+                      </p>
                       <p className="prose-body mt-3">
                         {project.overview.impact}
                       </p>
