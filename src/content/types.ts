@@ -62,6 +62,16 @@ export type Block =
   | { kind: "beforeAfter"; before: Media; after: Media }
   /** A group of media shown one panel at a time behind centred tabs. */
   | { kind: "tabs"; items: TabItem[] }
+  /**
+   * Tabbed parts of a book, each shown as a photo grid on a solid black/white
+   * card — full contrast in both themes, rather than the neutral tinted panel
+   * `framed` media uses. Every image opens a lightbox that pages through every
+   * part's images as one sequence, not just the part it was opened from.
+   */
+  | {
+      kind: "bookGallery";
+      parts: { label: string; caption?: string; images: Media[] }[];
+    }
   | { kind: "embed"; src: string; title: string; ratio?: number };
 
 export type Meta = { label: string; value: string }[];

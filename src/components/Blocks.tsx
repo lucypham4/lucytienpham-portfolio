@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Block } from "@/content/types";
 import { slugify } from "@/lib/slug";
+import BookGallery from "./BookGallery";
 import MediaTabs from "./MediaTabs";
 import MediaBlock from "./MediaBlock";
 
@@ -154,6 +155,9 @@ function BlockView({ block }: { block: Block }) {
 
     case "tabs":
       return <MediaTabs ariaLabel="Project views" items={block.items} />;
+
+    case "bookGallery":
+      return <BookGallery parts={block.parts} />;
 
     case "embed":
       return (
