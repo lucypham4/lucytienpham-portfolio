@@ -62,14 +62,20 @@ export default async function CaseStudyPage({
           ) : (
             <div className="shell pt-6 md:pt-10">
               {/* Panelled splashes match the plain ones' 16:9 footprint so
-                  every case study opens at the same height. The asset is
-                  contained inside the padding rather than filling the panel. */}
+                  every case study opens at the same height. By default the
+                  asset is contained inside padding rather than filling the
+                  panel — `panelFill` opts a photograph into covering the
+                  rounded box edge to edge instead. */}
               {project.hero.panel ? (
-                <div className="aspect-video rounded-xl2 bg-shell p-6 md:p-10">
+                <div
+                  className={`aspect-video overflow-hidden rounded-xl2 ${
+                    project.hero.panelFill ? "" : "bg-shell p-6 md:p-10"
+                  }`}
+                >
                   <MediaBlock
                     media={project.hero.media}
                     priority
-                    fit="contain"
+                    fit={project.hero.panelFill ? "fill" : "contain"}
                   />
                 </div>
               ) : (

@@ -63,6 +63,12 @@ export type Project = {
     fullBleed?: boolean;
     /** Sit the splash on a rounded tinted panel rather than bare on the page. */
     panel?: boolean;
+    /**
+     * With `panel`, fill the panel edge to edge (cover fit, no padding)
+     * instead of containing the asset inside whitespace. For photography;
+     * leave off for a logo or screenshot that needs the breathing room.
+     */
+    panelFill?: boolean;
     /** Suppress the tagline under the headline where it adds nothing. */
     hideTagline?: boolean;
   };
