@@ -44,7 +44,18 @@ export type Block =
    * `size` caps how wide a block renders. Tall phone screenshots become
    * unreadably large at full column width, so they opt into a narrower frame.
    */
-  | { kind: "media"; media: Media; caption?: string; size?: MediaSize }
+  | {
+      kind: "media";
+      media: Media;
+      caption?: string;
+      size?: MediaSize;
+      /**
+       * Sit the asset on a bordered, tinted card instead of bare on the page.
+       * For artwork that needs a fixed neutral ground to stay legible in both
+       * themes — e.g. dark line art that would vanish against a dark page.
+       */
+      framed?: boolean;
+    }
   | { kind: "grid"; media: Media[]; cols?: 2 | 3 | 4; size?: MediaSize }
   | { kind: "cards"; items: { title: string; body?: string; icon?: string }[] }
   | { kind: "list"; items: string[] }

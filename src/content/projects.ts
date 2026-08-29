@@ -450,18 +450,8 @@ export const projects: Project[] = [
     blocks: [
       {
         kind: "section",
-        label: "Why Silicon",
-      },
-      { kind: "heading", text: "Image research" },
-      {
-        kind: "text",
-        html: "I started by collecting the element visually rather than verbally &mdash; quartz, thin-section photomicrographs, server halls, cleanroom suits, silicone sheeting, solar fields, a chest x-ray, the lunar surface. Laid out together, the collection made the book&rsquo;s real argument obvious before a word was written: <strong>these images have nothing in common except silicon</strong>, and that range is the story.",
-      },
-
-      {
-        kind: "section",
         label: "Structure & Flatplan",
-        heading: "Fifty Spreads, Planned Before A Single One Was Designed.",
+        heading: "Structure and Flatplan",
       },
       {
         kind: "text",
@@ -507,11 +497,6 @@ export const projects: Project[] = [
             ],
           },
         ],
-      },
-      { kind: "heading", text: "Five parts, and a route through them" },
-      {
-        kind: "text",
-        html: "The research resolved into five parts that move outward from the rock to the world it built:",
       },
       {
         kind: "list",
@@ -592,8 +577,7 @@ export const projects: Project[] = [
 
       {
         kind: "section",
-        label: "Tools & Techniques",
-        heading: "Two Techniques The Book Would Not Exist Without.",
+        label: "Special Tools",
       },
       {
         kind: "text",
@@ -623,6 +607,7 @@ export const projects: Project[] = [
       },
       {
         kind: "media",
+        framed: true,
         media: {
           type: "pending",
           note: "silicon-icons.png — the five flat navigational marks laid out together.",
@@ -651,24 +636,6 @@ export const projects: Project[] = [
             title: "InDesign production",
             body: "Master pages, paragraph and object styles, and a print-ready file that holds 50 spreads together without drift.",
           },
-        ],
-      },
-
-      {
-        kind: "section",
-        label: "Print & Production",
-        heading: "From Screen To Sixty-Four Bound Pages.",
-      },
-      {
-        kind: "text",
-        html: "A book only really exists once it is printed. The last stretch of the semester went into production: master pages and styles in InDesign so a late change propagated instead of being retyped fifty times, image resolution and colour checked against print rather than screen, and margins and bleed set so nothing important died in the gutter &mdash; which matters more than usual in a book whose spreads routinely run an image across both pages.",
-      },
-      {
-        kind: "grid",
-        cols: 2,
-        media: [
-          { type: "pending", note: "silicon-cover.jpg — the printed cover." },
-          { type: "pending", note: "silicon-print-detail.jpg — a held spread or binding detail." },
         ],
       },
 

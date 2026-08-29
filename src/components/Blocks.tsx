@@ -66,10 +66,19 @@ function BlockView({ block }: { block: Block }) {
         />
       );
 
-    case "media":
+    case "media": {
+      // `framed` only matters once real artwork lands — a pending slot
+      // already renders its own dashed box, so a frame here would nest.
+      const frame = block.framed && block.media.type !== "pending";
       return (
         <figure className={`mt-8 ${block.size ? sizeCap[block.size] : ""}`}>
-          <MediaBlock media={block.media} />
+          {frame ? (
+            <div className="mx-auto max-w-[560px] rounded-xl2 border border-line bg-shell p-8">
+              <MediaBlock media={block.media} />
+            </div>
+          ) : (
+            <MediaBlock media={block.media} />
+          )}
           {block.caption && (
             <figcaption className="mt-3 text-sm leading-6 text-grey">
               {block.caption}
@@ -77,6 +86,7 @@ function BlockView({ block }: { block: Block }) {
           )}
         </figure>
       );
+    }
 
     case "grid":
       return (
