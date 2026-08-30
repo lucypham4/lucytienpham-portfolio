@@ -41,6 +41,16 @@ const SPREAD_MS = 900;
 
 type Point = { x: number; y: number; born: number };
 
+/** Blends two `#rrggbb` colours; t=0 is `a`, t=1 is `b`. */
+function mixHex(a: string, b: string, t: number) {
+  const pa = parseInt(a.slice(1), 16);
+  const pb = parseInt(b.slice(1), 16);
+  const r = Math.round(((pa >> 16) & 255) + (((pb >> 16) & 255) - ((pa >> 16) & 255)) * t);
+  const g = Math.round(((pa >> 8) & 255) + (((pb >> 8) & 255) - ((pa >> 8) & 255)) * t);
+  const bl = Math.round((pa & 255) + ((pb & 255) - (pa & 255)) * t);
+  return `rgb(${r}, ${g}, ${bl})`;
+}
+
 function decode(rle: string) {
   const cells = new Uint8Array(FLOWER_COLS * FLOWER_ROWS);
   let at = 0;
@@ -117,6 +127,65 @@ const REACH = (() => {
   return out;
 })();
 
+/**
+ * Cells that never touch the bloom's main body in the open frame — flecks
+ * that sit off on their own rather than joining a petal. They drift free
+ * instead of holding a fixed cell.
+ */
+const DETACHED = (() => {
+  const cells = FRAMES[LAST];
+  const total = FLOWER_COLS * FLOWER_ROWS;
+  const component = new Int32Array(total).fill(-1);
+  const sizes: number[] = [];
+  const stack: number[] = [];
+
+  for (let start = 0; start < total; start++) {
+    if (!cells[start] || component[start] !== -1) continue;
+    const id = sizes.length;
+    let size = 0;
+    stack.push(start);
+    component[start] = id;
+    while (stack.length) {
+      const i = stack.pop()!;
+      size++;
+      const row = Math.floor(i / FLOWER_COLS);
+      const col = i % FLOWER_COLS;
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (!dr && !dc) continue;
+          const r = row + dr;
+          const c = col + dc;
+          if (r < 0 || r >= FLOWER_ROWS || c < 0 || c >= FLOWER_COLS) continue;
+          const j = r * FLOWER_COLS + c;
+          if (!cells[j] || component[j] !== -1) continue;
+          component[j] = id;
+          stack.push(j);
+        }
+      }
+    }
+    sizes.push(size);
+  }
+
+  let mainId = 0;
+  for (let id = 1; id < sizes.length; id++) {
+    if (sizes[id] > sizes[mainId]) mainId = id;
+  }
+
+  const out = new Uint8Array(total);
+  for (let i = 0; i < total; i++) {
+    out[i] = cells[i] && component[i] !== mainId ? 1 : 0;
+  }
+  return out;
+})();
+
+const FLOAT_ANY = DETACHED.some(Boolean);
+/** How often a detached letter's drift is re-evaluated. */
+const FLOAT_MS = 45;
+/** One full up-and-down cycle. */
+const FLOAT_PERIOD_MS = 3400;
+/** How far a detached letter strays from its cell, in cells' worth of pixel. */
+const FLOAT_AMPLITUDE = 1.6;
+
 export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   const base = useRef<HTMLCanvasElement>(null);
   const reveal = useRef<HTMLCanvasElement>(null);
@@ -178,7 +247,6 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       if (!canvas || !ctx) return;
 
       const ink = token("--color-ink");
-      const bg = token("--color-bg");
 
       size(canvas);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -201,35 +269,54 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
           const x = (col - BOX.col) * cellW;
           const y = (row - BOX.row) * cellH;
 
+          // Flecks off the main body drift on their own slow, quiet cycle,
+          // each out of step with its neighbours.
+          let floatX = 0;
+          let floatY = 0;
+          if (DETACHED[i]) {
+            const phase = (row * 12.9898 + col * 78.233) % (Math.PI * 2);
+            const t = (performance.now() / FLOAT_PERIOD_MS) * Math.PI * 2;
+            floatY = Math.sin(t + phase) * FLOAT_AMPLITUDE;
+            floatX = Math.cos(t * 0.85 + phase) * FLOAT_AMPLITUDE * 0.6;
+          }
+
           // Lean toward the cursor, falling off with distance and capped so a
-          // letter never drifts far from its own cell.
+          // letter never drifts far from its own cell. The same falloff
+          // also decides how much of the letter's own hue shows through.
           let leanX = 0;
           let leanY = 0;
+          let near = 0;
           if (at) {
             const dx = at.x - x;
             const dy = at.y - y;
             const away = Math.hypot(dx, dy) || 1;
-            const pull = Math.max(0, 1 - away / PULL_RADIUS) * PULL_MAX;
+            near = Math.max(0, 1 - away / PULL_RADIUS);
+            const pull = near * PULL_MAX;
             leanX = (dx / away) * pull;
             leanY = (dy / away) * pull;
           }
 
           if (scatter) {
-            ctx.fillStyle = bg;
+            // Scattered glyphs carry the letter's own hue, so the streak
+            // reads as the flower's colours rather than blank noise.
+            ctx.fillStyle = PALETTE[slot - 1];
           } else {
             // Cells the wash has already reached wear the new colour.
             const turned = REACH[i] <= now.spread;
-            ctx.fillStyle = (turned ? now.next : now.colour)
+            const active = turned ? now.next : now.colour;
+            ctx.fillStyle = active
               ? PALETTE[slot - 1]
-              : ink;
+              : near > 0
+                ? mixHex(ink, PALETTE[slot - 1], near)
+                : ink;
           }
 
           ctx.fillText(
             scatter
               ? NOISE[(Math.random() * NOISE.length) | 0]
               : PHRASE[(col + row * 5) % PHRASE.length],
-            x + leanX,
-            y + leanY,
+            x + leanX + floatX,
+            y + leanY + floatY,
           );
         }
       }
@@ -252,6 +339,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
 
     let raf = 0;
     let lastScatter = 0;
+    let lastFloat = 0;
     let leaning = "";
     let drawn = -1;
 
@@ -296,6 +384,12 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         dirty = true;
       }
 
+      // The detached flecks drift on their own clock, independent of
+      // anything else that would otherwise ask for a redraw.
+      if (FLOAT_ANY && now - lastFloat > FLOAT_MS) {
+        lastFloat = now;
+        dirty = true;
+      }
 
       if (dirty) paint(base.current);
 
