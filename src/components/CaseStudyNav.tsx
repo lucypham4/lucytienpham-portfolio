@@ -42,27 +42,36 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
   }, [measure]);
 
   return (
-    <aside className="hidden lg:block">
+    // Width lives here, not on the parent grid track (which is `auto`-sized
+    // to match) — collapsing it lets the content column reflow into the
+    // freed space instead of leaving it empty. `overflow-hidden` clips the
+    // fixed-width inner nav from the right as this shrinks, so the collapse
+    // reads as pulling the panel in from its right edge.
+    <aside
+      className={`hidden shrink-0 overflow-hidden transition-[width] duration-300 ease-out lg:block ${
+        collapsed ? "w-10" : "w-[190px]"
+      }`}
+    >
       <nav
         aria-label="Case study sections"
-        className="sticky top-[136px] flex flex-col self-start"
+        className="sticky top-[136px] flex w-[190px] flex-col self-start"
       >
         <button
           type="button"
           onClick={() => setCollapsed((c) => !c)}
           aria-expanded={!collapsed}
+          aria-label={collapsed ? "Expand section list" : "Collapse section list"}
           className="flex cursor-pointer items-center gap-1.5 text-sm font-semibold text-ink"
         >
-          Sections
           <svg
             aria-hidden
             viewBox="0 0 12 12"
-            className={`h-3 w-3 transition-transform duration-200 ${
-              collapsed ? "-rotate-90" : ""
+            className={`h-3 w-3 shrink-0 transition-transform duration-300 ${
+              collapsed ? "rotate-180" : ""
             }`}
           >
             <path
-              d="M3 4.5 6 7.5 9 4.5"
+              d="M7.5 3 4.5 6l3 3"
               fill="none"
               stroke="currentColor"
               strokeWidth="1.5"
@@ -70,36 +79,33 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
               strokeLinejoin="round"
             />
           </svg>
+          <span className={collapsed ? "opacity-0" : "opacity-100"}>Sections</span>
         </button>
 
         <div
-          className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-            collapsed ? "grid-rows-[0fr]" : "grid-rows-[1fr]"
+          className={`flex flex-col gap-4 pt-4 transition-opacity duration-200 ${
+            collapsed ? "pointer-events-none opacity-0" : "opacity-100"
           }`}
         >
-          <div className="overflow-hidden">
-            <div className="flex flex-col gap-4 pt-4">
-              {sections.map((section) => {
-                const isActive = section.id === active;
-                return (
-                  <a
-                    key={section.id}
-                    href={`#${section.id}`}
-                    aria-current={isActive ? "true" : undefined}
-                    onClick={() => {
-                      setActive(section.id);
-                      lockedUntil.current = Date.now() + 900;
-                    }}
-                    className={`text-base leading-6 transition-colors ${
-                      isActive ? "font-semibold text-ink" : "text-grey hover:text-ink"
-                    }`}
-                  >
-                    {section.label}
-                  </a>
-                );
-              })}
-            </div>
-          </div>
+          {sections.map((section) => {
+            const isActive = section.id === active;
+            return (
+              <a
+                key={section.id}
+                href={`#${section.id}`}
+                aria-current={isActive ? "true" : undefined}
+                onClick={() => {
+                  setActive(section.id);
+                  lockedUntil.current = Date.now() + 900;
+                }}
+                className={`text-base leading-6 whitespace-nowrap transition-colors ${
+                  isActive ? "font-semibold text-ink" : "text-grey hover:text-ink"
+                }`}
+              >
+                {section.label}
+              </a>
+            );
+          })}
         </div>
       </nav>
     </aside>

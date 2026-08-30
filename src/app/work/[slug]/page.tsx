@@ -85,7 +85,11 @@ export default async function CaseStudyPage({
           ))}
       </header>
 
-      <div className="shell grid grid-cols-1 gap-12 pt-12 lg:grid-cols-[190px_1fr] lg:gap-16">
+      {/* The nav column is `auto`-tracked rather than a fixed 190px so
+          CaseStudyNav can collapse its own width and let this column shrink
+          with it — the content column (1fr) reflows to fill the freed
+          space automatically. */}
+      <div className="shell grid grid-cols-1 gap-12 pt-12 lg:grid-cols-[auto_1fr] lg:gap-16">
         <CaseStudyNav sections={sections} />
 
         <div className="min-w-0">

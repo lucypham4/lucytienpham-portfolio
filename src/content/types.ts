@@ -56,7 +56,19 @@ export type Block =
        */
       framed?: boolean;
     }
-  | { kind: "grid"; media: Media[]; cols?: 2 | 3 | 4; size?: MediaSize }
+  | {
+      kind: "grid";
+      media: Media[];
+      cols?: 2 | 3 | 4;
+      size?: MediaSize;
+      /** Same fixed-black card `media.framed` uses, with items centered
+       * (so mismatched aspect ratios sit aligned to a shared middle) rather
+       * than each filling its own column top-down. */
+      framed?: boolean;
+    }
+  /** Two images side by side with a small arrow between them, both capped to
+   * the same height so neither's own proportions dominate the pairing. */
+  | { kind: "pair"; from: Media; to: Media }
   | { kind: "cards"; items: { title: string; body?: string; icon?: string }[] }
   | { kind: "list"; items: string[] }
   | { kind: "beforeAfter"; before: Media; after: Media }

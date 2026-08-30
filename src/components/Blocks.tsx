@@ -89,16 +89,54 @@ function BlockView({ block }: { block: Block }) {
       );
     }
 
-    case "grid":
-      return (
+    case "grid": {
+      const grid = (
         <div
-          className={`mt-8 grid grid-cols-1 gap-4 ${gridCols[block.cols ?? 2]} ${
+          className={`grid grid-cols-1 gap-4 ${gridCols[block.cols ?? 2]} ${
             block.size ? sizeCap[block.size] : ""
           }`}
         >
-          {block.media.map((m, i) => (
-            <MediaBlock key={i} media={m} />
-          ))}
+          {block.media.map((m, i) =>
+            block.framed ? (
+              <div key={i} className="flex items-center justify-center">
+                <MediaBlock media={m} />
+              </div>
+            ) : (
+              <MediaBlock key={i} media={m} />
+            ),
+          )}
+        </div>
+      );
+      return block.framed ? (
+        <div className="mt-8 rounded-xl2 bg-black p-8">{grid}</div>
+      ) : (
+        <div className="mt-8">{grid}</div>
+      );
+    }
+
+    case "pair":
+      return (
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
+          <div className="flex h-40 min-w-0 flex-1 items-center justify-center sm:h-48">
+            <MediaBlock media={block.from} fit="contain" className="rounded-card" />
+          </div>
+          <svg
+            aria-hidden
+            viewBox="0 0 24 24"
+            className="h-6 w-6 shrink-0 text-grey"
+          >
+            <path
+              d="M4 12h15M13 6l6 6-6 6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <div className="flex h-40 min-w-0 flex-1 items-center justify-center sm:h-48">
+            <MediaBlock media={block.to} fit="contain" className="rounded-card" />
+          </div>
         </div>
       );
 

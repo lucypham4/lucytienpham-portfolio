@@ -727,6 +727,7 @@ export const projects: Project[] = [
       {
         kind: "grid",
         cols: 2,
+        framed: true,
         media: [
           {
             type: "image",
@@ -755,20 +756,17 @@ export const projects: Project[] = [
         },
       },
       {
-        kind: "grid",
-        cols: 2,
-        media: [
-          {
-            type: "image",
-            src: `${A}/silicon-dimension.webp`,
-            alt: "The Transformations mark rendered in 3D in Adobe Dimension, given material, lighting, and depth",
-          },
-          {
-            type: "image",
-            src: `${A}/silicon-title-page.webp`,
-            alt: "The finished Part 02: Transformations title spread, using the 3D-rendered mark",
-          },
-        ],
+        kind: "pair",
+        from: {
+          type: "image",
+          src: `${A}/silicon-dimension.webp`,
+          alt: "The Transformations mark rendered in 3D in Adobe Dimension, given material, lighting, and depth",
+        },
+        to: {
+          type: "image",
+          src: `${A}/silicon-title-page.webp`,
+          alt: "The finished Part 02: Transformations title spread, using the 3D-rendered mark",
+        },
       },
       { kind: "section", label: "Reflection" },
       {
