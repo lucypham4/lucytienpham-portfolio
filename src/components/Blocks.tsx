@@ -131,6 +131,21 @@ function BlockView({ block }: { block: Block }) {
         </ul>
       );
 
+    case "mediaList":
+      return (
+        <div className="mt-8 grid grid-cols-1 items-start gap-8 md:grid-cols-[1fr_1.4fr]">
+          <MediaBlock media={block.media} />
+          <ul className="flex flex-col gap-2">
+            {block.items.map((item, i) => (
+              <li key={i} className="flex gap-3 text-lg leading-8 text-ink-soft">
+                <span aria-hidden className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+
     case "beforeAfter":
       return (
         <MediaTabs

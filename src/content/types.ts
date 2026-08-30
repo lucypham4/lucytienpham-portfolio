@@ -26,6 +26,8 @@ export type Block =
   | { kind: "grid"; media: Media[]; cols?: 2 | 3 | 4; size?: MediaSize }
   | { kind: "cards"; items: { title: string; body?: string; icon?: string }[] }
   | { kind: "list"; items: string[] }
+  /** A media block paired with a bullet list in the same row, media on the left. */
+  | { kind: "mediaList"; media: Media; items: string[] }
   | { kind: "beforeAfter"; before: Media; after: Media }
   /** A group of media shown one panel at a time behind centred tabs. */
   | { kind: "tabs"; items: TabItem[] }

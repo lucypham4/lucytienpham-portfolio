@@ -667,11 +667,9 @@ export const projects: Project[] = [
     thumb: { type: "image", src: `${A}/splash-2.webp`, alt: "Truth Pharm campaign" },
     hero: {
       headline: "Truth Pharm",
-      fullBleed: true,
       media: { type: "image", src: `${A}/splash-2.webp`, alt: "Truth Pharm" },
     },
     overview: {
-      media: { type: "image", src: `${A}/frame-1.webp`, alt: "" },
       html: "Truth Pharm is a nonprofit based in Binghamton, NY that focuses on reducing the stigma against substance use disorder and helping affected families heal through advocacy. I designed and marketed for both the nonprofit and their annual event, the Trail of Truth, which is the largest rally for substance use disorder in the US.",
     },
     meta: [
@@ -692,10 +690,10 @@ export const projects: Project[] = [
         label: "Problem",
         heading: "Truth Pharm needed a way to design and market their upcoming events.",
       },
-      { kind: "media", media: { type: "image", src: `${A}/tp-2.webp`, alt: "Truth Pharm event" } },
       { kind: "text", html: "To accomplish this goal, I collaborated with the team to:" },
       {
-        kind: "list",
+        kind: "mediaList",
+        media: { type: "image", src: `${A}/tp-2.webp`, alt: "Truth Pharm event" },
         items: [
           "Schedule social media posts across both Truth Pharm and Trail of Truth accounts",
           "Design event flyers, headers, and posts to advertise upcoming events and rallies",
@@ -778,17 +776,18 @@ export const projects: Project[] = [
         kind: "text",
         html: "Business cards, postcards, flyers, and other forms of merchandise were designed to promote both Truth Pharm and the Trail of Truth. Alongside printed deliverables, I managed both social media accounts and posted at least 3 times a week, tracking analytics using the Meta Business Suite.",
       },
+      { kind: "media", media: { type: "image", src: `${A}/delivery-t-shirts.webp`, alt: "T-shirts" } },
       {
         kind: "grid",
-        cols: 3,
+        cols: 2,
         media: [
-          { type: "image", src: `${A}/delivery-t-shirts.webp`, alt: "T-shirts" },
           { type: "image", src: `${A}/delivery-cards.webp`, alt: "Cards" },
           { type: "image", src: `${A}/delivery-posters.webp`, alt: "Posters" },
         ],
       },
       {
         kind: "media",
+        size: "sm",
         media: {
           type: "video",
           poster: `${A}/video-mp4-320x642-4-poster-00001.jpg`,

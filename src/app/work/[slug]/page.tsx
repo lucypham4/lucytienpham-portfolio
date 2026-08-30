@@ -96,15 +96,9 @@ export default async function CaseStudyPage({
 
           <div id="overview" className="mt-12 scroll-mt-[112px] sm:scroll-mt-[136px]">
             {project.overview && (
-              <section
-                className={
-                  project.overview.media
-                    ? "grid grid-cols-1 gap-8 md:grid-cols-[1fr_1.4fr]"
-                    : ""
-                }
-              >
+              <section>
                 {project.overview.media && (
-                  <div>
+                  <div className="mb-10 max-w-sm">
                     <MediaBlock media={project.overview.media} />
                   </div>
                 )}
