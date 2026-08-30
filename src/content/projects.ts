@@ -722,59 +722,54 @@ export const projects: Project[] = [
       { kind: "heading", text: "Coding topography in QGIS" },
       {
         kind: "text",
-        html: "The book&rsquo;s contour line work is generated from real elevation data rather than drawn. I used <strong>QGIS</strong> to build contour layers from that data &mdash; Mt. Etna, whose basalt supplies the silicate photomicrograph the lines sit against &mdash; then <strong>exported them and rebuilt the output as clean vectors in Adobe Illustrator</strong>: reweighting the strokes, thinning the density down to what a printed page can actually hold, and setting the elevation labels in the book&rsquo;s own type. The result is topography that is accurate at the source and still reads as part of the design system rather than a screenshot dropped into a layout.",
+        html: "The book&rsquo;s contour line work is generated from real elevation data of Mt. Etna in <strong>QGIS</strong>, then exported and rebuilt as clean vectors in <strong>Adobe Illustrator</strong> to match the book&rsquo;s grid and type.",
       },
       {
         kind: "grid",
         cols: 2,
         media: [
-          { type: "pending", note: "silicon-qgis.png — the QGIS contour output before vectorising." },
           {
             type: "image",
-            src: `${A}/silicon-spread-silicates.jpg`,
-            alt: "The finished Silicates spread pairing QGIS contour data with a mineral thin-section photograph",
+            src: `${A}/silicon-qgis.webp`,
+            alt: "The raw QGIS contour output for Mt. Etna, white lines on black with elevation labels",
+          },
+          {
+            type: "image",
+            src: `${A}/silicon-mt-etna.webp`,
+            alt: "The finished Silicates spread pairing the vectorised contour lines with a mineral thin-section photograph",
           },
         ],
       },
       { kind: "heading", text: "Rendering the navigation icons in 3D" },
       {
         kind: "text",
-        html: "The part marks live twice. Flat, they are the navigation system &mdash; one mark per part, recurring at its opener so a reader landing on a random spread can place themselves in the book before reading a word. At each opener they also appear as <strong>3D renders built in Adobe Dimension</strong> &mdash; given material, lighting, and depth &mdash; so the title pages carry visual weight the flat marks could not.",
+        html: "The flat navigational marks also appear as <strong>3D renders built in Adobe Dimension</strong> at each part&rsquo;s title page, giving material, lighting, and depth to a mark that otherwise only works flat.",
       },
       {
         kind: "media",
         framed: true,
         media: {
-          type: "pending",
-          note: "silicon-icons.png — the five flat navigational marks laid out together.",
+          type: "image",
+          src: `${A}/silicon-icons.webp`,
+          alt: "The five flat navigational marks, one per part: a circle, a triple ring, an atom, a maze, and an orbit with nodes",
         },
       },
       {
         kind: "grid",
         cols: 2,
         media: [
-          { type: "pending", note: "silicon-dimension.png — a Dimension render, or the flat vs. 3D pair." },
-          { type: "pending", note: "silicon-title-page.jpg — a finished title page using the 3D icon." },
-        ],
-      },
-      {
-        kind: "cards",
-        items: [
           {
-            title: "QGIS → Illustrator",
-            body: "Generating contour layers from real elevation data in a GIS tool, then rebuilding them as editable vector artwork that obeys the book's grid, weights, and type.",
+            type: "image",
+            src: `${A}/silicon-dimension.webp`,
+            alt: "The Transformations mark rendered in 3D in Adobe Dimension, given material, lighting, and depth",
           },
           {
-            title: "Adobe Dimension",
-            body: "Modelling, texturing, and lighting the flat icon set so every part opener gets a rendered counterpart of its navigational mark.",
-          },
-          {
-            title: "InDesign production",
-            body: "Master pages, paragraph and object styles, and a print-ready file that holds 50 spreads together without drift.",
+            type: "image",
+            src: `${A}/silicon-title-page.webp`,
+            alt: "The finished Part 02: Transformations title spread, using the 3D-rendered mark",
           },
         ],
       },
-
       { kind: "section", label: "Reflection" },
       {
         kind: "cards",

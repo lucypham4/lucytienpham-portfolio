@@ -50,9 +50,9 @@ export type Block =
       caption?: string;
       size?: MediaSize;
       /**
-       * Sit the asset on a bordered, tinted card instead of bare on the page.
-       * For artwork that needs a fixed neutral ground to stay legible in both
-       * themes — e.g. dark line art that would vanish against a dark page.
+       * Sit the asset on a fixed black card instead of bare on the page. For
+       * artwork that needs one ground to stay legible in both themes — e.g.
+       * white line art that would vanish against a light page.
        */
       framed?: boolean;
     }

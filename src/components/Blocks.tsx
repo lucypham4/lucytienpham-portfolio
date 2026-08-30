@@ -74,7 +74,7 @@ function BlockView({ block }: { block: Block }) {
       return (
         <figure className={`mt-8 ${block.size ? sizeCap[block.size] : ""}`}>
           {frame ? (
-            <div className="mx-auto max-w-[560px] rounded-xl2 border border-line bg-shell p-8">
+            <div className="mx-auto max-w-[560px] rounded-xl2 bg-black p-8">
               <MediaBlock media={block.media} />
             </div>
           ) : (
