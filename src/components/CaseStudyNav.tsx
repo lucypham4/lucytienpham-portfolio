@@ -13,6 +13,7 @@ const READING_LINE = 220;
 
 export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
   const [active, setActive] = useState(sections[0]?.id ?? "");
+  const [collapsed, setCollapsed] = useState(false);
 
   // While a click-triggered smooth scroll is in flight the intermediate
   // positions would drag the highlight backwards, so the spy pauses.
@@ -44,27 +45,62 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
     <aside className="hidden lg:block">
       <nav
         aria-label="Case study sections"
-        className="sticky top-[136px] flex flex-col gap-4 self-start"
+        className="sticky top-[136px] flex flex-col self-start"
       >
-        {sections.map((section) => {
-          const isActive = section.id === active;
-          return (
-            <a
-              key={section.id}
-              href={`#${section.id}`}
-              aria-current={isActive ? "true" : undefined}
-              onClick={() => {
-                setActive(section.id);
-                lockedUntil.current = Date.now() + 900;
-              }}
-              className={`text-base leading-6 transition-colors ${
-                isActive ? "font-semibold text-ink" : "text-grey hover:text-ink"
-              }`}
-            >
-              {section.label}
-            </a>
-          );
-        })}
+        <button
+          type="button"
+          onClick={() => setCollapsed((c) => !c)}
+          aria-expanded={!collapsed}
+          className="flex cursor-pointer items-center gap-1.5 text-sm font-semibold text-ink"
+        >
+          Sections
+          <svg
+            aria-hidden
+            viewBox="0 0 12 12"
+            className={`h-3 w-3 transition-transform duration-200 ${
+              collapsed ? "-rotate-90" : ""
+            }`}
+          >
+            <path
+              d="M3 4.5 6 7.5 9 4.5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
+
+        <div
+          className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+            collapsed ? "grid-rows-[0fr]" : "grid-rows-[1fr]"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="flex flex-col gap-4 pt-4">
+              {sections.map((section) => {
+                const isActive = section.id === active;
+                return (
+                  <a
+                    key={section.id}
+                    href={`#${section.id}`}
+                    aria-current={isActive ? "true" : undefined}
+                    onClick={() => {
+                      setActive(section.id);
+                      lockedUntil.current = Date.now() + 900;
+                    }}
+                    className={`text-base leading-6 transition-colors ${
+                      isActive ? "font-semibold text-ink" : "text-grey hover:text-ink"
+                    }`}
+                  >
+                    {section.label}
+                  </a>
+                );
+              })}
+            </div>
+          </div>
+        </div>
       </nav>
     </aside>
   );
