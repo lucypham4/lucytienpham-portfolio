@@ -68,24 +68,30 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
             onClick={() => setCollapsed((c) => !c)}
             aria-expanded={!collapsed}
             aria-label={collapsed ? "Expand section list" : "Collapse section list"}
-            className="flex cursor-pointer items-center gap-1.5 text-sm font-semibold text-ink"
+            className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-ink"
           >
-            <svg
-              aria-hidden
-              viewBox="0 0 12 12"
-              className={`h-3 w-3 shrink-0 transition-transform duration-300 ${
-                collapsed ? "rotate-180" : ""
-              }`}
-            >
-              <path
-                d="M7.5 3 4.5 6l3 3"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            {/* Bordered just around the icon, not the whole button — at 40px
+                collapsed the nav can't fit a wider bordered box without
+                clipping it, so the border stays on the one part that's
+                always fully visible. */}
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-card border border-line-soft">
+              <svg
+                aria-hidden
+                viewBox="0 0 12 12"
+                className={`h-3 w-3 transition-transform duration-300 ${
+                  collapsed ? "rotate-180" : ""
+                }`}
+              >
+                <path
+                  d="M7.5 3 4.5 6l3 3"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </span>
             <span className={collapsed ? "opacity-0" : "opacity-100"}>Sections</span>
           </button>
 
