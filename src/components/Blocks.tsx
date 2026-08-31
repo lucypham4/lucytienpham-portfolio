@@ -121,7 +121,7 @@ function BlockView({ block }: { block: Block }) {
               image's own content — so filling right up to its half of the
               margins is guaranteed at any width, nothing to wrap. */}
           <div className="min-w-0 flex-1">
-            <MediaBlock media={block.from} className="rounded-card" />
+            <MediaBlock media={block.from} className="rounded-xl2" />
           </div>
           <svg
             aria-hidden
@@ -138,7 +138,7 @@ function BlockView({ block }: { block: Block }) {
             />
           </svg>
           <div className="min-w-0 flex-1">
-            <MediaBlock media={block.to} className="rounded-card" />
+            <MediaBlock media={block.to} className="rounded-xl2" />
           </div>
         </div>
       );
