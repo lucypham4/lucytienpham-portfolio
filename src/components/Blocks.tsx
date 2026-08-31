@@ -117,11 +117,11 @@ function BlockView({ block }: { block: Block }) {
     case "pair":
       return (
         <div className="mt-8 flex items-center gap-4 sm:gap-6">
-          {/* Each side is a `flex-1` share of the row, not a size set by the
-              image's own content — so filling right up to its half of the
-              margins is guaranteed at any width, nothing to wrap. */}
-          <div className="min-w-0 flex-1">
-            <MediaBlock media={block.from} className="rounded-xl2" />
+          {/* Each side is a `flex-1` share of the row, and the `aspect-video`
+              box (not the image's own content) sets its size — so the two
+              sides match regardless of the source assets' own aspect ratios. */}
+          <div className="aspect-video min-w-0 flex-1 overflow-hidden rounded-xl2">
+            <MediaBlock media={block.from} fit="fill" />
           </div>
           <svg
             aria-hidden
@@ -137,8 +137,8 @@ function BlockView({ block }: { block: Block }) {
               strokeLinejoin="round"
             />
           </svg>
-          <div className="min-w-0 flex-1">
-            <MediaBlock media={block.to} className="rounded-xl2" />
+          <div className="aspect-video min-w-0 flex-1 overflow-hidden rounded-xl2">
+            <MediaBlock media={block.to} fit="fill" />
           </div>
         </div>
       );
