@@ -96,7 +96,7 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
           </button>
 
           <div
-            className={`flex flex-col gap-4 pt-4 transition-opacity duration-200 ${
+            className={`flex flex-col gap-5 pt-4 transition-opacity duration-200 ${
               collapsed ? "pointer-events-none opacity-0" : "opacity-100"
             }`}
           >
@@ -111,7 +111,7 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
                     setActive(section.id);
                     lockedUntil.current = Date.now() + 900;
                   }}
-                  className={`text-base leading-6 whitespace-nowrap transition-colors ${
+                  className={`text-base leading-[1.15] transition-colors ${
                     isActive ? "font-semibold text-ink" : "text-grey hover:text-ink"
                   }`}
                 >
