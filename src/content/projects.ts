@@ -403,6 +403,393 @@ export const projects: Project[] = [
   },
 
   {
+    slug: "silicon",
+    title: "Si: Silicon",
+    tagline: "Created an informational coffee table book about a hidden element.",
+    categories: ["Editorial Design", "Personal Project"],
+    // TODO: replace the pending slots below once the exports land. Each note
+    // names the file it is waiting for.
+    thumb: {
+      type: "slideshow",
+      interval: 1000,
+      items: [
+        { src: `${A}/silicon-spread-silicates.jpg`, alt: "A spread from Si: Silicon on silicate minerals, topographic vectors beside a mineral thin-section photograph" },
+        { src: `${A}/silicon-spread-terminology.jpg`, alt: "A spread from Si: Silicon distinguishing silicon, silica, silicate, and silicone" },
+        { src: `${A}/silicon-spread-society.jpg`, alt: "A spread from Si: Silicon on AI and surveillance, object-detection labels over a street scene" },
+      ],
+    },
+    hero: {
+      headline: "SI: Silicon",
+      hideTagline: true,
+      panel: true,
+      panelFill: true,
+      media: {
+        type: "image",
+        src: `${A}/silicon-cover.jpg`,
+        alt: "The printed cover of Si: Silicon, styled as the element's periodic table cell",
+      },
+    },
+    overview: {
+      label: "Challenge",
+      html: "Under Prof. G&ouml;khan Ersan, I was tasked with creating a coffee table book that would be published by the end of the semester. The main challenge was to create a polished editorial design for a single subject that would implement a navigational design.",
+      impactLabel: "Approach",
+      impact:
+        "I utilized a 9 x 9 grid system, custom icons, contact pages, spread planning, and experimental design tools to strengthen the visual language of the book and help solidify my vision for the final printing.",
+    },
+    meta: [
+      { label: "Duration", value: "October – December 2025\nOne semester (~2.5 months)" },
+      {
+        label: "My Role",
+        value: "Designer",
+      },
+      {
+        label: "Tools",
+        value: "Adobe Illustrator, Photoshop, InDesign, Adobe Dimension, QGIS",
+      },
+    ],
+    blocks: [
+      {
+        kind: "section",
+        label: "Structure & Flatplan",
+        heading: "Structure and Flatplan",
+      },
+      {
+        kind: "text",
+        html: "Before the first spread was designed, the book was planned three times over.",
+      },
+      {
+        kind: "tabs",
+        items: [
+          {
+            label: "Figma Planning",
+            caption:
+              "The full 64-page flatplan, mapped spread by spread in Figma before any design began.",
+            media: [
+              {
+                type: "image",
+                src: `${A}/silicon-flatplan.jpg`,
+                alt: "The full 64-page flatplan, spread by spread, with working titles and reference images",
+              },
+            ],
+          },
+          {
+            label: "Grey Wireframes",
+            caption:
+              "Every spread blocked out in grey before an image or line of copy went in.",
+            media: [
+              {
+                type: "image",
+                src: `${A}/silicon-layout-grid.jpg`,
+                alt: "Grey-block wireframes for every spread, composed before any image or copy went in",
+              },
+            ],
+          },
+          {
+            label: "Contact Pages",
+            caption:
+              "A contact sheet of the visual research that shaped the book's direction.",
+            media: [
+              {
+                type: "image",
+                src: `${A}/silicon-contact-sheet.jpg`,
+                alt: "A 24-image research grid spanning geology, semiconductors, cleanrooms, and everyday silicon objects",
+              },
+            ],
+          },
+        ],
+      },
+      {
+        kind: "section",
+        label: "The Chapters",
+        heading: "A Tour Through The Book",
+      },
+      {
+        kind: "text",
+        html: "Each part opens on a rendered title page, then moves between full-bleed imagery, diagram spreads, and text pages at the pace the flatplan set.",
+      },
+      {
+        kind: "bookGallery",
+        parts: [
+          {
+            label: "01 Origins",
+            caption: "Sand to silicon, the geology of the crust, silica and the silicates.",
+            images: [
+              {
+                type: "image",
+                src: `${A}/silicon-part01-1.webp`,
+                alt: "The front cover of Si: Silicon, styled as the element's periodic table cell",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-2.webp`,
+                alt: "The table of contents, listing all five parts beside their navigational icons",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-3.webp`,
+                alt: "The Part 01: Origins title spread",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-4.webp`,
+                alt: "A spread from Part 01: Origins",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-5.webp`,
+                alt: "A spread from Part 01: Origins",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-6.webp`,
+                alt: "A spread from Part 01: Origins",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-7.webp`,
+                alt: "A spread from Part 01: Origins",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part01-8.webp`,
+                alt: "A spread from Part 01: Origins",
+              },
+            ],
+          },
+          {
+            label: "02 Transformations",
+            caption:
+              "Semiconductor physics, extraction, zone refining, silicones, and the terminology that separates silicon from silica, silicate, and silicone.",
+            images: [
+              {
+                type: "image",
+                src: `${A}/silicon-part02-1.webp`,
+                alt: "The Part 02: Transformations title spread",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part02-2.webp`,
+                alt: "A spread from Part 02: Transformations",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part02-3.webp`,
+                alt: "A spread from Part 02: Transformations",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part02-4.webp`,
+                alt: "A spread from Part 02: Transformations",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part02-5.webp`,
+                alt: "A spread from Part 02: Transformations",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part02-6.webp`,
+                alt: "A spread from Part 02: Transformations",
+              },
+            ],
+          },
+          {
+            label: "03 Tech & Beyond",
+            caption:
+              "Sand to wafer, the transistor revolution, chips to circuits, the global supply chain, and chips as geopolitics.",
+            images: [
+              {
+                type: "image",
+                src: `${A}/silicon-part03-1.webp`,
+                alt: "The Part 03: Tech & Beyond title spread",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part03-2.webp`,
+                alt: "A spread from Part 03: Tech & Beyond",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part03-3.webp`,
+                alt: "A spread from Part 03: Tech & Beyond",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part03-4.webp`,
+                alt: "A spread from Part 03: Tech & Beyond",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part03-5.webp`,
+                alt: "A spread from Part 03: Tech & Beyond",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part03-6.webp`,
+                alt: "A spread from Part 03: Tech & Beyond",
+              },
+            ],
+          },
+          {
+            label: "04 Challenges",
+            caption:
+              "The physical limits of silicon, environmental costs, the hidden labour behind it, and the digital divide.",
+            images: [
+              {
+                type: "image",
+                src: `${A}/silicon-part04-1.webp`,
+                alt: "The Part 04: Challenges title spread",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part04-2.webp`,
+                alt: "A spread from Part 04: Challenges",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part04-3.webp`,
+                alt: "A spread from Part 04: Challenges",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part04-4.webp`,
+                alt: "A spread from Part 04: Challenges",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part04-5.webp`,
+                alt: "A spread from Part 04: Challenges",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part04-6.webp`,
+                alt: "A spread from Part 04: Challenges",
+              },
+            ],
+          },
+          {
+            label: "05 Futures",
+            caption: "Quantum, graphene, and AI hardware, silicon and energy, and silicon and society.",
+            images: [
+              {
+                type: "image",
+                src: `${A}/silicon-part05-1.webp`,
+                alt: "The Part 05: Futures title spread",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-2.webp`,
+                alt: "A spread from Part 05: Futures",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-3.webp`,
+                alt: "A spread from Part 05: Futures",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-4.webp`,
+                alt: "A spread from Part 05: Futures",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-5.webp`,
+                alt: "A spread from Part 05: Futures",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-6.webp`,
+                alt: "The Civilization spread, Earth at night beside city-light maps of the Americas",
+              },
+              {
+                type: "image",
+                src: `${A}/silicon-part05-7.webp`,
+                alt: "The closing colophon page, with author, course, and source credits",
+              },
+            ],
+          },
+        ],
+      },
+
+      {
+        kind: "section",
+        label: "Special Tools",
+      },
+      {
+        kind: "text",
+        html: "Two of the things holding the book together are not drawn by hand, and neither is made in the software this project would normally be credited to. Both were skills I picked up mid-semester, specifically because the book needed them.",
+      },
+      { kind: "heading", text: "Coding topography in QGIS" },
+      {
+        kind: "text",
+        html: "The book&rsquo;s contour line work is generated from real elevation data of Mt. Etna in <strong>QGIS</strong>, then exported and rebuilt as clean vectors in <strong>Adobe Illustrator</strong> to match the book&rsquo;s grid and type.",
+      },
+      {
+        kind: "grid",
+        cols: 2,
+        framed: true,
+        media: [
+          {
+            type: "image",
+            src: `${A}/silicon-qgis.webp`,
+            alt: "The raw QGIS contour output for Mt. Etna, white lines on black with elevation labels",
+          },
+          {
+            type: "image",
+            src: `${A}/silicon-mt-etna.webp`,
+            alt: "The finished Silicates spread pairing the vectorised contour lines with a mineral thin-section photograph",
+          },
+        ],
+      },
+      { kind: "heading", text: "Rendering the navigation icons in 3D" },
+      {
+        kind: "text",
+        html: "The flat navigational marks also appear as <strong>3D renders built in Adobe Dimension</strong> at each part&rsquo;s title page, giving material, lighting, and depth to a mark that otherwise only works flat.",
+      },
+      {
+        kind: "media",
+        framed: true,
+        media: {
+          type: "image",
+          src: `${A}/silicon-icons.webp`,
+          alt: "The five flat navigational marks, one per part: a circle, a triple ring, an atom, a maze, and an orbit with nodes",
+        },
+      },
+      {
+        kind: "pair",
+        from: {
+          type: "image",
+          src: `${A}/silicon-dimension.webp`,
+          alt: "The Transformations mark rendered in 3D in Adobe Dimension, given material, lighting, and depth",
+        },
+        to: {
+          type: "image",
+          src: `${A}/silicon-title-page.webp`,
+          alt: "The finished Part 02: Transformations title spread, using the 3D-rendered mark",
+        },
+      },
+      { kind: "section", label: "Reflection" },
+      {
+        kind: "cards",
+        items: [
+          {
+            title: "Systems beat spreads",
+            body: "Settling the grid, type, and icon language first turned 64 pages from an impossible workload into a sequence of solvable compositions.",
+          },
+          {
+            title: "Learn the tool the idea needs",
+            body: "QGIS and Dimension were both outside the Adobe workflow I knew. Picking them up mid-semester was faster than compromising the idea to fit the software I already had.",
+          },
+          {
+            title: "Iconography is information design",
+            body: "Treating the icons as navigation rather than decoration gave the book a structure a reader can feel without being told about it.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
     slug: "graditude",
     title: "Graditude",
     tagline:

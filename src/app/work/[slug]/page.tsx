@@ -62,14 +62,20 @@ export default async function CaseStudyPage({
           ) : (
             <div className="shell pt-6 md:pt-10">
               {/* Panelled splashes match the plain ones' 16:9 footprint so
-                  every case study opens at the same height. The asset is
-                  contained inside the padding rather than filling the panel. */}
+                  every case study opens at the same height. By default the
+                  asset is contained inside padding rather than filling the
+                  panel — `panelFill` opts a photograph into covering the
+                  rounded box edge to edge instead. */}
               {project.hero.panel ? (
-                <div className="aspect-video rounded-xl2 bg-shell p-6 md:p-10">
+                <div
+                  className={`aspect-video overflow-hidden rounded-xl2 ${
+                    project.hero.panelFill ? "" : "bg-shell p-6 md:p-10"
+                  }`}
+                >
                   <MediaBlock
                     media={project.hero.media}
                     priority
-                    fit="contain"
+                    fit={project.hero.panelFill ? "fill" : "contain"}
                   />
                 </div>
               ) : (
@@ -79,7 +85,11 @@ export default async function CaseStudyPage({
           ))}
       </header>
 
-      <div className="shell grid grid-cols-1 gap-12 pt-12 lg:grid-cols-[190px_1fr] lg:gap-16">
+      {/* The nav column is `auto`-tracked rather than a fixed 190px so
+          CaseStudyNav can collapse its own width and let this column shrink
+          with it — the content column (1fr) reflows to fill the freed
+          space automatically. */}
+      <div className="shell grid grid-cols-1 gap-12 pt-12 lg:grid-cols-[auto_1fr] lg:gap-16">
         <CaseStudyNav sections={sections} />
 
         <div className="min-w-0">
@@ -103,14 +113,16 @@ export default async function CaseStudyPage({
                   </div>
                 )}
                 <div>
-                  <p className="eyebrow">Overview</p>
+                  <p className="eyebrow">{project.overview.label ?? "Overview"}</p>
                   <p
                     className="prose-body mt-3"
                     dangerouslySetInnerHTML={{ __html: project.overview.html }}
                   />
                   {project.overview.impact && (
                     <>
-                      <p className="eyebrow mt-8">Impact</p>
+                      <p className="eyebrow mt-8">
+                        {project.overview.impactLabel ?? "Impact"}
+                      </p>
                       <p className="prose-body mt-3">
                         {project.overview.impact}
                       </p>

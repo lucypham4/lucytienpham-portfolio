@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { Media } from "@/content/types";
+import MediaSlideshow from "./MediaSlideshow";
 
 /**
  * How the asset sits in its box. Picking one here rather than overriding with
@@ -34,6 +35,37 @@ export default function MediaBlock({
   fit?: Fit;
 }) {
   const fitClasses = fitClassNames[fit];
+
+  // `cover` sizes itself from the asset's own height, which a composed box has
+  // none of, so those two give themselves the same 16:9 footprint a thumbnail
+  // would have had. `grow` is already absolute, so it is a positioning context
+  // for stacked contents; the rest have to be told to be one.
+  const boxClasses =
+    fit === "cover" ? "aspect-video w-full rounded-card" : fitClasses;
+  const stackClasses = fit === "grow" ? boxClasses : `relative ${boxClasses}`;
+
+  if (media.type === "slideshow") {
+    return (
+      <MediaSlideshow
+        items={media.items}
+        interval={media.interval}
+        priority={priority}
+        className={`${stackClasses} ${className}`}
+      />
+    );
+  }
+
+  if (media.type === "pending") {
+    return (
+      <div
+        className={`${boxClasses} ${className} flex items-center justify-center border border-dashed border-line bg-shell p-6`}
+      >
+        <span className="max-w-[36ch] text-center text-sm leading-6 text-grey">
+          {media.note}
+        </span>
+      </div>
+    );
+  }
 
   if (media.type === "video") {
     return (

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Block } from "@/content/types";
 import { slugify } from "@/lib/slug";
+import BookGallery from "./BookGallery";
 import MediaTabs from "./MediaTabs";
 import MediaBlock from "./MediaBlock";
 
@@ -66,10 +67,19 @@ function BlockView({ block }: { block: Block }) {
         />
       );
 
-    case "media":
+    case "media": {
+      // `framed` only matters once real artwork lands — a pending slot
+      // already renders its own dashed box, so a frame here would nest.
+      const frame = block.framed && block.media.type !== "pending";
       return (
         <figure className={`mt-8 ${block.size ? sizeCap[block.size] : ""}`}>
-          <MediaBlock media={block.media} />
+          {frame ? (
+            <div className="mx-auto max-w-[560px] rounded-xl2 bg-black p-8">
+              <MediaBlock media={block.media} />
+            </div>
+          ) : (
+            <MediaBlock media={block.media} />
+          )}
           {block.caption && (
             <figcaption className="mt-3 text-sm leading-6 text-grey">
               {block.caption}
@@ -77,17 +87,59 @@ function BlockView({ block }: { block: Block }) {
           )}
         </figure>
       );
+    }
 
-    case "grid":
-      return (
+    case "grid": {
+      const grid = (
         <div
-          className={`mt-8 grid grid-cols-1 gap-4 ${gridCols[block.cols ?? 2]} ${
+          className={`grid grid-cols-1 gap-4 ${gridCols[block.cols ?? 2]} ${
             block.size ? sizeCap[block.size] : ""
           }`}
         >
-          {block.media.map((m, i) => (
-            <MediaBlock key={i} media={m} />
-          ))}
+          {block.media.map((m, i) =>
+            block.framed ? (
+              <div key={i} className="flex items-center justify-center">
+                <MediaBlock media={m} />
+              </div>
+            ) : (
+              <MediaBlock key={i} media={m} />
+            ),
+          )}
+        </div>
+      );
+      return block.framed ? (
+        <div className="mt-8 rounded-xl2 bg-black p-8">{grid}</div>
+      ) : (
+        <div className="mt-8">{grid}</div>
+      );
+    }
+
+    case "pair":
+      return (
+        <div className="mt-8 flex items-center gap-4 sm:gap-6">
+          {/* Each side is a `flex-1` share of the row, not a size set by the
+              image's own content — so filling right up to its half of the
+              margins is guaranteed at any width, nothing to wrap. */}
+          <div className="min-w-0 flex-1">
+            <MediaBlock media={block.from} className="rounded-xl2" />
+          </div>
+          <svg
+            aria-hidden
+            viewBox="0 0 24 24"
+            className="h-6 w-6 shrink-0 text-grey"
+          >
+            <path
+              d="M4 12h15M13 6l6 6-6 6"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+          <div className="min-w-0 flex-1">
+            <MediaBlock media={block.to} className="rounded-xl2" />
+          </div>
         </div>
       );
 
@@ -159,6 +211,9 @@ function BlockView({ block }: { block: Block }) {
 
     case "tabs":
       return <MediaTabs ariaLabel="Project views" items={block.items} />;
+
+    case "bookGallery":
+      return <BookGallery parts={block.parts} />;
 
     case "embed":
       return (
