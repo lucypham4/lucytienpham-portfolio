@@ -4,144 +4,6 @@ const A = "/assets";
 
 export const projects: Project[] = [
   {
-    slug: "voyage-theater-company",
-    title: "Voyage Theater Company",
-    tagline: "Building a scalable digital stage for diverse voices.",
-    categories: ["Product Design", "Contract"],
-    thumb: {
-      type: "video",
-      poster: `${A}/vtc-portfolio-poster-0000000.jpg`,
-      mp4: `${A}/vtc-portfolio-mp4.mp4`,
-      webm: `${A}/vtc-portfolio-webm.webm`,
-    },
-    hero: {
-      headline: "Building a scalable digital stage for diverse voices.",
-      media: {
-        type: "video",
-        poster: `${A}/vtc-portfolio-poster-0000000.jpg`,
-        mp4: `${A}/vtc-portfolio-mp4.mp4`,
-        webm: `${A}/vtc-portfolio-webm.webm`,
-      },
-    },
-    overview: {
-      html: 'To modernize a decade-old digital presence and eliminate technical fragility, I led the transformation of <a href="https://voyagetheatercompany.org/" target="_blank" rel="noopener noreferrer">Voyage Theater Company</a>&rsquo;s &ldquo;messy patchwork&rdquo; WordPress site into a professional digital stage.',
-      impact:
-        "Replaced a decade-old WordPress build with a templated CMS and trained the staff to run it, so a small non-technical team can update the site without breaking it.",
-    },
-    meta: [
-      { label: "Duration", value: "Oct 2025 – Feb 2026" },
-      { label: "My Role", value: "Product Designer\nContract" },
-      {
-        label: "Team",
-        value:
-          "Wayne Maugans, Founding Artistic Director\nKathleen Salazar, Associate Artistic Director\nCharles C. Bales, Founding Executive Director",
-      },
-    ],
-    blocks: [
-      { kind: "section", label: "A Fragile Patchwork" },
-      {
-        kind: "quote",
-        text: "Every time we make updates, something crashes or goes awry.",
-      },
-      {
-        kind: "text",
-        html: "After meeting with stakeholders, I found that non-artistic directors struggle to manage content, feeling <strong>constrained by the design system</strong> and often breaking things when they try to update it. The old site was not optimized for VTC&rsquo;s mission. How might we create a site that empowers the current staff?",
-      },
-      {
-        kind: "media",
-        media: { type: "image", src: `${A}/desktop-1.png`, alt: "The previous Voyage Theater Company website" },
-      },
-
-      {
-        kind: "section",
-        label: "Rebuilding The Architecture",
-        heading: "A Comprehensive Redesign Spanning From Branding To Technical Migration.",
-      },
-      {
-        kind: "text",
-        html: "Instead of patching a messy web of broken links, I rebuilt Voyage Theater Company&rsquo;s site architecture into a <strong>clear, scalable system</strong>. With improved structure, branding guidelines, and CMS training, the team <strong>can now confidently update content</strong> and grow their digital presence without breaking the site.",
-      },
-      {
-        kind: "media",
-        media: {
-          type: "video",
-          poster: `${A}/current-season-poster-0000000.jpg`,
-          mp4: `${A}/current-season-mp4.mp4`,
-          webm: `${A}/current-season-webm.webm`,
-        },
-      },
-      {
-        kind: "beforeAfter",
-        before: { type: "image", src: `${A}/screenshot-2026-04-23-at-11-25-01-pm-1.png`, alt: "Before" },
-        after: { type: "image", src: `${A}/screenshot-2026-04-23-at-11-25-40-pm-1.png`, alt: "After" },
-      },
-      {
-        kind: "beforeAfter",
-        before: { type: "image", src: `${A}/desktop-3.png`, alt: "Before" },
-        after: {
-          type: "video",
-          poster: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-poster-0000000.jpg`,
-          mp4: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-mp4.mp4`,
-          webm: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-webm.webm`,
-        },
-      },
-
-      {
-        kind: "section",
-        label: "Content Ownership",
-        heading: "Empowering Non-Technical Content Ownership",
-      },
-      {
-        kind: "text",
-        html: "In nonprofit theater, operational independence is everything. I redesigned the site to <strong>empower a small, non-technical team</strong> to manage their own content without breaking the design system, giving VTC a digital presence built to last beyond launch. To reinforce long-term success, I introduced a templated CMS architecture paired with hands-on training, transforming a once fragile, developer-dependent website into a <strong>maintainable, brand-consistent</strong> platform.",
-      },
-
-      {
-        kind: "tabs",
-        items: [
-          {
-            label: "Branding & Logo",
-            cols: 2,
-            media: [
-              { type: "image", src: `${A}/screenshot-2026-02-13-at-1-38-38-pm-1-1-1.png`, alt: "Brand exploration" },
-              { type: "image", src: `${A}/screenshot-2026-02-13-at-1-37-49-pm-1-1.png`, alt: "Logo system" },
-            ],
-          },
-          {
-            label: "Live Site",
-            media: [{ type: "image", src: `${A}/frame-8-9.png`, alt: "Live site" }],
-          },
-          {
-            label: "CMS & Site Training",
-            media: [
-              { type: "image", src: `${A}/screenshot-2026-02-13-at-12-47-40-pm-1.png`, alt: "CMS training materials" },
-            ],
-          },
-        ],
-      },
-
-      { kind: "section", label: "Reflection" },
-      {
-        kind: "cards",
-        items: [
-          {
-            title: "Managing Up",
-            body: "Made sure that all stakeholders are aligned with meeting dates, expectations, and tasks.",
-          },
-          {
-            title: "Operational Autonomy",
-            body: "Unified page architecture ensures brand consistency and reduces future maintenance friction.",
-          },
-          {
-            title: "Contracting 101",
-            body: "Understanding setting rates, scope management, and professional offboarding.",
-          },
-        ],
-      },
-    ],
-  },
-
-  {
     slug: "the-washington-post",
     title: "The Washington Post",
     tagline:
@@ -396,6 +258,144 @@ export const projects: Project[] = [
           {
             title: "Go beyond the MVP",
             body: "I design scalable frameworks and flexible templates that ensure products can grow well past their initial launch.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "voyage-theater-company",
+    title: "Voyage Theater Company",
+    tagline: "Building a scalable digital stage for diverse voices.",
+    categories: ["Product Design", "Contract"],
+    thumb: {
+      type: "video",
+      poster: `${A}/vtc-portfolio-poster-0000000.jpg`,
+      mp4: `${A}/vtc-portfolio-mp4.mp4`,
+      webm: `${A}/vtc-portfolio-webm.webm`,
+    },
+    hero: {
+      headline: "Building a scalable digital stage for diverse voices.",
+      media: {
+        type: "video",
+        poster: `${A}/vtc-portfolio-poster-0000000.jpg`,
+        mp4: `${A}/vtc-portfolio-mp4.mp4`,
+        webm: `${A}/vtc-portfolio-webm.webm`,
+      },
+    },
+    overview: {
+      html: 'To modernize a decade-old digital presence and eliminate technical fragility, I led the transformation of <a href="https://voyagetheatercompany.org/" target="_blank" rel="noopener noreferrer">Voyage Theater Company</a>&rsquo;s &ldquo;messy patchwork&rdquo; WordPress site into a professional digital stage.',
+      impact:
+        "Replaced a decade-old WordPress build with a templated CMS and trained the staff to run it, so a small non-technical team can update the site without breaking it.",
+    },
+    meta: [
+      { label: "Duration", value: "Oct 2025 – Feb 2026" },
+      { label: "My Role", value: "Product Designer\nContract" },
+      {
+        label: "Team",
+        value:
+          "Wayne Maugans, Founding Artistic Director\nKathleen Salazar, Associate Artistic Director\nCharles C. Bales, Founding Executive Director",
+      },
+    ],
+    blocks: [
+      { kind: "section", label: "A Fragile Patchwork" },
+      {
+        kind: "quote",
+        text: "Every time we make updates, something crashes or goes awry.",
+      },
+      {
+        kind: "text",
+        html: "After meeting with stakeholders, I found that non-artistic directors struggle to manage content, feeling <strong>constrained by the design system</strong> and often breaking things when they try to update it. The old site was not optimized for VTC&rsquo;s mission. How might we create a site that empowers the current staff?",
+      },
+      {
+        kind: "media",
+        media: { type: "image", src: `${A}/desktop-1.png`, alt: "The previous Voyage Theater Company website" },
+      },
+
+      {
+        kind: "section",
+        label: "Rebuilding The Architecture",
+        heading: "A Comprehensive Redesign Spanning From Branding To Technical Migration.",
+      },
+      {
+        kind: "text",
+        html: "Instead of patching a messy web of broken links, I rebuilt Voyage Theater Company&rsquo;s site architecture into a <strong>clear, scalable system</strong>. With improved structure, branding guidelines, and CMS training, the team <strong>can now confidently update content</strong> and grow their digital presence without breaking the site.",
+      },
+      {
+        kind: "media",
+        media: {
+          type: "video",
+          poster: `${A}/current-season-poster-0000000.jpg`,
+          mp4: `${A}/current-season-mp4.mp4`,
+          webm: `${A}/current-season-webm.webm`,
+        },
+      },
+      {
+        kind: "beforeAfter",
+        before: { type: "image", src: `${A}/screenshot-2026-04-23-at-11-25-01-pm-1.png`, alt: "Before" },
+        after: { type: "image", src: `${A}/screenshot-2026-04-23-at-11-25-40-pm-1.png`, alt: "After" },
+      },
+      {
+        kind: "beforeAfter",
+        before: { type: "image", src: `${A}/desktop-3.png`, alt: "Before" },
+        after: {
+          type: "video",
+          poster: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-poster-0000000.jpg`,
+          mp4: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-mp4.mp4`,
+          webm: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-webm.webm`,
+        },
+      },
+
+      {
+        kind: "section",
+        label: "Content Ownership",
+        heading: "Empowering Non-Technical Content Ownership",
+      },
+      {
+        kind: "text",
+        html: "In nonprofit theater, operational independence is everything. I redesigned the site to <strong>empower a small, non-technical team</strong> to manage their own content without breaking the design system, giving VTC a digital presence built to last beyond launch. To reinforce long-term success, I introduced a templated CMS architecture paired with hands-on training, transforming a once fragile, developer-dependent website into a <strong>maintainable, brand-consistent</strong> platform.",
+      },
+
+      {
+        kind: "tabs",
+        items: [
+          {
+            label: "Branding & Logo",
+            cols: 2,
+            media: [
+              { type: "image", src: `${A}/screenshot-2026-02-13-at-1-38-38-pm-1-1-1.png`, alt: "Brand exploration" },
+              { type: "image", src: `${A}/screenshot-2026-02-13-at-1-37-49-pm-1-1.png`, alt: "Logo system" },
+            ],
+          },
+          {
+            label: "Live Site",
+            media: [{ type: "image", src: `${A}/frame-8-9.png`, alt: "Live site" }],
+          },
+          {
+            label: "CMS & Site Training",
+            media: [
+              { type: "image", src: `${A}/screenshot-2026-02-13-at-12-47-40-pm-1.png`, alt: "CMS training materials" },
+            ],
+          },
+        ],
+      },
+
+      { kind: "section", label: "Reflection" },
+      {
+        kind: "cards",
+        items: [
+          {
+            title: "Managing Up",
+            body: "Made sure that all stakeholders are aligned with meeting dates, expectations, and tasks.",
+          },
+          {
+            title: "Operational Autonomy",
+            body: "Unified page architecture ensures brand consistency and reduces future maintenance friction.",
+          },
+          {
+            title: "Contracting 101",
+            body: "Understanding setting rates, scope management, and professional offboarding.",
           },
         ],
       },
