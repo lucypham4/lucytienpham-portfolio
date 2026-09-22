@@ -48,7 +48,94 @@ const BLOOM_MS = 1700;
 const CYCLE_MS = WILT_MS + BLOOM_MS;
 const SPREAD_MS = 900;
 
+/**
+ * A press waters the flower first: streaks of the word fall at 45° from the
+ * top left over the whole plant, each soaking in at a letter of it. The
+ * cycle starts once the last one has landed.
+ */
+const RAIN_WORD = "water";
+const RAIN_DROPS = 110;
+/** Drops set off across this long, so the water arrives as a shower. */
+const RAIN_SPAWN_MS = 700;
+/** How fast a drop falls, in rows per millisecond, each drop a little
+ *  faster or slower. Measured against the flower rather than in pixels, so
+ *  a shower takes as long at any width. */
+const RAIN_SPEED = 0.12;
+const RAIN_SPEED_SPREAD = 0.03;
+/** The shower's letters against the flower's, so the word can be read. */
+const RAIN_SCALE = 1.5;
+/** How far apart a streak's letters sit along its path, in rows: about one
+ *  letter's advance at RAIN_SCALE. */
+const RAIN_STEP = Math.SQRT1_2;
+/** Used if the site's blue token is missing. */
+const RAIN_FALLBACK = "#339af0";
+
 type Point = { x: number; y: number; born: number };
+
+/** One falling streak. Positions are in grid cells, fractional, with the
+ *  head of the streak at (col, row) when it sets off at `born`. */
+type Drop = {
+  col: number;
+  row: number;
+  born: number;
+  speed: number;
+  lands: number;
+};
+
+type Rain = { drops: Drop[]; ends: number };
+
+/** Rows the head has fallen since it set off. A step down one row is a step
+ *  across CELL_ASPECT columns, which keeps the path at 45° on screen. */
+const headRow = (drop: Drop, now: number) =>
+  drop.row + (now - drop.born) * drop.speed;
+
+/** Aims a shower at the plant as it stands in `cells`. */
+function makeRain(cells: Uint8Array, now: number): Rain {
+  const lit: number[] = [];
+  for (let i = 0; i < cells.length; i++) {
+    const col = i % FLOWER_COLS;
+    if (cells[i] && col >= BOX.col && col < BOX.col + BOX.cols) lit.push(i);
+  }
+
+  const drops: Drop[] = [];
+  let ends = now;
+  // Every streak starts wholly above the top edge.
+  const start = BOX.row - RAIN_WORD.length * RAIN_STEP - 1;
+  for (let k = 0; k < RAIN_DROPS && lit.length; k++) {
+    // Each streak soaks in at a letter of the plant picked at random, so the
+    // water falls over the whole of it rather than only its near edge.
+    const target = lit[(Math.random() * lit.length) | 0];
+    const lands = Math.floor(target / FLOWER_COLS);
+    const col = (target % FLOWER_COLS) - (lands - start) * CELL_ASPECT;
+
+    const born = now + Math.random() * RAIN_SPAWN_MS;
+    const speed = RAIN_SPEED + (Math.random() * 2 - 1) * RAIN_SPEED_SPREAD;
+    // The tail lands a streak's length behind the head.
+    const soaked =
+      born + (lands - start + RAIN_WORD.length * RAIN_STEP) / speed;
+    if (soaked > ends) ends = soaked;
+    drops.push({ col, row: start, born, speed, lands });
+  }
+  return { drops, ends };
+}
+
+type Shot = {
+  frame: number;
+  colour: boolean;
+  next: boolean;
+  spread: number;
+  began: number | null;
+  rain: Rain | null;
+};
+
+/** Starts the close-and-bloom, handing the flower the other colours. A cycle
+ *  already running restarts rather than stacking another. */
+function beginCycle(s: Shot, now: number) {
+  s.colour = s.next;
+  s.next = !s.colour;
+  s.spread = 0;
+  s.began = now;
+}
 
 /** Blends two `#rrggbb` colours; t=0 is `a`, t=1 is `b`. */
 function mixHex(a: string, b: string, t: number) {
@@ -237,7 +324,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   const cursor = useRef<{ x: number; y: number } | null>(null);
 
   /** Everything the loop needs, held in refs so a press never restarts it. */
-  const shot = useRef({
+  const shot = useRef<Shot>({
     frame: 0,
     /** Opens in the clip's colours; a press trades them for the page's ink. */
     colour: true,
@@ -246,8 +333,16 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     /** How far the colour has washed out from the heart, 0 to 1. */
     spread: 1,
     /** When the running cycle began; null once it has finished. */
-    began: null as number | null,
+    began: null,
+    /** The shower on its way down, if any. */
+    rain: null,
   });
+
+  /** The latest onPick, for the loop to call once the water has landed. */
+  const pick = useRef(onPick);
+  useEffect(() => {
+    pick.current = onPick;
+  }, [onPick]);
 
   useEffect(() => {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -346,19 +441,20 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
             leanY = (dy / away) * pull;
           }
 
+          // Cells the wash has already reached wear the new colour.
+          const turned = REACH[i] <= now.spread;
+          const active = turned ? now.next : now.colour;
+
+          // The cursor always shows the other side: in ink, the letter's
+          // own hue shows through near it and scatters in that hue; in
+          // colour, the page's ink (near black, or near white when dark)
+          // does instead.
           if (scatter) {
-            // Scattered glyphs carry the letter's own hue, so the streak
-            // reads as the flower's colours rather than blank noise.
-            ctx.fillStyle = hue;
+            ctx.fillStyle = active ? ink : hue;
+          } else if (active) {
+            ctx.fillStyle = near > 0 ? mixHex(hue, ink, near) : hue;
           } else {
-            // Cells the wash has already reached wear the new colour.
-            const turned = REACH[i] <= now.spread;
-            const active = turned ? now.next : now.colour;
-            ctx.fillStyle = active
-              ? hue
-              : near > 0
-                ? mixHex(ink, hue, near)
-                : ink;
+            ctx.fillStyle = near > 0 ? mixHex(ink, hue, near) : ink;
           }
           ctx.globalAlpha = TONE_ALPHA[tone];
 
@@ -371,6 +467,41 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
           );
         }
       }
+
+      if (!scatter && now.rain) paintRain(ctx, now.rain);
+    };
+
+    /** The shower, drawn over the plant: each letter turned to lie along
+     *  its 45° path, the head brightest, gone once it reaches its landing. */
+    const paintRain = (ctx: CanvasRenderingContext2D, rain: Rain) => {
+      const t = performance.now();
+      const turn = Math.SQRT1_2 * dpr;
+      ctx.fillStyle = token("--color-grad-blue") || RAIN_FALLBACK;
+      ctx.font = ctx.font.replace(/[\d.]+px/, `${cellH * RAIN_SCALE}px`);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      for (const drop of rain.drops) {
+        if (t < drop.born) continue;
+        const head = headRow(drop, t);
+        for (let k = 0; k < RAIN_WORD.length; k++) {
+          const row = head - k * RAIN_STEP;
+          if (row > drop.lands) continue;
+          const col = drop.col + (row - drop.row) * CELL_ASPECT;
+          const x = (col - BOX.col + 0.5) * cellW;
+          const y = (row - BOX.row + 0.5) * cellH;
+          ctx.globalAlpha = 1 - k * 0.16;
+          ctx.setTransform(turn, turn, -turn, turn, x * dpr, y * dpr);
+          // The head leads with the word's last letter, so a streak reads
+          // "water" from its tail down to its head.
+          ctx.fillText(RAIN_WORD[RAIN_WORD.length - 1 - k], 0, 0);
+        }
+      }
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalAlpha = 1;
+      ctx.textAlign = "start";
+      ctx.textBaseline = "top";
     };
 
     const repaint = () => {
@@ -397,6 +528,16 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     const tick = (now: number) => {
       const s = shot.current;
       let dirty = false;
+
+      // Once the last drop has soaked in, the flower answers.
+      if (s.rain) {
+        dirty = true;
+        if (now >= s.rain.ends) {
+          s.rain = null;
+          beginCycle(s, now);
+          pick.current();
+        }
+      }
 
       if (s.began !== null) {
         const t = now - s.began;
@@ -512,12 +653,16 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
 
   const press = () => {
     const s = shot.current;
-    // A press during a cycle restarts it rather than stacking another.
-    s.colour = s.next;
-    s.next = !s.colour;
-    s.spread = 0;
-    s.began = performance.now();
-    onPick();
+    // Water already on its way lands before any more is poured.
+    if (s.rain) return;
+    const now = performance.now();
+    // Without motion there is no shower to watch, so answer straight away.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      beginCycle(s, now);
+      onPick();
+      return;
+    }
+    s.rain = makeRain(FRAMES[Math.min(Math.max(s.frame, 0), LAST)], now);
   };
 
   return (
@@ -530,7 +675,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         cursor.current = null;
       }}
       onMouseMove={track}
-      aria-label="Change the intro line and the flower's colours"
+      aria-label="Water the flower to change the intro line and its colours"
       className="ascii-art relative block w-full cursor-pointer select-none"
     >
       <span aria-hidden className="ascii-halo" />

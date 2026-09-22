@@ -32,8 +32,7 @@ export default function HomeIntro() {
             pressed ? "opacity-0" : ""
           }`}
         >
-          <span className="flower-hint-click">Click</span>
-          <span className="flower-hint-tap">Tap</span> the flower
+          Water for a surprise
         </span>
       </div>
 
