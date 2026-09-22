@@ -12,10 +12,13 @@ const openSans = Open_Sans({
 });
 
 // The ASCII piece is a Roboto Mono specimen, so it is set in the real face.
+// Only the flower uses it, so it isn't preloaded on every page; AsciiFlower
+// asks for it when it draws.
 const robotoMono = Roboto_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
