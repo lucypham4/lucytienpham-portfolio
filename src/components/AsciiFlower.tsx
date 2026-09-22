@@ -36,7 +36,7 @@ const SCATTER_MS = 70;
 /** Letters lean toward the cursor, never straying more than this from where
  *  they belong, and only within reach of it. */
 const PULL_MAX = 2;
-const PULL_RADIUS = 110;
+export const PULL_RADIUS = 110;
 
 /**
  * A press runs one unbroken cycle: the flower closes back to a bud and opens
@@ -251,11 +251,8 @@ const BOX = (() => {
   };
 })();
 
-/**
- * How far each cell sits from the heart of the bloom, as 0 to 1. The colour
- * change is released from the centre and washes outward along this.
- */
-const REACH = (() => {
+/** The heart of the open bloom, in cells: the middle of all its letters. */
+const HEART = (() => {
   const open = FRAMES[LAST];
   let sumX = 0;
   let sumY = 0;
@@ -268,16 +265,24 @@ const REACH = (() => {
       n++;
     }
   }
-  const heartX = n ? sumX / n : FLOWER_COLS / 2;
-  const heartY = n ? sumY / n : FLOWER_ROWS / 2;
+  return {
+    col: n ? sumX / n : FLOWER_COLS / 2,
+    row: n ? sumY / n : FLOWER_ROWS / 2,
+  };
+})();
 
+/**
+ * How far each cell sits from the heart of the bloom, as 0 to 1. The colour
+ * change is released from the centre and washes outward along this.
+ */
+const REACH = (() => {
   const out = new Float32Array(FLOWER_COLS * FLOWER_ROWS);
   let far = 1;
   for (let row = 0; row < FLOWER_ROWS; row++) {
     for (let col = 0; col < FLOWER_COLS; col++) {
       // Columns are narrower than rows are tall, so the sweep stays round
       // rather than stretching sideways.
-      const d = Math.hypot((col - heartX) / CELL_ASPECT, row - heartY);
+      const d = Math.hypot((col - HEART.col) / CELL_ASPECT, row - HEART.row);
       out[row * FLOWER_COLS + col] = d;
       if (d > far) far = d;
     }
@@ -347,9 +352,26 @@ const FLOAT_PERIOD_MS = 3400;
 /** How far a detached letter strays from its cell, in cells' worth of pixel. */
 const FLOAT_AMPLITUDE = 1.6;
 
+/**
+ * At rest the flower sways slowly from side to side, pivoting on the foot of
+ * its stem, which stays planted: the bloom moves most. The drawing is turned
+ * as a whole by the compositor rather than redrawn letter by letter, so the
+ * sway costs next to nothing while the flower sits idle.
+ */
+/** One full sway, left and back. */
+const SWAY_PERIOD_MS = 6200;
+/** A slower rhythm blended in, so the sway never quite repeats. */
+const SWAY_DRIFT_MS = 15700;
+/** How far the top of the flower sways either way, in letter widths. */
+const SWAY = 1.5;
+/** The sway stills while the flower is watered and blooms, and picks up
+ *  again over this long once it is open. */
+const SWAY_EASE_MS = 900;
+
 export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   const base = useRef<HTMLCanvasElement>(null);
   const reveal = useRef<HTMLCanvasElement>(null);
+  const drift = useRef<HTMLCanvasElement>(null);
   const stage = useRef<HTMLButtonElement>(null);
   const points = useRef<Point[]>([]);
   const cursor = useRef<{ x: number; y: number } | null>(null);
@@ -378,6 +400,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   useEffect(() => {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
+    /** How much of its sway the flower has right now, 0 to 1. */
+    let swaying = 0;
     let cellW = 3.9;
     let cellH = cellW * CELL_ASPECT;
     let width = BOX.cols * cellW;
@@ -407,12 +431,18 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     };
 
     /**
-     * `scatter` paints the disturbed layer: random glyphs in the other
-     * side's colour. In colour that is the page's own background, so where
-     * the cursor passes the flower reads as having been scattered away
-     * rather than recoloured.
+     * Paints one layer. "body" is the flower itself, less its drifting
+     * flecks, which "drift" paints on their own small layer so they can move
+     * without the whole flower being redrawn. "scatter" paints the disturbed
+     * layer: random glyphs in the other side's colour. In colour that is the
+     * page's own background, so where the cursor passes the flower reads as
+     * having been scattered away rather than recoloured.
      */
-    const paint = (canvas: HTMLCanvasElement | null, scatter = false) => {
+    const paint = (
+      canvas: HTMLCanvasElement | null,
+      layer: "body" | "drift" | "scatter",
+    ) => {
+      const scatter = layer === "scatter";
       const ctx = canvas?.getContext("2d");
       if (!canvas || !ctx) return;
 
@@ -433,7 +463,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       if (!cells) return;
 
       const at = cursor.current;
-
+      const clock = performance.now();
       for (let row = 0; row < FLOWER_ROWS; row++) {
         for (let col = 0; col < FLOWER_COLS; col++) {
           const i = row * FLOWER_COLS + col;
@@ -441,21 +471,25 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
           if (!code) continue;
           // Specks past the edge of the bloom are left out; see BOX.
           if (col < BOX.col || col >= BOX.col + BOX.cols) continue;
+          if (layer === "body" && DETACHED[i]) continue;
+          if (layer === "drift" && !DETACHED[i]) continue;
           const hue = PALETTE[hueOf(code)];
           const tone = toneOf(code);
 
           const x = (col - BOX.col) * cellW;
           const y = (row - BOX.row) * cellH;
 
+          // Each letter's own offset, so neighbours move out of step.
+          const seed = (row * 12.9898 + col * 78.233) % (Math.PI * 2);
+
           // Flecks off the main body drift on their own slow, quiet cycle,
           // each out of step with its neighbours.
           let floatX = 0;
           let floatY = 0;
           if (DETACHED[i]) {
-            const phase = (row * 12.9898 + col * 78.233) % (Math.PI * 2);
-            const t = (performance.now() / FLOAT_PERIOD_MS) * Math.PI * 2;
-            floatY = Math.sin(t + phase) * FLOAT_AMPLITUDE;
-            floatX = Math.cos(t * 0.85 + phase) * FLOAT_AMPLITUDE * 0.6;
+            const t = (clock / FLOAT_PERIOD_MS) * Math.PI * 2;
+            floatY = Math.sin(t + seed) * FLOAT_AMPLITUDE;
+            floatX = Math.cos(t * 0.85 + seed) * FLOAT_AMPLITUDE * 0.6;
           }
 
           // Lean toward the cursor, falling off with distance and capped so a
@@ -501,7 +535,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         }
       }
 
-      if (!scatter && now.rain) paintRain(ctx, now.rain);
+      if (layer === "body" && now.rain) paintRain(ctx, now.rain);
     };
 
     /** The shower, drawn over the plant: each letter turned to lie along
@@ -537,8 +571,9 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     };
 
     const repaint = () => {
-      paint(base.current);
-      paint(reveal.current, true);
+      paint(base.current, "body");
+      paint(drift.current, "drift");
+      paint(reveal.current, "scatter");
     };
 
     // Open on load the same way a press does, minus the closing half.
@@ -554,6 +589,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     let raf = 0;
     let lastScatter = 0;
     let lastFloat = 0;
+    let masked = "";
+    let lastTick = performance.now();
     let leaning = "";
     let drawn = -1;
 
@@ -610,14 +647,41 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         dirty = true;
       }
 
-      // The detached flecks drift on their own clock, independent of
-      // anything else that would otherwise ask for a redraw.
+      // The detached flecks drift on their own clock, on their own layer,
+      // so only they are redrawn for it.
+      let drifted = dirty;
       if (FLOAT_ANY && now - lastFloat > FLOAT_MS) {
         lastFloat = now;
-        dirty = true;
+        drifted = true;
       }
 
-      if (dirty) paint(base.current);
+      // The flower sways only while it is open and at rest, easing
+      // in and out rather than stopping dead.
+      const still = s.began === null && !s.rain;
+      const eased = Math.min(1, (now - lastTick) / SWAY_EASE_MS);
+      lastTick = now;
+      swaying = still
+        ? Math.min(1, swaying + eased)
+        : Math.max(0, swaying - eased);
+
+      // Turn the layers about the foot of the stem, so the top of the
+      // flower travels SWAY letter widths at the height of the swing.
+      const swing =
+        swaying *
+        SWAY *
+        (0.8 * Math.sin((now / SWAY_PERIOD_MS) * Math.PI * 2) +
+          0.2 * Math.sin((now / SWAY_DRIFT_MS) * Math.PI * 2 + 1.1));
+      const footX = (HEART.col - BOX.col + 0.5) * cellW;
+      const footY = height * 0.95;
+      const turn = `rotate(${Math.atan2(swing * cellW, footY)}rad)`;
+      for (const layer of [base.current, drift.current, reveal.current]) {
+        if (!layer) continue;
+        layer.style.transformOrigin = `${footX}px ${footY}px`;
+        layer.style.transform = swing ? turn : "";
+      }
+
+      if (dirty) paint(base.current, "body");
+      if (drifted) paint(drift.current, "drift");
 
       points.current = points.current.filter((p) => now - p.born < TRAIL_MS);
 
@@ -625,7 +689,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       // rate so the static reads as flicker rather than a blur.
       if (points.current.length && now - lastScatter > SCATTER_MS) {
         lastScatter = now;
-        paint(reveal.current, true);
+        paint(reveal.current, "scatter");
       }
 
       const mask = points.current
@@ -641,7 +705,10 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       // rather than "none", which would remove the mask and reveal all of it.
       const applied = mask || "linear-gradient(#0000, #0000)";
       const node = reveal.current;
-      if (node) {
+      // Only touch the style when the mask changes: rewriting it every
+      // frame would have the browser restyle the page for nothing.
+      if (node && applied !== masked) {
+        masked = applied;
         node.style.maskImage = applied;
         node.style.webkitMaskImage = applied;
       }
@@ -712,8 +779,12 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       aria-label="Water the flower to change the intro line and its colours"
       className="ascii-art relative block w-full cursor-pointer select-none"
     >
-      <span aria-hidden className="ascii-halo" />
       <canvas ref={base} aria-hidden className="ascii-canvas" />
+      <canvas
+        ref={drift}
+        aria-hidden
+        className="ascii-canvas pointer-events-none absolute inset-0"
+      />
       <canvas ref={reveal} aria-hidden className="ascii-canvas ascii-reveal" />
     </button>
   );
