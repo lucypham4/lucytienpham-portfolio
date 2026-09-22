@@ -346,9 +346,9 @@ const DETACHED = (() => {
 
 const FLOAT_ANY = DETACHED.some(Boolean);
 /** How often a detached letter's drift is re-evaluated. */
-const FLOAT_MS = 45;
+const FLOAT_MS = 90;
 /** One full up-and-down cycle. */
-const FLOAT_PERIOD_MS = 3400;
+const FLOAT_PERIOD_MS = 7000;
 /** How far a detached letter strays from its cell, in cells' worth of pixel. */
 const FLOAT_AMPLITUDE = 1.6;
 /** Every other letter drifts the same way, only this far, so the whole
@@ -358,7 +358,7 @@ const FLOAT_AMPLITUDE = 1.6;
 const JITTER_AMPLITUDE = 1;
 const QUIVER_MEDIA = "(hover: hover) and (pointer: fine)";
 /** How often the whole flower is redrawn for its quiver. */
-const JITTER_MS = 80;
+const JITTER_MS = 120;
 
 export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   const base = useRef<HTMLCanvasElement>(null);
