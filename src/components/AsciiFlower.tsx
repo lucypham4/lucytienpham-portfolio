@@ -351,6 +351,11 @@ const FLOAT_MS = 45;
 const FLOAT_PERIOD_MS = 3400;
 /** How far a detached letter strays from its cell, in cells' worth of pixel. */
 const FLOAT_AMPLITUDE = 1.6;
+/** Every other letter drifts the same way, only this far, so the whole
+ *  flower quivers without losing its shape. */
+const JITTER_AMPLITUDE = 1;
+/** How often the whole flower is redrawn for its quiver. */
+const JITTER_MS = 80;
 
 export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   const base = useRef<HTMLCanvasElement>(null);
@@ -468,10 +473,11 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
           // each out of step with its neighbours.
           let floatX = 0;
           let floatY = 0;
-          if (DETACHED[i]) {
+          {
             const t = (clock / FLOAT_PERIOD_MS) * Math.PI * 2;
-            floatY = Math.sin(t + seed) * FLOAT_AMPLITUDE;
-            floatX = Math.cos(t * 0.85 + seed) * FLOAT_AMPLITUDE * 0.6;
+            const reach = DETACHED[i] ? FLOAT_AMPLITUDE : JITTER_AMPLITUDE;
+            floatY = Math.sin(t + seed) * reach;
+            floatX = Math.cos(t * 0.85 + seed) * reach * 0.6;
           }
 
           // Lean toward the cursor, falling off with distance and capped so a
@@ -571,6 +577,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     let raf = 0;
     let lastScatter = 0;
     let lastFloat = 0;
+    let lastJitter = 0;
     let masked = "";
     let leaning = "";
     let drawn = -1;
@@ -634,6 +641,12 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       if (FLOAT_ANY && now - lastFloat > FLOAT_MS) {
         lastFloat = now;
         drifted = true;
+      }
+      // The rest of the flower quivers more slowly, so it is redrawn less
+      // often for it.
+      if (now - lastJitter > JITTER_MS) {
+        lastJitter = now;
+        dirty = true;
       }
 
       if (dirty) paint(base.current, "body");
