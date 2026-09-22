@@ -353,10 +353,13 @@ const FLOAT_PERIOD_MS = 3400;
 const FLOAT_AMPLITUDE = 1.6;
 
 /**
- * At rest the flower sways slowly from side to side, pivoting on the foot of
- * its stem, which stays planted: the bloom moves most. The drawing is turned
- * as a whole by the compositor rather than redrawn letter by letter, so the
- * sway costs next to nothing while the flower sits idle.
+ * At rest the flower sways slowly from side to side, bending from the foot
+ * of its stem, which stays planted: from the heart up it moves fully, the
+ * stem less and less toward its foot. The flower is drawn once to an
+ * offscreen sheet; each frame copies it to the screen a row of letters at a
+ * time, each row shifted by a whole number of device pixels. Nothing is
+ * redrawn or resampled for the sway, so it stays crisp and costs little.
+ * (Rotating the drawn canvas instead made its rows shimmer.)
  */
 /** One full sway, left and back. */
 const SWAY_PERIOD_MS = 6200;
@@ -421,6 +424,23 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
 
     const token = (name: string) =>
       getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+    /** Where the body is drawn before it is copied to the screen, swayed. */
+    const sheet = document.createElement("canvas");
+    /** Where the sway has the top of the flower now, in letter widths. */
+    let swing = 0;
+    /** The row shifts last copied to the screen, to skip copies that would
+     *  change nothing. */
+    let shifted = "";
+
+    /** How much of the sway reaches a given height: all of it from the
+     *  heart up, fading down the stem to nothing at its foot. */
+    const bendAt = (y: number) => {
+      const heartY = (HEART.row - BOX.row) * cellH;
+      const footY = height * 0.95;
+      const below = (y - heartY) / (footY - heartY);
+      return below <= 0 ? 1 : Math.max(0, 1 - below) ** 1.5;
+    };
 
     const size = (canvas: HTMLCanvasElement) => {
       if (canvas.width === Math.round(width * dpr)) return;
@@ -490,6 +510,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
             const t = (clock / FLOAT_PERIOD_MS) * Math.PI * 2;
             floatY = Math.sin(t + seed) * FLOAT_AMPLITUDE;
             floatX = Math.cos(t * 0.85 + seed) * FLOAT_AMPLITUDE * 0.6;
+            // They sway with the flower too, drawn straight in place.
+            floatX += swing * bendAt(y) * cellW;
           }
 
           // Lean toward the cursor, falling off with distance and capped so a
@@ -570,8 +592,50 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       ctx.textBaseline = "top";
     };
 
+    /**
+     * Copies the body from the sheet to the screen, one row of letters at a
+     * time, each shifted by the sway at its height rounded to whole device
+     * pixels. Skipped when no row would move, unless `force`d after a
+     * redraw of the sheet.
+     */
+    const present = (force: boolean) => {
+      const canvas = base.current;
+      const ctx = canvas?.getContext("2d");
+      if (!canvas || !ctx) return;
+
+      const shifts: number[] = [];
+      for (let r = 0; r < BOX.rows; r++) {
+        shifts.push(Math.round(swing * bendAt((r + 0.5) * cellH) * cellW * dpr));
+      }
+      const key = shifts.join(",");
+      if (!force && key === shifted) return;
+      shifted = key;
+
+      size(canvas);
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let r = 0; r < BOX.rows; r++) {
+        const top = Math.round(r * cellH * dpr);
+        const bottom =
+          r === BOX.rows - 1 ? canvas.height : Math.round((r + 1) * cellH * dpr);
+        if (bottom <= top) continue;
+        ctx.drawImage(
+          sheet,
+          0,
+          top,
+          canvas.width,
+          bottom - top,
+          shifts[r],
+          top,
+          canvas.width,
+          bottom - top,
+        );
+      }
+    };
+
     const repaint = () => {
-      paint(base.current, "body");
+      paint(sheet, "body");
+      present(true);
       paint(drift.current, "drift");
       paint(reveal.current, "scatter");
     };
@@ -664,23 +728,18 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         ? Math.min(1, swaying + eased)
         : Math.max(0, swaying - eased);
 
-      // Turn the layers about the foot of the stem, so the top of the
-      // flower travels SWAY letter widths at the height of the swing.
-      const swing =
+      swing =
         swaying *
         SWAY *
         (0.8 * Math.sin((now / SWAY_PERIOD_MS) * Math.PI * 2) +
           0.2 * Math.sin((now / SWAY_DRIFT_MS) * Math.PI * 2 + 1.1));
-      const footX = (HEART.col - BOX.col + 0.5) * cellW;
-      const footY = height * 0.95;
-      const turn = `rotate(${Math.atan2(swing * cellW, footY)}rad)`;
-      for (const layer of [base.current, drift.current, reveal.current]) {
-        if (!layer) continue;
-        layer.style.transformOrigin = `${footX}px ${footY}px`;
-        layer.style.transform = swing ? turn : "";
-      }
 
-      if (dirty) paint(base.current, "body");
+      if (dirty) {
+        paint(sheet, "body");
+        present(true);
+      } else {
+        present(false);
+      }
       if (drifted) paint(drift.current, "drift");
 
       points.current = points.current.filter((p) => now - p.born < TRAIL_MS);
