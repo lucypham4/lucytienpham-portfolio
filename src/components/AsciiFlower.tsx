@@ -10,6 +10,14 @@ import {
   FLOWER_TONES,
   PALETTE,
 } from "@/content/flower-frames";
+import {
+  NOISE,
+  PULL_MAX,
+  PULL_RADIUS,
+  SCATTER_MS,
+  TRAIL_MS,
+  TRAIL_RADIUS,
+} from "@/lib/scatter";
 
 /**
  * The letters of her name, sorted from least ink to most. Each tone picks
@@ -20,23 +28,10 @@ const RAMP = ["", "il", "lt", "tc", "cy", "ue", "an", "ph", "hm"];
 /** How strongly each tone is inked, faintest fleck to brightest petal. */
 const TONE_ALPHA = [0, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.93, 1];
 
-/** What the cursor scatters the letters into: a spread of glyph weights so the
- *  disturbed cells read as static rather than as words. */
-const NOISE = "0]M%bBhqZdpr#Q\\uX!k&@aWJZvC<K^9z;~+\"{}|/$IwvY*=?3T7";
-
 /** Character cells keep the clip's proportions. The width itself comes from
  *  whatever room the column gives the piece, so the flower fills it rather
  *  than sitting at a fixed size. */
 const CELL_ASPECT = FLOWER_CELL_ASPECT;
-
-const TRAIL_MS = 520;
-const TRAIL_RADIUS = 45;
-/** How often the disturbed letters re-roll while hovered. */
-const SCATTER_MS = 70;
-/** Letters lean toward the cursor, never straying more than this from where
- *  they belong, and only within reach of it. */
-const PULL_MAX = 2;
-const PULL_RADIUS = 110;
 
 /**
  * A press runs one unbroken cycle: the flower closes back to a bud and opens

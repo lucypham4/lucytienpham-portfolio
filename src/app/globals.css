@@ -219,8 +219,10 @@ body {
 /* A soft halo in the page colour that hugs each letter of the line laid over
    the flower, so it reads without boxing out the petals around it. */
 .intro-over {
-  /* Tight layers are repeated so the fill right behind the strokes is close
-     to solid; the wider ones feather it out into the petals. */
+  /* A thick outline in the page colour, painted under each letter, clears
+     the petals right against the strokes; the shadows feather it outward. */
+  -webkit-text-stroke: 7px var(--color-bg);
+  paint-order: stroke fill;
   text-shadow:
     0 0 3px var(--color-bg),
     0 0 3px var(--color-bg),
@@ -230,6 +232,23 @@ body {
     0 0 14px var(--color-bg),
     0 0 24px var(--color-bg),
     0 0 36px var(--color-bg);
+}
+
+/* One letter of the intro line. Under the cursor it fades out while a noise
+   glyph in the bloom's red fades in over it, --s being how far it has gone. */
+.scatter-ch {
+  position: relative;
+  display: inline-block;
+  color: color-mix(in srgb, currentColor calc(100% - var(--s, 0) * 100%), transparent);
+}
+
+.scatter-ch[data-n]::after {
+  content: attr(data-n);
+  position: absolute;
+  inset: 0;
+  text-align: center;
+  color: #ea0012;
+  opacity: var(--s, 0);
 }
 
 .ascii-canvas {
