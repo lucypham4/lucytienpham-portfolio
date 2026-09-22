@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /** Drawn from while a line is resolving, so the noise reads as the same
  *  typeface rather than as symbols. */
@@ -57,29 +57,9 @@ export default function GlitchLine({
     return () => window.clearInterval(timer);
   }, [text]);
 
-  // Each letter gets its own box so the cursor can scatter it on its own.
-  // Words stay unbroken, so the line still wraps between them rather than
-  // mid-word. Assistive tech reads the settled line, not the letters.
-  const words = shown.split(" ");
   return (
-    <span className={className}>
-      <span aria-live="polite" className="sr-only">
-        {text}
-      </span>
-      <span aria-hidden>
-        {words.map((word, w) => (
-          <Fragment key={w}>
-            {w > 0 && " "}
-            <span className="whitespace-nowrap">
-              {[...word].map((ch, c) => (
-                <span key={c} data-ch className="scatter-ch">
-                  {ch}
-                </span>
-              ))}
-            </span>
-          </Fragment>
-        ))}
-      </span>
+    <span aria-live="polite" className={className}>
+      {shown}
     </span>
   );
 }
