@@ -1,5 +1,7 @@
 import Image from "next/image";
 import type { Media } from "@/content/types";
+import { COLUMN } from "@/lib/sizes";
+import LazyVideo from "./LazyVideo";
 import MediaSlideshow from "./MediaSlideshow";
 
 /**
@@ -28,14 +30,15 @@ export default function MediaBlock({
   className = "",
   priority = false,
   fit = "cover",
-  sizes,
+  sizes = COLUMN,
 }: {
   media: Media;
   className?: string;
   priority?: boolean;
   fit?: Fit;
   /** How wide the asset shows, as an `<img sizes>` value, so the browser
-   *  fetches a file of about that width rather than one for a full screen. */
+   *  fetches a file of about that width rather than one for a full screen.
+   *  Defaults to the case-study column; see src/lib/sizes.ts. */
   sizes?: string;
 }) {
   const fitClasses = fitClassNames[fit];
@@ -74,17 +77,12 @@ export default function MediaBlock({
 
   if (media.type === "video") {
     return (
-      <video
+      <LazyVideo
         className={`${fitClasses} ${className}`}
         poster={media.poster}
-        autoPlay
-        loop
-        muted
-        playsInline
-      >
-        {media.webm && <source src={media.webm} type="video/webm" />}
-        <source src={media.mp4} type="video/mp4" />
-      </video>
+        webm={media.webm}
+        mp4={media.mp4}
+      />
     );
   }
 

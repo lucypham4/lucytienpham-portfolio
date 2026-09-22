@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { LIGHTBOX } from "@/lib/sizes";
 import { useCallback, useEffect, useState } from "react";
 
 /**
@@ -97,6 +98,7 @@ export default function Lightbox({
           alt=""
           width={2400}
           height={1800}
+          sizes={LIGHTBOX}
           className="max-h-[85vh] w-auto max-w-full rounded-card object-contain"
           priority
         />

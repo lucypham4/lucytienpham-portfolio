@@ -10,6 +10,7 @@ import {
   FLOWER_TONES,
   PALETTE,
 } from "@/content/flower-frames";
+import { FLOWER_ASPECT, PULL_RADIUS } from "@/content/flower-shape";
 
 /**
  * The letters of her name, sorted from least ink to most. Each tone picks
@@ -36,7 +37,6 @@ const SCATTER_MS = 70;
 /** Letters lean toward the cursor, never straying more than this from where
  *  they belong, and only within reach of it. */
 const PULL_MAX = 2;
-export const PULL_RADIUS = 110;
 
 /**
  * A press runs one unbroken cycle: the flower closes back to a bud and opens
@@ -571,6 +571,23 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       paint(drift.current, "drift");
       paint(reveal.current, "scatter");
     };
+
+    if (
+      process.env.NODE_ENV !== "production" &&
+      Math.abs(BOX.cols / (BOX.rows * CELL_ASPECT) - FLOWER_ASPECT) > 1e-9
+    ) {
+      console.warn(
+        `FLOWER_ASPECT is stale: the box is ${BOX.cols}x${BOX.rows}. Update src/content/flower-shape.ts.`,
+      );
+    }
+
+    // The mono face is loaded only here, where it is used, rather than on
+    // every page. The canvas can't ask for it, so ask, and redraw once it
+    // has arrived.
+    const mono = token("--font-mono");
+    if (mono && document.fonts) {
+      document.fonts.load(`12px ${mono}`).then(repaint, () => {});
+    }
 
     // Open on load the same way a press does, minus the closing half.
     shot.current.began = performance.now() - WILT_MS;

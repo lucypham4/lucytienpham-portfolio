@@ -1,8 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRef, useState } from "react";
-import AsciiFlower, { PULL_RADIUS } from "./AsciiFlower";
+import { FLOWER_ASPECT, PULL_RADIUS } from "@/content/flower-shape";
 import GlitchLine from "./GlitchLine";
+
+// The flower and its frames are about 116KB of script. Loaded here, on
+// demand, rather than with the page's code, so other pages that prefetch the
+// home page don't download them. Its space is held open meanwhile.
+const AsciiFlower = dynamic(() => import("./AsciiFlower"), { ssr: false });
 
 /** Cycled rather than picked at random, so every click changes the line and
  *  all three are reachable. */
@@ -40,7 +46,10 @@ export default function HomeIntro() {
       onMouseLeave={leave}
       className="grid grid-cols-1 items-center gap-x-8 gap-y-8 sm:grid-cols-2"
     >
-      <div className="intro-flower relative">
+      <div
+        style={{ aspectRatio: FLOWER_ASPECT }}
+        className="intro-flower relative"
+      >
         <AsciiFlower
           onPick={() => {
             setIndex((i) => (i + 1) % LINES.length);
