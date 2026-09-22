@@ -16,7 +16,6 @@ export default function HomeIntro() {
   const [index, setIndex] = useState(0);
   /** Whether the flower has been pressed yet; the hint bows out once it has. */
   const [pressed, setPressed] = useState(false);
-  const area = useRef<HTMLDivElement>(null);
   const tagline = useRef<HTMLHeadingElement>(null);
 
   // The tagline takes the flower's colours around the cursor, over the same
@@ -35,13 +34,8 @@ export default function HomeIntro() {
     tagline.current?.style.removeProperty("--bloom-y");
   };
 
-  // The button waters the flower exactly as pressing the flower does.
-  const water = () =>
-    area.current?.querySelector<HTMLButtonElement>(".ascii-art")?.click();
-
   return (
     <div
-      ref={area}
       onMouseMove={follow}
       onMouseLeave={leave}
       className="grid grid-cols-1 items-center gap-x-8 gap-y-8 sm:grid-cols-2"
@@ -56,8 +50,9 @@ export default function HomeIntro() {
       </div>
 
       {/* Layered over the flower, which reaches in under the tagline's first
-          letters. The button keeps its room once it has faded, so the
-          tagline does not shift. */}
+          letters. The hint keeps its room once it has faded, so the
+          tagline does not shift. It is only a label, not a control: it
+          points people at the flower, which is what they press. */}
       <div className="relative z-10 flex flex-col items-start gap-6">
         <h1
           ref={tagline}
@@ -66,17 +61,14 @@ export default function HomeIntro() {
         >
           <GlitchLine text={LINES[index]} echoClassName="tagline-bloom" />
         </h1>
-        <button
-          type="button"
-          onClick={water}
-          tabIndex={pressed ? -1 : 0}
+        <p
           aria-hidden={pressed}
-          className={`cursor-pointer rounded-card border border-line-soft px-3 py-1.5 text-xs font-semibold tracking-[1px] text-ink uppercase transition-[opacity,background-color] duration-500 hover:bg-line ${
-            pressed ? "pointer-events-none opacity-0" : ""
+          className={`rounded-card border border-line-soft px-3 py-1.5 text-xs font-semibold tracking-[1px] text-ink uppercase transition-opacity duration-500 select-none ${
+            pressed ? "opacity-0" : ""
           }`}
         >
-          Water for a surprise
-        </button>
+          Click the flower for a surprise
+        </p>
       </div>
     </div>
   );
