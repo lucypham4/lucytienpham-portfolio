@@ -765,6 +765,10 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       }}
       onMouseMove={track}
       aria-label="Water the flower to change the intro line and its colours"
+      // Hold the flower's exact shape from the first paint. The canvas only
+      // gets its size once the script runs, and until then the page below
+      // would sit higher and then jump down.
+      style={{ aspectRatio: `${BOX.cols} / ${BOX.rows * CELL_ASPECT}` }}
       className="ascii-art relative block w-full cursor-pointer select-none"
     >
       <canvas ref={base} aria-hidden className="ascii-canvas" />

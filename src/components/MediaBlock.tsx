@@ -28,11 +28,15 @@ export default function MediaBlock({
   className = "",
   priority = false,
   fit = "cover",
+  sizes,
 }: {
   media: Media;
   className?: string;
   priority?: boolean;
   fit?: Fit;
+  /** How wide the asset shows, as an `<img sizes>` value, so the browser
+   *  fetches a file of about that width rather than one for a full screen. */
+  sizes?: string;
 }) {
   const fitClasses = fitClassNames[fit];
 
@@ -50,6 +54,7 @@ export default function MediaBlock({
         items={media.items}
         interval={media.interval}
         priority={priority}
+        sizes={sizes}
         className={`${stackClasses} ${className}`}
       />
     );
@@ -89,6 +94,7 @@ export default function MediaBlock({
       alt={media.alt ?? ""}
       width={1600}
       height={1000}
+      sizes={sizes}
       priority={priority}
       className={`${fitClasses} ${className}`}
     />
