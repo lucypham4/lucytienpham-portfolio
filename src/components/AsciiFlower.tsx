@@ -49,33 +49,37 @@ const CYCLE_MS = WILT_MS + BLOOM_MS;
 const SPREAD_MS = 900;
 
 /**
- * A press waters the flower first: tags reading "Water", in the same style
- * as the project tags, fall at 45° from the top left and soak in at letters
- * of the plant. The flower answers RAIN_LEAD_MS in, while the rest fall.
+ * A press waters the flower first: streaks of flickering letters fall at 45°
+ * from the top left over the whole plant, each soaking in at a letter of it.
+ * The flower answers RAIN_LEAD_MS in, while the rest of the water falls.
  */
-/** The most tags a shower uses; how many it does depends on the width. */
-const RAIN_MAX = 20;
-const RAIN_MIN = 8;
-/** One tag per this many pixels of the flower's width. */
-const RAIN_PX_PER_DROP = 40;
-/** Tags set off across this long, so the water arrives as a shower. */
+const RAIN_DROPS = 110;
+/** Letters in one streak. */
+const RAIN_LENGTH = 5;
+/** What a streak is made of. Each letter re-rolls at the rhythm of the hover
+ *  scatter, so the water flickers as it falls. */
+const RAIN_GLYPHS = "abcdefghijklmnopqrstuvwxyz";
+/** Drops set off across this long, so the water arrives as a shower. */
 const RAIN_SPAWN_MS = 700;
-/** How fast a tag falls, in rows per millisecond, each a little faster or
- *  slower. Measured against the flower rather than in pixels, so a shower
- *  takes as long at any width. */
+/** How fast a drop falls, in rows per millisecond, each drop a little
+ *  faster or slower. Measured against the flower rather than in pixels, so
+ *  a shower takes as long at any width. */
 const RAIN_SPEED = 0.12;
 const RAIN_SPEED_SPREAD = 0.03;
-/** Tags set off this many rows above the top edge, clear of it. */
-const RAIN_ABOVE = 20;
-/** Over this many rows before landing, a tag fades as it soaks in. */
-const RAIN_SOAK = 4;
+/** The shower's letters against the flower's, so they stand out from it. */
+const RAIN_SCALE = 1.5;
+/** How far apart a streak's letters sit along its path, in rows: about one
+ *  letter's advance at RAIN_SCALE. */
+const RAIN_STEP = Math.SQRT1_2;
+/** Used if the site's blue token is missing. */
+const RAIN_FALLBACK = "#339af0";
 /** How long the water falls before the flower starts to close and bloom. */
 const RAIN_LEAD_MS = 500;
 
 type Point = { x: number; y: number; born: number };
 
-/** One falling tag. Positions are in grid cells, fractional, with the
- *  tag's centre at (col, row) when it sets off at `born`. */
+/** One falling streak. Positions are in grid cells, fractional, with the
+ *  head of the streak at (col, row) when it sets off at `born`. */
 type Drop = {
   col: number;
   row: number;
@@ -89,17 +93,26 @@ type Rain = {
   began: number;
   /** Whether the flower has started its cycle for this shower yet. */
   answered: boolean;
-  /** When the last tag has soaked in. */
+  /** When the last streak has soaked in. */
   ends: number;
 };
 
-/** Rows a tag has fallen since it set off. A step down one row is a step
+/** Rows the head has fallen since it set off. A step down one row is a step
  *  across CELL_ASPECT columns, which keeps the path at 45° on screen. */
-const fallenTo = (drop: Drop, now: number) =>
+const headRow = (drop: Drop, now: number) =>
   drop.row + (now - drop.born) * drop.speed;
 
-/** Aims `count` tags at the plant as it stands in `cells`. */
-function makeRain(cells: Uint8Array, count: number, now: number): Rain {
+/** The letter in place `k` of streak `n` during flicker step `step`: random
+ *  looking, but steady until the step changes. */
+function rainGlyph(n: number, k: number, step: number) {
+  let h = (n * 374761393 + k * 668265263 + step * 1274126177) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1103515245);
+  h ^= h >>> 16;
+  return RAIN_GLYPHS[(h >>> 0) % RAIN_GLYPHS.length];
+}
+
+/** Aims a shower at the plant as it stands in `cells`. */
+function makeRain(cells: Uint8Array, now: number): Rain {
   const lit: number[] = [];
   for (let i = 0; i < cells.length; i++) {
     const col = i % FLOWER_COLS;
@@ -108,9 +121,10 @@ function makeRain(cells: Uint8Array, count: number, now: number): Rain {
 
   const drops: Drop[] = [];
   let ends = now;
-  const start = BOX.row - RAIN_ABOVE;
-  for (let k = 0; k < count && lit.length; k++) {
-    // Each tag soaks in at a letter of the plant picked at random, so the
+  // Every streak starts wholly above the top edge.
+  const start = BOX.row - RAIN_LENGTH * RAIN_STEP - 1;
+  for (let k = 0; k < RAIN_DROPS && lit.length; k++) {
+    // Each streak soaks in at a letter of the plant picked at random, so the
     // water falls over the whole of it rather than only its near edge.
     const target = lit[(Math.random() * lit.length) | 0];
     const lands = Math.floor(target / FLOWER_COLS);
@@ -118,7 +132,8 @@ function makeRain(cells: Uint8Array, count: number, now: number): Rain {
 
     const born = now + Math.random() * RAIN_SPAWN_MS;
     const speed = RAIN_SPEED + (Math.random() * 2 - 1) * RAIN_SPEED_SPREAD;
-    const soaked = born + (lands - start) / speed;
+    // The tail lands a streak's length behind the head.
+    const soaked = born + (lands - start + RAIN_LENGTH * RAIN_STEP) / speed;
     if (soaked > ends) ends = soaked;
     drops.push({ col, row: start, born, speed, lands });
   }
@@ -337,7 +352,6 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   const reveal = useRef<HTMLCanvasElement>(null);
   const stage = useRef<HTMLButtonElement>(null);
   const points = useRef<Point[]>([]);
-  const pills = useRef<(HTMLSpanElement | null)[]>([]);
   const cursor = useRef<{ x: number; y: number } | null>(null);
 
   /** Everything the loop needs, held in refs so a press never restarts it. */
@@ -486,26 +500,40 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
           );
         }
       }
+
+      if (!scatter && now.rain) paintRain(ctx, now.rain);
     };
 
-    /** Moves the shower's tags to where they have fallen, and hides the
-     *  ones not yet set off or already soaked in. */
-    const placeRain = (t: number) => {
-      const rain = shot.current.rain;
-      pills.current.forEach((pill, k) => {
-        if (!pill) return;
-        const drop = rain?.drops[k];
-        const row = drop ? fallenTo(drop, t) : 0;
-        if (!drop || t < drop.born || row >= drop.lands) {
-          if (pill.style.opacity !== "0") pill.style.opacity = "0";
-          return;
+    /** The shower, drawn over the plant: each letter turned to lie along
+     *  its 45° path, the head brightest, gone once it reaches its landing. */
+    const paintRain = (ctx: CanvasRenderingContext2D, rain: Rain) => {
+      const t = performance.now();
+      const step = Math.floor(t / SCATTER_MS);
+      const turn = Math.SQRT1_2 * dpr;
+      ctx.fillStyle = token("--color-grad-blue") || RAIN_FALLBACK;
+      ctx.font = ctx.font.replace(/[\d.]+px/, `${cellH * RAIN_SCALE}px`);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      rain.drops.forEach((drop, n) => {
+        if (t < drop.born) return;
+        const head = headRow(drop, t);
+        for (let k = 0; k < RAIN_LENGTH; k++) {
+          const row = head - k * RAIN_STEP;
+          if (row > drop.lands) continue;
+          const col = drop.col + (row - drop.row) * CELL_ASPECT;
+          const x = (col - BOX.col + 0.5) * cellW;
+          const y = (row - BOX.row + 0.5) * cellH;
+          ctx.globalAlpha = 1 - k * 0.16;
+          ctx.setTransform(turn, turn, -turn, turn, x * dpr, y * dpr);
+          ctx.fillText(rainGlyph(n, k, step), 0, 0);
         }
-        const col = drop.col + (row - drop.row) * CELL_ASPECT;
-        const x = (col - BOX.col + 0.5) * cellW;
-        const y = (row - BOX.row + 0.5) * cellH;
-        pill.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%) rotate(45deg)`;
-        pill.style.opacity = String(Math.min(1, (drop.lands - row) / RAIN_SOAK));
       });
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalAlpha = 1;
+      ctx.textAlign = "start";
+      ctx.textBaseline = "top";
     };
 
     const repaint = () => {
@@ -536,13 +564,13 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       // A moment into the shower the flower answers; the rest of the water
       // keeps falling while it closes and blooms.
       if (s.rain) {
+        dirty = true;
         if (!s.rain.answered && now - s.rain.began >= RAIN_LEAD_MS) {
           s.rain.answered = true;
           beginCycle(s, now);
           pick.current();
         }
         if (s.rain.answered && now >= s.rain.ends) s.rain = null;
-        placeRain(now);
       }
 
       if (s.began !== null) {
@@ -668,12 +696,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       onPick();
       return;
     }
-    const room = stage.current?.clientWidth ?? 0;
-    const count = Math.min(
-      RAIN_MAX,
-      Math.max(RAIN_MIN, Math.round(room / RAIN_PX_PER_DROP)),
-    );
-    s.rain = makeRain(FRAMES[Math.min(Math.max(s.frame, 0), LAST)], count, now);
+    s.rain = makeRain(FRAMES[Math.min(Math.max(s.frame, 0), LAST)], now);
   };
 
   return (
@@ -692,23 +715,6 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       <span aria-hidden className="ascii-halo" />
       <canvas ref={base} aria-hidden className="ascii-canvas" />
       <canvas ref={reveal} aria-hidden className="ascii-canvas ascii-reveal" />
-      {/* The watering tags, styled as the project tags on the home page. */}
-      <span
-        aria-hidden
-        className="pointer-events-none absolute inset-0 overflow-hidden"
-      >
-        {Array.from({ length: RAIN_MAX }, (_, k) => (
-          <span
-            key={k}
-            ref={(el) => {
-              pills.current[k] = el;
-            }}
-            className="absolute top-0 left-0 rounded-card border border-line-soft bg-bg px-3 py-1.5 text-xs font-semibold tracking-[1px] whitespace-nowrap text-ink uppercase opacity-0 will-change-transform"
-          >
-            Water
-          </span>
-        ))}
-      </span>
     </button>
   );
 }

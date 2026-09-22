@@ -28,7 +28,7 @@ export default function HomeIntro() {
         />
         <span
           aria-hidden
-          className={`flower-hint pointer-events-none absolute bottom-0 left-0 text-xs font-semibold tracking-[1px] text-grey uppercase transition-opacity duration-500 ${
+          className={`flower-hint pointer-events-none absolute bottom-0 left-0 rounded-card border border-line-soft px-3 py-1.5 text-xs font-semibold tracking-[1px] text-ink uppercase transition-opacity duration-500 ${
             pressed ? "opacity-0" : ""
           }`}
         >
