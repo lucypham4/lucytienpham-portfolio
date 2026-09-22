@@ -225,6 +225,21 @@ body {
   }
 }
 
+/* Hovering the tagline takes it into the flower's colours: the ink fades
+   to reveal a gradient from the stem's green to the petals' red, running
+   through the words from first to last, across line breaks. */
+.tagline-bloom > span {
+  background-image: linear-gradient(90deg, #17ea00, #ea0012);
+  background-image: linear-gradient(90deg in oklch, #17ea00, #ea0012);
+  -webkit-background-clip: text;
+  background-clip: text;
+  transition: color 300ms ease;
+}
+
+.tagline-bloom:hover > span {
+  color: transparent;
+}
+
 .ascii-canvas {
   display: block;
   max-width: 100%;

@@ -40,7 +40,7 @@ export default function HomeIntro() {
           letters. The button keeps its room once it has faded, so the
           tagline does not shift. */}
       <div className="relative z-10 flex flex-col items-start gap-6">
-        <h1 className="text-2xl leading-9 font-normal text-ink">
+        <h1 className="tagline-bloom text-2xl leading-9 font-normal text-ink">
           <GlitchLine text={LINES[index]} />
         </h1>
         <button
