@@ -291,87 +291,6 @@ const REACH = (() => {
   return out;
 })();
 
-/** Which way each cell points out from the heart, as an angle on screen.
- *  A petal runs out along one direction, so its letters share an angle. */
-const ANGLE = (() => {
-  const out = new Float32Array(FLOWER_COLS * FLOWER_ROWS);
-  for (let row = 0; row < FLOWER_ROWS; row++) {
-    for (let col = 0; col < FLOWER_COLS; col++) {
-      out[row * FLOWER_COLS + col] = Math.atan2(
-        (row - HEART.row) * CELL_ASPECT,
-        col - HEART.col,
-      );
-    }
-  }
-  return out;
-})();
-
-/** Whether each palette hue belongs to a petal (red leaning) rather than
- *  the stem (green leaning). Only petals flutter; the stem just bends. */
-const PETAL_HUE = PALETTE.map((hex) => {
-  const value = parseInt(hex.slice(1), 16);
-  return ((value >> 16) & 255) > ((value >> 8) & 255);
-});
-
-/**
- * How much of the wind each cell of the open bloom takes, 0 to 1. Only the
- * thin petals reaching out from the bloom move: letters that sit sparsely
- * (few neighbours) and well out from the heart. The thick curled centre and
- * the stem hold still. Smoothed so a petal moves as one piece, easing to
- * nothing where it joins the body.
- */
-const THIN = (() => {
-  const open = FRAMES[LAST];
-  const total = FLOWER_COLS * FLOWER_ROWS;
-  const at = (row: number, col: number) =>
-    row >= 0 && row < FLOWER_ROWS && col >= 0 && col < FLOWER_COLS
-      ? open[row * FLOWER_COLS + col]
-      : 0;
-
-  // Share of the neighbourhood (4 columns and 2 rows either way, about
-  // square on screen) that holds a letter.
-  const raw = new Float32Array(total);
-  for (let row = 0; row < FLOWER_ROWS; row++) {
-    for (let col = 0; col < FLOWER_COLS; col++) {
-      const i = row * FLOWER_COLS + col;
-      const code = open[i];
-      if (!code || !PETAL_HUE[hueOf(code)]) continue;
-      // The foot of the stem carries a few petal-coloured letters.
-      const stem =
-        row > HEART.row + 8 && Math.abs(col - HEART.col) < 12;
-      if (stem) continue;
-      let filled = 0;
-      for (let dr = -2; dr <= 2; dr++) {
-        for (let dc = -4; dc <= 4; dc++) if (at(row + dr, col + dc)) filled++;
-      }
-      const thin = Math.min(1, Math.max(0, (0.5 - filled / 45) / 0.25));
-      const outer = Math.min(1, Math.max(0, (REACH[i] - 0.2) / 0.15));
-      raw[i] = thin * outer;
-    }
-  }
-
-  // Smooth across each petal, then keep only what is clearly thin.
-  const out = new Float32Array(total);
-  for (let row = 0; row < FLOWER_ROWS; row++) {
-    for (let col = 0; col < FLOWER_COLS; col++) {
-      const i = row * FLOWER_COLS + col;
-      if (!open[i]) continue;
-      let sum = 0;
-      for (let dr = -1; dr <= 1; dr++) {
-        for (let dc = -2; dc <= 2; dc++) {
-          const r = row + dr;
-          const c = col + dc;
-          if (r >= 0 && r < FLOWER_ROWS && c >= 0 && c < FLOWER_COLS) {
-            sum += raw[r * FLOWER_COLS + c];
-          }
-        }
-      }
-      out[i] = Math.min(1, Math.max(0, (sum / 15 - 0.35) / 0.35));
-    }
-  }
-  return out;
-})();
-
 /**
  * Cells that never touch the bloom's main body in the open frame — flecks
  * that sit off on their own rather than joining a petal. They drift free
@@ -434,59 +353,19 @@ const FLOAT_PERIOD_MS = 3400;
 const FLOAT_AMPLITUDE = 1.6;
 
 /**
- * At rest the flower stands in a breeze from the top left. Gusts come and go
- * at random. The thin outer petals lean with them and spring back past
- * where they started before settling, and each flutters slowly on its own
- * around where it joins the heart, tips most, harder in a gust. The thick
- * centre and the stem hold still.
+ * At rest the flower sways slowly from side to side, bending from the foot
+ * of its stem, which stays planted: the bloom moves most, the stem less and
+ * less toward its foot.
  */
-/** The direction the wind pushes, on screen: right and a little down. */
-const WIND_X = 0.86;
-const WIND_Y = 0.51;
-/** Gusts are drawn from smooth noise, one new value about this often, with
- *  a quicker, lighter layer of turbulence on top. */
-const GUST_STEP_MS = 1700;
-const GUST_TURBULENCE_MS = 520;
-/** How far a full gust leans the petal tips, in letter widths. */
-const LEAN = 2.4;
-/** The petals' spring: how long one sway back and forth takes, and how
- *  quickly it settles (0 would swing forever, 1 would not overshoot). */
-const LEAN_PERIOD_MS = 1500;
-const LEAN_DAMPING = 0.3;
-/** How far a petal tip flutters sideways in a full gust, in letter widths. */
-const FLUTTER = 2;
-/** How fast the petals flutter, in radians per millisecond: the main beat
- *  is about one flap a second, with slower and quicker ones blended in. */
-const FLUTTER_RATE = 0.006;
-/** How much a petal still flutters with no gust at all, as a share. */
-const FLUTTER_CALM = 0.3;
-/** The breeze drops while the flower is watered and blooms, and picks up
+/** One full sway, left and back. */
+const SWAY_PERIOD_MS = 6200;
+/** A slower rhythm blended in, so the sway never quite repeats. */
+const SWAY_DRIFT_MS = 15700;
+/** How far the top of the flower sways either way, in letter widths. */
+const SWAY = 1.5;
+/** The sway stills while the flower is watered and blooms, and picks up
  *  again over this long once it is open. */
-const WIND_EASE_MS = 700;
-
-/** Smooth random noise over time: 0 to 1, a new value every `step` ms. */
-function gustNoise(t: number, step: number, salt: number) {
-  const at = t / step;
-  const k = Math.floor(at);
-  const f = at - k;
-  const ease = f * f * (3 - 2 * f);
-  const hash = (n: number) => {
-    let h = Math.imul(n ^ salt, 2654435761);
-    h ^= h >>> 15;
-    h = Math.imul(h, 2246822519);
-    h ^= h >>> 13;
-    return (h >>> 0) / 4294967295;
-  };
-  return hash(k) + (hash(k + 1) - hash(k)) * ease;
-}
-
-/** How hard the wind blows at `t`, 0 to 1: mostly light, now and then
- *  gusting, never quite still. */
-function gustAt(t: number) {
-  const swell = gustNoise(t, GUST_STEP_MS, 0x51ed) ** 1.6;
-  const turbulence = gustNoise(t, GUST_TURBULENCE_MS, 0x7a3b) - 0.5;
-  return Math.min(1, Math.max(0, 0.12 + 0.88 * swell + 0.18 * turbulence));
-}
+const SWAY_EASE_MS = 900;
 
 export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   const base = useRef<HTMLCanvasElement>(null);
@@ -519,11 +398,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   useEffect(() => {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-    /** How hard the breeze blows right now, 0 to 1. */
-    let breeze = 0;
-    /** How far the petals lean, in letter widths, and how fast they move. */
-    let sway = 0;
-    let swayVelocity = 0;
+    /** How much of its sway the flower has right now, 0 to 1. */
+    let swaying = 0;
     let cellW = 3.9;
     let cellH = cellW * CELL_ASPECT;
     let width = BOX.cols * cellW;
@@ -580,7 +456,13 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
 
       const at = cursor.current;
       const clock = performance.now();
-      const gust = gustAt(clock);
+      // Where the sway has the top of the flower right now, in letter widths.
+      const phase = (clock / SWAY_PERIOD_MS) * Math.PI * 2;
+      const drift = (clock / SWAY_DRIFT_MS) * Math.PI * 2;
+      const swing =
+        swaying * SWAY * (0.8 * Math.sin(phase) + 0.2 * Math.sin(drift + 1.1));
+      const heartY = (HEART.row - BOX.row) * cellH;
+      const footY = height * 0.95;
 
       for (let row = 0; row < FLOWER_ROWS; row++) {
         for (let col = 0; col < FLOWER_COLS; col++) {
@@ -608,32 +490,13 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
             floatX = Math.cos(t * 0.85 + seed) * FLOAT_AMPLITUDE * 0.6;
           }
 
-          // Only the thin outer petals take the wind; see THIN.
-          const give = breeze * THIN[i];
-          if (give > 0) {
-            // They lean with each gust, tips trailing further than roots.
-            const lean = sway * (1 + 0.6 * REACH[i]) * give * cellW;
-            floatX += lean * WIND_X;
-            floatY += lean * WIND_Y;
-
-            // And flap sideways around the heart. The flutter is a blend of
-            // slow rhythms that turn with the angle out from the heart, so
-            // a petal's letters move together and its neighbours don't.
-            const a = ANGLE[i];
-            const beat =
-              0.55 * Math.sin(a * 5 + clock * FLUTTER_RATE + 1.3) +
-              0.3 * Math.sin(a * 9 - clock * FLUTTER_RATE * 1.63 + 0.4) +
-              0.25 * Math.sin(a * 3 + clock * FLUTTER_RATE * 0.42 + seed * 0.15);
-            const flap =
-              beat *
-              (FLUTTER_CALM + (1 - FLUTTER_CALM) * gust) *
-              FLUTTER *
-              REACH[i] *
-              give *
-              cellW *
-              2;
-            floatX += -Math.sin(a) * flap;
-            floatY += Math.cos(a) * flap;
+          // The sway: full from the heart up, fading down the stem to its
+          // foot, with a slight dip at the ends of the swing as it arcs.
+          if (swing !== 0) {
+            const below = (y - heartY) / (footY - heartY);
+            const bend = below <= 0 ? 1 : Math.max(0, 1 - below) ** 1.5;
+            floatX += swing * bend * cellW;
+            floatY += Math.abs(swing) * bend * cellW * 0.12;
           }
 
           // Lean toward the cursor, falling off with distance and capped so a
@@ -733,7 +596,6 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     let lastScatter = 0;
     let lastFloat = 0;
     let lastTick = performance.now();
-    let lastSpring = lastTick;
     let leaning = "";
     let drawn = -1;
 
@@ -797,28 +659,16 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         dirty = true;
       }
 
-      // The breeze blows only while the flower is open and at rest, easing
+      // The flower sways only while it is open and at rest, easing
       // in and out rather than stopping dead.
       const still = s.began === null && !s.rain;
-      const eased = Math.min(1, (now - lastTick) / WIND_EASE_MS);
+      const eased = Math.min(1, (now - lastTick) / SWAY_EASE_MS);
       lastTick = now;
-      breeze = still
-        ? Math.min(1, breeze + eased)
-        : Math.max(0, breeze - eased);
+      swaying = still
+        ? Math.min(1, swaying + eased)
+        : Math.max(0, swaying - eased);
 
-      // The lean is a damped spring pulled toward where the gust would hold
-      // it, so it lags a change in the wind and swings back past upright.
-      const dt = Math.min(0.05, (now - lastSpring) / 1000);
-      lastSpring = now;
-      const stiffness = ((Math.PI * 2) / (LEAN_PERIOD_MS / 1000)) ** 2;
-      const target = gustAt(now) * LEAN * breeze;
-      swayVelocity +=
-        (stiffness * (target - sway) -
-          2 * LEAN_DAMPING * Math.sqrt(stiffness) * swayVelocity) *
-        dt;
-      sway += swayVelocity * dt;
-
-      if (breeze > 0) dirty = true;
+      if (swaying > 0) dirty = true;
 
       if (dirty) paint(base.current);
 

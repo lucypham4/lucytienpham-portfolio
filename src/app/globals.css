@@ -206,7 +206,7 @@ body {
 
 /* Near the cursor the tagline takes the flower's colours, the way the
    flower's own letters do: a copy of the line laid exactly over it, painted
-   in a gradient from the stem's green to the petals' red, shows fully at
+   in a gradient from the petals' red to the stem's green, shows fully at
    the cursor and fades out over --bloom-reach, leaving the ink beneath.
    Positions come from HomeIntro. Hidden where text can't be clipped to. */
 .tagline-bloom {
@@ -221,8 +221,8 @@ body {
     pointer-events: none;
     user-select: none;
     color: transparent;
-    background-image: linear-gradient(90deg, #17ea00, #ea0012);
-    background-image: linear-gradient(90deg in oklch, #17ea00, #ea0012);
+    background-image: linear-gradient(90deg, #ea0012, #17ea00);
+    background-image: linear-gradient(90deg in oklch, #ea0012, #17ea00);
     -webkit-background-clip: text;
     background-clip: text;
     --bloom-mask: radial-gradient(
