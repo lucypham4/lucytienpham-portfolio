@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import LazyVideo from "@/components/LazyVideo";
 import Lightbox from "@/components/Lightbox";
+import { PLAY_TILE } from "@/lib/sizes";
 
 type PlayItem = {
   labels: string[];
@@ -124,17 +126,12 @@ function Labels({ labels }: { labels: string[] }) {
 function Media({ media }: { media: PlayItem["media"] }) {
   if (media.type === "video") {
     return (
-      <video
+      <LazyVideo
         className="grow-media rounded-card"
         poster={media.poster}
-        autoPlay
-        loop
-        muted
-        playsInline
-      >
-        {media.webm && <source src={media.webm} type="video/webm" />}
-        <source src={media.mp4} type="video/mp4" />
-      </video>
+        webm={media.webm}
+        mp4={media.mp4}
+      />
     );
   }
   // The animation is a live document, so it fills its frame but does not grow
@@ -154,6 +151,7 @@ function Media({ media }: { media: PlayItem["media"] }) {
       alt=""
       width={media.width}
       height={media.height}
+      sizes={PLAY_TILE}
       className="grow-media rounded-card"
     />
   );
