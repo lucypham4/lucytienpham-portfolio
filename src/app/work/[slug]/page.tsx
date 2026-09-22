@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Blocks from "@/components/Blocks";
 import CaseStudyNav, { type NavSection } from "@/components/CaseStudyNav";
 import MediaBlock from "@/components/MediaBlock";
+import { BLEED, HERO_BOX, OVERVIEW } from "@/lib/sizes";
 import { getProject, projects } from "@/content/projects";
 import { slugify } from "@/lib/slug";
 
@@ -57,7 +58,12 @@ export default async function CaseStudyPage({
         {project.hero.media &&
           (project.hero.fullBleed ? (
             <div className="h-[45vh] min-h-[320px] w-full overflow-hidden">
-              <MediaBlock media={project.hero.media} priority fit="fill" />
+              <MediaBlock
+                media={project.hero.media}
+                priority
+                fit="fill"
+                sizes={BLEED}
+              />
             </div>
           ) : (
             <div className="shell pt-6 md:pt-10">
@@ -76,10 +82,11 @@ export default async function CaseStudyPage({
                     media={project.hero.media}
                     priority
                     fit={project.hero.panelFill ? "fill" : "contain"}
+                    sizes={HERO_BOX}
                   />
                 </div>
               ) : (
-                <MediaBlock media={project.hero.media} priority />
+                <MediaBlock media={project.hero.media} priority sizes={HERO_BOX} />
               )}
             </div>
           ))}
@@ -109,7 +116,7 @@ export default async function CaseStudyPage({
               <section>
                 {project.overview.media && (
                   <div className="mb-10 max-w-sm">
-                    <MediaBlock media={project.overview.media} />
+                    <MediaBlock media={project.overview.media} sizes={OVERVIEW} />
                   </div>
                 )}
                 <div>

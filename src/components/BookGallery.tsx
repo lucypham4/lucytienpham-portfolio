@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import type { Media } from "@/content/types";
 import Lightbox from "./Lightbox";
 import MediaBlock from "./MediaBlock";
+import { BOOK } from "@/lib/sizes";
 
 type Part = { label: string; caption?: string; images: Media[] };
 
@@ -75,7 +76,7 @@ export default function BookGallery({ parts }: { parts: Part[] }) {
             if (media.type !== "image") {
               return (
                 <div key={key} className="flex items-center justify-center">
-                  <MediaBlock media={media} />
+                  <MediaBlock media={media} sizes={BOOK} />
                 </div>
               );
             }
@@ -89,6 +90,7 @@ export default function BookGallery({ parts }: { parts: Part[] }) {
               >
                 <MediaBlock
                   media={media}
+                  sizes={BOOK}
                   className="rounded-card transition-transform duration-300 hover:scale-105"
                 />
               </button>

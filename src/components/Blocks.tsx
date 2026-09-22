@@ -4,6 +4,7 @@ import { slugify } from "@/lib/slug";
 import BookGallery from "./BookGallery";
 import MediaTabs from "./MediaTabs";
 import MediaBlock from "./MediaBlock";
+import { CAP_MD, CAP_SM, GRID, MEDIA_LIST, PAIR } from "@/lib/sizes";
 
 const gridCols = {
   2: "sm:grid-cols-2",
@@ -75,10 +76,19 @@ function BlockView({ block }: { block: Block }) {
         <figure className={`mt-8 ${block.size ? sizeCap[block.size] : ""}`}>
           {frame ? (
             <div className="mx-auto max-w-[560px] rounded-xl2 bg-black p-8">
-              <MediaBlock media={block.media} />
+              <MediaBlock media={block.media} sizes={CAP_MD} />
             </div>
           ) : (
-            <MediaBlock media={block.media} />
+            <MediaBlock
+              media={block.media}
+              sizes={
+                block.size === "sm"
+                  ? CAP_SM
+                  : block.size === "md"
+                    ? CAP_MD
+                    : undefined
+              }
+            />
           )}
           {block.caption && (
             <figcaption className="mt-3 text-sm leading-6 text-grey">
@@ -99,10 +109,10 @@ function BlockView({ block }: { block: Block }) {
           {block.media.map((m, i) =>
             block.framed ? (
               <div key={i} className="flex items-center justify-center">
-                <MediaBlock media={m} />
+                <MediaBlock media={m} sizes={GRID} />
               </div>
             ) : (
-              <MediaBlock key={i} media={m} />
+              <MediaBlock key={i} media={m} sizes={GRID} />
             ),
           )}
         </div>
@@ -121,7 +131,7 @@ function BlockView({ block }: { block: Block }) {
               box (not the image's own content) sets its size — so the two
               sides match regardless of the source assets' own aspect ratios. */}
           <div className="aspect-video min-w-0 flex-1 overflow-hidden rounded-xl2">
-            <MediaBlock media={block.from} fit="fill" />
+            <MediaBlock media={block.from} fit="fill" sizes={PAIR} />
           </div>
           <svg
             aria-hidden
@@ -138,7 +148,7 @@ function BlockView({ block }: { block: Block }) {
             />
           </svg>
           <div className="aspect-video min-w-0 flex-1 overflow-hidden rounded-xl2">
-            <MediaBlock media={block.to} fit="fill" />
+            <MediaBlock media={block.to} fit="fill" sizes={PAIR} />
           </div>
         </div>
       );
@@ -186,7 +196,7 @@ function BlockView({ block }: { block: Block }) {
     case "mediaList":
       return (
         <div className="mt-8 grid grid-cols-1 items-start gap-8 md:grid-cols-[1fr_1.4fr]">
-          <MediaBlock media={block.media} />
+          <MediaBlock media={block.media} sizes={MEDIA_LIST} />
           <ul className="flex flex-col gap-2">
             {block.items.map((item, i) => (
               <li key={i} className="flex gap-3 text-lg leading-8 text-ink-soft">

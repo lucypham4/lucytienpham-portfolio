@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { ABOUT_PHOTO } from "@/lib/sizes";
 import { useEffect, useRef, useState } from "react";
 
 /**
@@ -127,6 +128,7 @@ export default function AboutPhotos({ photos }: { photos: Photo[] }) {
               alt=""
               width={width}
               height={height}
+              sizes={ABOUT_PHOTO}
               className="grow-media rounded-card"
             />
           </button>
