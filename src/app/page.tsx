@@ -25,6 +25,9 @@ export default function Home() {
                 <MediaBlock
                   media={project.thumb}
                   priority={i === 0}
+                  // One column on phones, two from sm up, inside the
+                  // 1400px shell (less its 2rem padding and gutter).
+                  sizes="(min-width: 1400px) 652px, (min-width: 640px) 50vw, 100vw"
                   fit="grow"
                   className="rounded-xl2"
                 />

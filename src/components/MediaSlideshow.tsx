@@ -16,11 +16,13 @@ export default function MediaSlideshow({
   interval = 1000,
   priority = false,
   className = "",
+  sizes,
 }: {
   items: { src: string; alt?: string }[];
   interval?: number;
   priority?: boolean;
   className?: string;
+  sizes?: string;
 }) {
   const [index, setIndex] = useState(0);
 
@@ -51,6 +53,7 @@ export default function MediaSlideshow({
           alt=""
           width={900}
           height={1200}
+          sizes={sizes}
           priority={priority && i === 0}
           // Cut, don't fade: a cross-fade puts both pages on screen at once,
           // which on a book spread just reads as a smear. Cover rather than
