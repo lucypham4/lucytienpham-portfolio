@@ -225,6 +225,21 @@ body {
   }
 }
 
+/* The hint names the gesture the device actually has. */
+.flower-hint-tap {
+  display: none;
+}
+
+@media (hover: none) {
+  .flower-hint-click {
+    display: none;
+  }
+
+  .flower-hint-tap {
+    display: inline;
+  }
+}
+
 .ascii-canvas {
   display: block;
   max-width: 100%;

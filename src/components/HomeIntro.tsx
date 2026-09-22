@@ -14,11 +14,27 @@ const LINES = [
 
 export default function HomeIntro() {
   const [index, setIndex] = useState(0);
+  /** Whether the flower has been pressed yet; the hint bows out once it has. */
+  const [pressed, setPressed] = useState(false);
 
   return (
     <div className="grid grid-cols-1 items-center gap-x-8 gap-y-8 sm:grid-cols-2">
       <div className="intro-flower relative">
-        <AsciiFlower onPick={() => setIndex((i) => (i + 1) % LINES.length)} />
+        <AsciiFlower
+          onPick={() => {
+            setIndex((i) => (i + 1) % LINES.length);
+            setPressed(true);
+          }}
+        />
+        <span
+          aria-hidden
+          className={`flower-hint pointer-events-none absolute bottom-0 left-0 text-xs font-semibold tracking-[1px] text-grey uppercase transition-opacity duration-500 ${
+            pressed ? "opacity-0" : ""
+          }`}
+        >
+          <span className="flower-hint-click">Click</span>
+          <span className="flower-hint-tap">Tap</span> the flower
+        </span>
       </div>
 
       {/* Layered over the flower, which reaches in under its first letters. */}
