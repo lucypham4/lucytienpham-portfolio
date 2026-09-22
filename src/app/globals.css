@@ -195,27 +195,6 @@ body {
   isolation: isolate;
 }
 
-.ascii-halo {
-  position: absolute;
-  inset: 4% 8% 20%;
-  z-index: -1;
-  border-radius: 50%;
-  background: radial-gradient(
-    ellipse at center,
-    rgb(2 170 75 / 0.12) 0%,
-    rgb(2 170 75 / 0.05) 48%,
-    transparent 74%
-  );
-  filter: blur(18px);
-  opacity: 0.55;
-  transition: opacity 300ms ease;
-  pointer-events: none;
-}
-
-.ascii-art:hover .ascii-halo {
-  opacity: 1;
-}
-
 /* From sm up the flower breaks out of its grid column: across the gutter
    (2rem) and on under the tagline's first two letters (about 1.5em of its
    1.5rem type), measured to the tips of the petals. */
@@ -225,19 +204,36 @@ body {
   }
 }
 
-/* Hovering the tagline takes it into the flower's colours: the ink fades
-   to reveal a gradient from the stem's green to the petals' red, running
-   through the words from first to last, across line breaks. */
-.tagline-bloom > span {
-  background-image: linear-gradient(90deg, #17ea00, #ea0012);
-  background-image: linear-gradient(90deg in oklch, #17ea00, #ea0012);
-  -webkit-background-clip: text;
-  background-clip: text;
-  transition: color 300ms ease;
+/* Near the cursor the tagline takes the flower's colours, the way the
+   flower's own letters do: a copy of the line laid exactly over it, painted
+   in a gradient from the stem's green to the petals' red, shows fully at
+   the cursor and fades out over --bloom-reach, leaving the ink beneath.
+   Positions come from HomeIntro. Hidden where text can't be clipped to. */
+.tagline-bloom {
+  display: none;
 }
 
-.tagline-bloom:hover > span {
-  color: transparent;
+@supports (background-clip: text) or (-webkit-background-clip: text) {
+  .tagline-bloom {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    user-select: none;
+    color: transparent;
+    background-image: linear-gradient(90deg, #17ea00, #ea0012);
+    background-image: linear-gradient(90deg in oklch, #17ea00, #ea0012);
+    -webkit-background-clip: text;
+    background-clip: text;
+    --bloom-mask: radial-gradient(
+      circle var(--bloom-reach, 110px) at var(--bloom-x, -9999px)
+        var(--bloom-y, -9999px),
+      #000,
+      transparent
+    );
+    -webkit-mask-image: var(--bloom-mask);
+    mask-image: var(--bloom-mask);
+  }
 }
 
 .ascii-canvas {
