@@ -352,8 +352,11 @@ const FLOAT_PERIOD_MS = 3400;
 /** How far a detached letter strays from its cell, in cells' worth of pixel. */
 const FLOAT_AMPLITUDE = 1.6;
 /** Every other letter drifts the same way, only this far, so the whole
- *  flower quivers without losing its shape. */
+ *  flower quivers without losing its shape. Only where there is a mouse or
+ *  trackpad (see QUIVER_MEDIA): redrawing the whole flower for it is too
+ *  much to ask of a phone that is just showing the page. */
 const JITTER_AMPLITUDE = 1;
+const QUIVER_MEDIA = "(hover: hover) and (pointer: fine)";
 /** How often the whole flower is redrawn for its quiver. */
 const JITTER_MS = 80;
 
@@ -451,6 +454,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
 
       const at = cursor.current;
       const clock = performance.now();
+      const quiver = quivers.matches;
       for (let row = 0; row < FLOWER_ROWS; row++) {
         for (let col = 0; col < FLOWER_COLS; col++) {
           const i = row * FLOWER_COLS + col;
@@ -475,7 +479,11 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
           let floatY = 0;
           {
             const t = (clock / FLOAT_PERIOD_MS) * Math.PI * 2;
-            const reach = DETACHED[i] ? FLOAT_AMPLITUDE : JITTER_AMPLITUDE;
+            const reach = DETACHED[i]
+              ? FLOAT_AMPLITUDE
+              : quiver
+                ? JITTER_AMPLITUDE
+                : 0;
             floatY = Math.sin(t + seed) * reach;
             floatX = Math.cos(t * 0.85 + seed) * reach * 0.6;
           }
@@ -575,6 +583,10 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     }
 
     let raf = 0;
+    const quivers = window.matchMedia(QUIVER_MEDIA);
+    /** Whether any of the flower is on screen. Off screen the loop stops,
+     *  so the flower costs nothing while the page is scrolled past it. */
+    let onScreen = true;
     let lastScatter = 0;
     let lastFloat = 0;
     let lastJitter = 0;
@@ -644,7 +656,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       }
       // The rest of the flower quivers more slowly, so it is redrawn less
       // often for it.
-      if (now - lastJitter > JITTER_MS) {
+      if (quivers.matches && now - lastJitter > JITTER_MS) {
         lastJitter = now;
         dirty = true;
       }
@@ -682,7 +694,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         node.style.webkitMaskImage = applied;
       }
 
-      raf = requestAnimationFrame(tick);
+      raf = onScreen ? requestAnimationFrame(tick) : 0;
     };
 
     measure();
@@ -703,11 +715,18 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       attributeFilter: ["data-theme"],
     });
 
+    const watchView = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      if (onScreen && !raf) raf = requestAnimationFrame(tick);
+    });
+    if (stage.current) watchView.observe(stage.current);
+
     raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       watchTheme.disconnect();
+      watchView.disconnect();
     };
   }, []);
 
