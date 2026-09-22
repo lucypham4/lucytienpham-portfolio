@@ -216,6 +216,22 @@ body {
   opacity: 1;
 }
 
+/* A soft halo in the page colour that hugs each letter of the line laid over
+   the flower, so it reads without boxing out the petals around it. */
+.intro-over {
+  /* Tight layers are repeated so the fill right behind the strokes is close
+     to solid; the wider ones feather it out into the petals. */
+  text-shadow:
+    0 0 3px var(--color-bg),
+    0 0 3px var(--color-bg),
+    0 0 8px var(--color-bg),
+    0 0 8px var(--color-bg),
+    0 0 14px var(--color-bg),
+    0 0 14px var(--color-bg),
+    0 0 24px var(--color-bg),
+    0 0 36px var(--color-bg);
+}
+
 .ascii-canvas {
   display: block;
   max-width: 100%;
