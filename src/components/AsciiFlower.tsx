@@ -347,6 +347,26 @@ const FLOAT_PERIOD_MS = 3400;
 /** How far a detached letter strays from its cell, in cells' worth of pixel. */
 const FLOAT_AMPLITUDE = 1.6;
 
+/**
+ * At rest the flower sways in a breeze: waves roll across it from the top
+ * left to the bottom right, pushing each letter along that diagonal and
+ * letting it spring back, with a little flutter across the wind. Letters
+ * higher up the plant move most; the foot of the stem stays put.
+ */
+/** How long one wave takes to pass a given letter. */
+const WIND_PERIOD_MS = 2600;
+/** The distance between waves, as a share of the flower's width. */
+const WIND_WAVELENGTH = 0.45;
+/** The breeze swells and eases over this long. */
+const WIND_GUST_MS = 7300;
+/** How far a wave pushes the top of the flower, in letter widths. */
+const WIND_PUSH = 3;
+/** How far each letter quivers across the wind, in letter widths. */
+const WIND_FLUTTER = 0.6;
+/** The breeze drops while the flower is watered and blooms, and picks up
+ *  again over this long once it is open. */
+const WIND_EASE_MS = 700;
+
 export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   const base = useRef<HTMLCanvasElement>(null);
   const reveal = useRef<HTMLCanvasElement>(null);
@@ -378,6 +398,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   useEffect(() => {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
+    /** How hard the breeze blows right now, 0 to 1. */
+    let breeze = 0;
     let cellW = 3.9;
     let cellH = cellW * CELL_ASPECT;
     let width = BOX.cols * cellW;
@@ -433,6 +455,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       if (!cells) return;
 
       const at = cursor.current;
+      const clock = performance.now();
+      const gust = 0.65 + 0.35 * Math.sin((clock / WIND_GUST_MS) * Math.PI * 2);
 
       for (let row = 0; row < FLOWER_ROWS; row++) {
         for (let col = 0; col < FLOWER_COLS; col++) {
@@ -447,15 +471,32 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
           const x = (col - BOX.col) * cellW;
           const y = (row - BOX.row) * cellH;
 
+          // Each letter's own offset, so neighbours move out of step.
+          const seed = (row * 12.9898 + col * 78.233) % (Math.PI * 2);
+
           // Flecks off the main body drift on their own slow, quiet cycle,
           // each out of step with its neighbours.
           let floatX = 0;
           let floatY = 0;
           if (DETACHED[i]) {
-            const phase = (row * 12.9898 + col * 78.233) % (Math.PI * 2);
-            const t = (performance.now() / FLOAT_PERIOD_MS) * Math.PI * 2;
-            floatY = Math.sin(t + phase) * FLOAT_AMPLITUDE;
-            floatX = Math.cos(t * 0.85 + phase) * FLOAT_AMPLITUDE * 0.6;
+            const t = (clock / FLOAT_PERIOD_MS) * Math.PI * 2;
+            floatY = Math.sin(t + seed) * FLOAT_AMPLITUDE;
+            floatX = Math.cos(t * 0.85 + seed) * FLOAT_AMPLITUDE * 0.6;
+          }
+
+          // The breeze: a wave travelling along the top-left to bottom-right
+          // diagonal pushes the letter down and right, then lets it back.
+          const lift = breeze > 0 ? Math.max(0, 1 - y / (height * 0.92)) : 0;
+          if (lift > 0) {
+            const reach = lift ** 1.5 * breeze * cellW;
+            const phase =
+              ((x + y) / (width * WIND_WAVELENGTH) - clock / WIND_PERIOD_MS) *
+              Math.PI *
+              2;
+            const push = (0.5 + 0.5 * Math.sin(phase)) * gust * WIND_PUSH;
+            const flutter = Math.sin(phase * 2.3 + seed) * WIND_FLUTTER;
+            floatX += (push + flutter) * reach * Math.SQRT1_2;
+            floatY += (push - flutter) * reach * Math.SQRT1_2;
           }
 
           // Lean toward the cursor, falling off with distance and capped so a
@@ -554,6 +595,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     let raf = 0;
     let lastScatter = 0;
     let lastFloat = 0;
+    let lastTick = performance.now();
     let leaning = "";
     let drawn = -1;
 
@@ -616,6 +658,16 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         lastFloat = now;
         dirty = true;
       }
+
+      // The breeze blows only while the flower is open and at rest, easing
+      // in and out rather than stopping dead.
+      const still = s.began === null && !s.rain;
+      const eased = Math.min(1, (now - lastTick) / WIND_EASE_MS);
+      lastTick = now;
+      breeze = still
+        ? Math.min(1, breeze + eased)
+        : Math.max(0, breeze - eased);
+      if (breeze > 0) dirty = true;
 
       if (dirty) paint(base.current);
 
