@@ -2,23 +2,32 @@
 
 import { useEffect, useRef } from "react";
 import {
+  FLOWER_ALPHABET,
+  FLOWER_CELL_ASPECT,
   FLOWER_COLS,
   FLOWER_FRAMES,
   FLOWER_ROWS,
+  FLOWER_TONES,
   PALETTE,
 } from "@/content/flower-frames";
 
-/** Tiled through the drawing so the flower is spelled out of her name. */
-const PHRASE = "lucy cat tien pham ";
+/**
+ * The letters of her name, sorted from least ink to most. Each tone picks
+ * from its own pair, so the flower's shading is drawn with "lucy cat tien
+ * pham" the way the clip shades with its glyph ramp.
+ */
+const RAMP = ["", "il", "lt", "tc", "cy", "ue", "an", "ph", "hm"];
+/** How strongly each tone is inked, faintest fleck to brightest petal. */
+const TONE_ALPHA = [0, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.93, 1];
 
 /** What the cursor scatters the letters into: a spread of glyph weights so the
  *  disturbed cells read as static rather than as words. */
 const NOISE = "0]M%bBhqZdpr#Q\\uX!k&@aWJZvC<K^9z;~+\"{}|/$IwvY*=?3T7";
 
-/** Character cells are about half again as tall as they are wide. The width
- *  itself comes from whatever room the column gives the piece, so the flower
- *  fills it rather than sitting at a fixed size. */
-const CELL_ASPECT = 6 / 3.9;
+/** Character cells keep the clip's proportions. The width itself comes from
+ *  whatever room the column gives the piece, so the flower fills it rather
+ *  than sitting at a fixed size. */
+const CELL_ASPECT = FLOWER_CELL_ASPECT;
 
 const TRAIL_MS = 520;
 const TRAIL_RADIUS = 45;
@@ -55,13 +64,22 @@ function decode(rle: string) {
   const cells = new Uint8Array(FLOWER_COLS * FLOWER_ROWS);
   let at = 0;
   for (let i = 0; i < rle.length; i += 2) {
-    const slot = parseInt(rle[i], 36);
-    const run = parseInt(rle[i + 1], 36);
-    cells.fill(slot, at, at + run);
+    const code = FLOWER_ALPHABET.indexOf(rle[i]);
+    const run = FLOWER_ALPHABET.indexOf(rle[i + 1]);
+    cells.fill(code, at, at + run);
     at += run;
   }
   return cells;
 }
+
+/** A cell's code is 1 + hue * tones + (tone - 1); 0 is empty. */
+const hueOf = (code: number) => Math.floor((code - 1) / FLOWER_TONES);
+const toneOf = (code: number) => ((code - 1) % FLOWER_TONES) + 1;
+
+/** Which of its tone's letters a cell wears, fixed per cell so the texture
+ *  holds still between frames instead of shimmering. */
+const pickOf = (row: number, col: number) =>
+  ((row * 7 + col * 13 + ((row * col) % 5)) % 2) as 0 | 1;
 
 const FRAMES = FLOWER_FRAMES.map(decode);
 const LAST = FRAMES.length - 1;
@@ -116,9 +134,9 @@ const REACH = (() => {
   let far = 1;
   for (let row = 0; row < FLOWER_ROWS; row++) {
     for (let col = 0; col < FLOWER_COLS; col++) {
-      // Columns are about half as wide as rows are tall, so the sweep stays
-      // round rather than stretching sideways.
-      const d = Math.hypot((col - heartX) * 0.5, row - heartY);
+      // Columns are narrower than rows are tall, so the sweep stays round
+      // rather than stretching sideways.
+      const d = Math.hypot((col - heartX) / CELL_ASPECT, row - heartY);
       out[row * FLOWER_COLS + col] = d;
       if (d > far) far = d;
     }
@@ -150,8 +168,10 @@ const DETACHED = (() => {
       size++;
       const row = Math.floor(i / FLOWER_COLS);
       const col = i % FLOWER_COLS;
-      for (let dr = -1; dr <= 1; dr++) {
-        for (let dc = -1; dc <= 1; dc++) {
+      // The grid is fine enough that a petal's glyphs can sit a cell apart,
+      // so neighbours two cells off still count as touching.
+      for (let dr = -2; dr <= 2; dr++) {
+        for (let dc = -2; dc <= 2; dc++) {
           if (!dr && !dc) continue;
           const r = row + dr;
           const c = col + dc;
@@ -196,10 +216,10 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   /** Everything the loop needs, held in refs so a press never restarts it. */
   const shot = useRef({
     frame: 0,
-    /** Opens contrasted against the page; a press hands it the clip's colours. */
-    colour: false,
+    /** Opens in the clip's colours; a press trades them for the page's ink. */
+    colour: true,
     /** Colour the spread is moving toward, while a cycle runs. */
-    next: false,
+    next: true,
     /** How far the colour has washed out from the heart, 0 to 1. */
     spread: 1,
     /** When the running cycle began; null once it has finished. */
@@ -251,7 +271,10 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       size(canvas);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
-      ctx.font = `${cellH}px var(--font-mono, ui-monospace, monospace)`;
+      // Canvas fonts can't read CSS variables, so resolve the face first —
+      // otherwise the whole string is rejected and it falls back to 10px sans.
+      const mono = token("--font-mono") || "ui-monospace";
+      ctx.font = `700 ${cellH}px ${mono}, monospace`;
       ctx.textBaseline = "top";
 
       const now = shot.current;
@@ -263,8 +286,10 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       for (let row = 0; row < FLOWER_ROWS; row++) {
         for (let col = 0; col < FLOWER_COLS; col++) {
           const i = row * FLOWER_COLS + col;
-          const slot = cells[i];
-          if (!slot) continue;
+          const code = cells[i];
+          if (!code) continue;
+          const hue = PALETTE[hueOf(code)];
+          const tone = toneOf(code);
 
           const x = (col - BOX.col) * cellW;
           const y = (row - BOX.row) * cellH;
@@ -299,22 +324,23 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
           if (scatter) {
             // Scattered glyphs carry the letter's own hue, so the streak
             // reads as the flower's colours rather than blank noise.
-            ctx.fillStyle = PALETTE[slot - 1];
+            ctx.fillStyle = hue;
           } else {
             // Cells the wash has already reached wear the new colour.
             const turned = REACH[i] <= now.spread;
             const active = turned ? now.next : now.colour;
             ctx.fillStyle = active
-              ? PALETTE[slot - 1]
+              ? hue
               : near > 0
-                ? mixHex(ink, PALETTE[slot - 1], near)
+                ? mixHex(ink, hue, near)
                 : ink;
           }
+          ctx.globalAlpha = TONE_ALPHA[tone];
 
           ctx.fillText(
             scatter
               ? NOISE[(Math.random() * NOISE.length) | 0]
-              : PHRASE[(col + row * 5) % PHRASE.length],
+              : RAMP[tone][pickOf(row, col)],
             x + leanX + floatX,
             y + leanY + floatY,
           );
