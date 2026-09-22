@@ -84,23 +84,46 @@ const pickOf = (row: number, col: number) =>
 const FRAMES = FLOWER_FRAMES.map(decode);
 const LAST = FRAMES.length - 1;
 
-/** The box the drawing actually occupies across every frame, so the empty
- *  columns down one side are not paid for in width. */
+/** Share of a frame's letters the box may leave out at each side. A few
+ *  specks flung wide of the petals would otherwise set the flower's width,
+ *  leaving the bloom small inside a box that is mostly empty. */
+const SPECK_SHARE = 0.005;
+
+/**
+ * The box the drawing occupies. Sideways it spans the petals of every frame,
+ * less the stray specks past them, so the edge of the box is the edge of the
+ * bloom. Top to bottom it keeps everything, so the stem keeps its tail.
+ */
 const BOX = (() => {
   let minCol = FLOWER_COLS;
   let maxCol = 0;
   let minRow = FLOWER_ROWS;
   let maxRow = 0;
+  const perCol = new Uint32Array(FLOWER_COLS);
   for (const cells of FRAMES) {
+    perCol.fill(0);
+    let total = 0;
     for (let row = 0; row < FLOWER_ROWS; row++) {
       for (let col = 0; col < FLOWER_COLS; col++) {
         if (!cells[row * FLOWER_COLS + col]) continue;
-        if (col < minCol) minCol = col;
-        if (col > maxCol) maxCol = col;
+        perCol[col]++;
+        total++;
         if (row < minRow) minRow = row;
         if (row > maxRow) maxRow = row;
       }
     }
+    if (!total) continue;
+
+    const spare = total * SPECK_SHARE;
+    let first = 0;
+    let skipped = 0;
+    while (skipped + perCol[first] <= spare) skipped += perCol[first++];
+    let last = FLOWER_COLS - 1;
+    skipped = 0;
+    while (skipped + perCol[last] <= spare) skipped += perCol[last--];
+
+    if (first < minCol) minCol = first;
+    if (last > maxCol) maxCol = last;
   }
   return {
     col: minCol,
@@ -288,6 +311,8 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
           const i = row * FLOWER_COLS + col;
           const code = cells[i];
           if (!code) continue;
+          // Specks past the edge of the bloom are left out; see BOX.
+          if (col < BOX.col || col >= BOX.col + BOX.cols) continue;
           const hue = PALETTE[hueOf(code)];
           const tone = toneOf(code);
 
