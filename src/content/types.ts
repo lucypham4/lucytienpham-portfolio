@@ -86,6 +86,7 @@ export type Block =
       kind: "bookGallery";
       parts: { label: string; caption?: string; images: Media[] }[];
     }
+  /** A third-party player. `ratio` is width over height (16/9 if unset). */
   | { kind: "embed"; src: string; title: string; ratio?: number };
 
 export type Meta = { label: string; value: string }[];

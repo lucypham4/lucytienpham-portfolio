@@ -257,14 +257,24 @@ function BlockView({ block, outer }: { block: Block; outer: number }) {
     case "bookGallery":
       return <BookGallery parts={block.parts} />;
 
-    case "embed":
+    case "embed": {
+      // Width over height. Tall players (social reels) are capped to a
+      // phone's width and centred rather than stretched across the column.
+      const ratio = block.ratio ?? 16 / 9;
+      const tall = ratio < 1;
       return (
-        <figure className="mt-8">
-          <div className="aspect-video w-full overflow-hidden rounded-card bg-shell">
+        <figure className={`mt-8 ${tall ? "mx-auto max-w-[360px]" : ""}`}>
+          <div
+            style={{ aspectRatio: ratio }}
+            className="w-full overflow-hidden rounded-card bg-shell"
+          >
             <iframe
               src={block.src}
               title={block.title}
-              allow="autoplay"
+              // Third-party players are heavy; fetch them only as they near
+              // the screen.
+              loading="lazy"
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
               allowFullScreen
               className="h-full w-full border-0"
             />
@@ -274,6 +284,7 @@ function BlockView({ block, outer }: { block: Block; outer: number }) {
           </figcaption>
         </figure>
       );
+    }
   }
 }
 

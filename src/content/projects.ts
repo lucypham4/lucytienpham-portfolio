@@ -2,6 +2,13 @@ import type { Project } from "./types";
 
 const A = "/assets";
 
+/** Facebook's embeddable player for a public reel, by the reel's id (the
+ *  number in facebook.com/reel/<id>). Only plays if the reel is public. */
+const facebookReel = (id: string) =>
+  `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
+    `https://www.facebook.com/reel/${id}`,
+  )}&show_text=false&width=360`;
+
 export const projects: Project[] = [
   {
     slug: "the-washington-post",
@@ -1105,8 +1112,9 @@ export const projects: Project[] = [
       },
       {
         kind: "embed",
-        src: "https://drive.google.com/file/d/1k-yVDfn6oBwGsJJLbHOQqzemAgtAaQ6R/preview",
+        src: facebookReel("245340501751186"),
         title: "Tombstone Video",
+        ratio: 9 / 16,
       },
       {
         kind: "list",
@@ -1117,8 +1125,9 @@ export const projects: Project[] = [
       },
       {
         kind: "embed",
-        src: "https://drive.google.com/file/d/1YGrPXIKUK8FOJ1inoFicLMeJWov_KlA1/preview",
+        src: facebookReel("1299963617578978"),
         title: "Gracie Parker Video",
+        ratio: 9 / 16,
       },
       {
         kind: "list",
