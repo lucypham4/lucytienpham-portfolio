@@ -3,6 +3,7 @@ import { createElement, type ReactNode } from "react";
 import type { Block } from "@/content/types";
 import { slugify } from "@/lib/slug";
 import BookGallery from "./BookGallery";
+import Embed from "./Embed";
 import MediaTabs from "./MediaTabs";
 import MediaBlock from "./MediaBlock";
 import { CAP_MD, CAP_SM, GRID, MEDIA_LIST, PAIR } from "@/lib/sizes";
@@ -258,27 +259,12 @@ function BlockView({ block, outer }: { block: Block; outer: number }) {
       return <BookGallery parts={block.parts} />;
 
     case "embed": {
-      // Width over height. Tall players (social reels) are capped to a
-      // phone's width and centred rather than stretched across the column.
+      // Width over height. Tall players are capped to a phone's width and
+      // centred rather than stretched across the column.
       const ratio = block.ratio ?? 16 / 9;
-      const tall = ratio < 1;
       return (
-        <figure className={`mt-8 ${tall ? "mx-auto max-w-[360px]" : ""}`}>
-          <div
-            style={{ aspectRatio: ratio }}
-            className="w-full overflow-hidden rounded-card bg-shell"
-          >
-            <iframe
-              src={block.src}
-              title={block.title}
-              // Third-party players are heavy; fetch them only as they near
-              // the screen.
-              loading="lazy"
-              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-              allowFullScreen
-              className="h-full w-full border-0"
-            />
-          </div>
+        <figure className={`mt-8 ${ratio < 1 ? "mx-auto max-w-[360px]" : ""}`}>
+          <Embed src={block.src} title={block.title} ratio={ratio} />
           <figcaption className="mt-3 text-sm leading-6 text-grey">
             {block.title}
           </figcaption>

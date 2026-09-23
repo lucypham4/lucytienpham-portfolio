@@ -3,11 +3,12 @@ import type { Project } from "./types";
 const A = "/assets";
 
 /** Facebook's embeddable player for a public reel, by the reel's id (the
- *  number in facebook.com/reel/<id>). Only plays if the reel is public. */
+ *  number in facebook.com/reel/<id>). Only plays if the reel is public. The
+ *  Embed component sizes it to its frame. */
 const facebookReel = (id: string) =>
   `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
     `https://www.facebook.com/reel/${id}`,
-  )}&show_text=false&width=360`;
+  )}&show_text=false`;
 
 export const projects: Project[] = [
   {
@@ -1114,7 +1115,6 @@ export const projects: Project[] = [
         kind: "embed",
         src: facebookReel("245340501751186"),
         title: "Tombstone Video",
-        ratio: 9 / 16,
       },
       {
         kind: "list",
@@ -1127,7 +1127,6 @@ export const projects: Project[] = [
         kind: "embed",
         src: facebookReel("1299963617578978"),
         title: "Gracie Parker Video",
-        ratio: 9 / 16,
       },
       {
         kind: "list",
