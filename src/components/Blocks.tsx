@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { createElement, type ReactNode } from "react";
 import type { Block } from "@/content/types";
 import { slugify } from "@/lib/slug";
 import BookGallery from "./BookGallery";
@@ -19,7 +20,32 @@ const sizeCap = {
   md: "max-w-[560px] mx-auto",
 } as const;
 
-function BlockView({ block }: { block: Block }) {
+/** A heading tag, h2 to h4. */
+type Heading = "h2" | "h3" | "h4";
+
+/** The heading one level below `level` (1 is the page's h1), capped at h4. */
+const below = (level: number): Heading =>
+  `h${Math.min(Math.max(level + 1, 2), 4)}` as Heading;
+
+/** A heading whose level is chosen by its place on the page. */
+function HeadingAt({
+  tag,
+  className,
+  children,
+}: {
+  tag: Heading;
+  className: string;
+  children: ReactNode;
+}) {
+  return createElement(tag, { className }, children);
+}
+
+/**
+ * `outer` is the level of the nearest heading above this block, so headings
+ * inside it can sit one level lower and never skip one (h1 straight to h3,
+ * say), whatever order a case study's blocks come in.
+ */
+function BlockView({ block, outer }: { block: Block; outer: number }) {
   switch (block.kind) {
     case "section":
       return (
@@ -47,9 +73,12 @@ function BlockView({ block }: { block: Block }) {
 
     case "heading":
       return (
-        <h3 className="mt-10 text-2xl leading-8 font-semibold text-ink">
+        <HeadingAt
+          tag={below(outer)}
+          className="mt-10 text-2xl leading-8 font-semibold text-ink"
+        >
           {block.text}
-        </h3>
+        </HeadingAt>
       );
 
     case "text":
@@ -170,9 +199,12 @@ function BlockView({ block }: { block: Block }) {
                   className="mb-4 h-7 w-7"
                 />
               )}
-              <h4 className="text-base leading-6 font-semibold text-ink">
+              <HeadingAt
+                tag={below(outer)}
+                className="text-base leading-6 font-semibold text-ink"
+              >
                 {item.title}
-              </h4>
+              </HeadingAt>
               {item.body && (
                 <p className="mt-2 text-sm leading-6 text-grey">{item.body}</p>
               )}
@@ -245,11 +277,23 @@ function BlockView({ block }: { block: Block }) {
   }
 }
 
+/** The level of the last heading before block `i`: 1 for the page's h1
+ *  until a section (h2) or sub-heading appears. */
+function levelBefore(blocks: Block[], i: number) {
+  let level = 1;
+  for (let j = 0; j < i; j++) {
+    const block = blocks[j];
+    if (block.kind === "section") level = 2;
+    else if (block.kind === "heading") level = Math.min(Math.max(level + 1, 2), 4);
+  }
+  return level;
+}
+
 export default function Blocks({ blocks }: { blocks: Block[] }) {
   return (
     <>
       {blocks.map((block, i) => (
-        <BlockView key={i} block={block} />
+        <BlockView key={i} block={block} outer={levelBefore(blocks, i)} />
       ))}
     </>
   );

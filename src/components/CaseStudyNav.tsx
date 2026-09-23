@@ -66,8 +66,10 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
           <button
             type="button"
             onClick={() => setCollapsed((c) => !c)}
+            // Named by its visible "Sections" text, so people who speak or
+            // read the label they see can reach it; aria-expanded says
+            // whether the list is open.
             aria-expanded={!collapsed}
-            aria-label={collapsed ? "Expand section list" : "Collapse section list"}
             className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-ink"
           >
             {/* Bordered just around the icon, not the whole button — at 40px
