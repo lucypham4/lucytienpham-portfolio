@@ -3,6 +3,7 @@ import { createElement, type ReactNode } from "react";
 import type { Block } from "@/content/types";
 import { slugify } from "@/lib/slug";
 import BookGallery from "./BookGallery";
+import Embed from "./Embed";
 import MediaTabs from "./MediaTabs";
 import MediaBlock from "./MediaBlock";
 import { CAP_MD, CAP_SM, GRID, MEDIA_LIST, PAIR } from "@/lib/sizes";
@@ -257,23 +258,31 @@ function BlockView({ block, outer }: { block: Block; outer: number }) {
     case "bookGallery":
       return <BookGallery parts={block.parts} />;
 
-    case "embed":
+    case "embed": {
+      // Width over height. Tall players are capped to a phone's width and
+      // centred rather than stretched across the column.
+      const ratio = block.ratio ?? 16 / 9;
       return (
-        <figure className="mt-8">
-          <div className="aspect-video w-full overflow-hidden rounded-card bg-shell">
-            <iframe
-              src={block.src}
-              title={block.title}
-              allow="autoplay"
-              allowFullScreen
-              className="h-full w-full border-0"
-            />
-          </div>
-          <figcaption className="mt-3 text-sm leading-6 text-grey">
-            {block.title}
+        <figure className={`mt-8 ${ratio < 1 ? "mx-auto max-w-[360px]" : ""}`}>
+          <Embed src={block.src} title={block.title} ratio={ratio} />
+          <figcaption className="mt-3 flex flex-wrap justify-between gap-x-4 text-sm leading-6 text-grey">
+            <span>{block.title}</span>
+            {block.watch && (
+              <a
+                href={block.watch.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink underline underline-offset-4 transition-opacity hover:opacity-70"
+              >
+                {block.watch.label}
+                <span aria-hidden> ↗</span>
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            )}
           </figcaption>
         </figure>
       );
+    }
   }
 }
 
