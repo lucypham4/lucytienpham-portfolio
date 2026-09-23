@@ -82,6 +82,10 @@ export default function MediaBlock({
         poster={media.poster}
         webm={media.webm}
         mp4={media.mp4}
+        // A `grow` video is laid over its frame, so its poster can be a
+        // responsive image under it; see LazyVideo.
+        sizes={fit === "grow" ? sizes : undefined}
+        priority={priority}
       />
     );
   }
@@ -94,6 +98,7 @@ export default function MediaBlock({
       height={1000}
       sizes={sizes}
       priority={priority}
+      fetchPriority={priority ? "high" : undefined}
       className={`${fitClasses} ${className}`}
     />
   );

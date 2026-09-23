@@ -131,6 +131,7 @@ function Media({ media }: { media: PlayItem["media"] }) {
         poster={media.poster}
         webm={media.webm}
         mp4={media.mp4}
+        sizes={PLAY_TILE}
       />
     );
   }
