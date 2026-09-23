@@ -2,13 +2,17 @@ import type { Project } from "./types";
 
 const A = "/assets";
 
-/** Facebook's embeddable player for a public reel, by the reel's id (the
- *  number in facebook.com/reel/<id>). Only plays if the reel is public. The
- *  Embed component sizes it to its frame. */
-const facebookReel = (id: string) =>
-  `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(
-    `https://www.facebook.com/reel/${id}`,
-  )}&show_text=false`;
+/** A public Facebook reel, by its id (the number in facebook.com/reel/<id>):
+ *  Facebook's embeddable player, which the Embed component sizes to its
+ *  frame, and a link to the reel itself for visitors whose browser blocks
+ *  the player. The player only plays while the reel is public. */
+const facebookReel = (id: string) => {
+  const href = `https://www.facebook.com/reel/${id}`;
+  return {
+    src: `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(href)}&show_text=false`,
+    watch: { href, label: "Watch on Facebook" },
+  };
+};
 
 export const projects: Project[] = [
   {
@@ -1113,7 +1117,7 @@ export const projects: Project[] = [
       },
       {
         kind: "embed",
-        src: facebookReel("245340501751186"),
+        ...facebookReel("245340501751186"),
         title: "Tombstone Video",
       },
       {
@@ -1125,7 +1129,7 @@ export const projects: Project[] = [
       },
       {
         kind: "embed",
-        src: facebookReel("1299963617578978"),
+        ...facebookReel("1299963617578978"),
         title: "Gracie Parker Video",
       },
       {

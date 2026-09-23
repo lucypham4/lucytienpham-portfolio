@@ -265,8 +265,20 @@ function BlockView({ block, outer }: { block: Block; outer: number }) {
       return (
         <figure className={`mt-8 ${ratio < 1 ? "mx-auto max-w-[360px]" : ""}`}>
           <Embed src={block.src} title={block.title} ratio={ratio} />
-          <figcaption className="mt-3 text-sm leading-6 text-grey">
-            {block.title}
+          <figcaption className="mt-3 flex flex-wrap justify-between gap-x-4 text-sm leading-6 text-grey">
+            <span>{block.title}</span>
+            {block.watch && (
+              <a
+                href={block.watch.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink underline underline-offset-4 transition-opacity hover:opacity-70"
+              >
+                {block.watch.label}
+                <span aria-hidden> ↗</span>
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            )}
           </figcaption>
         </figure>
       );
