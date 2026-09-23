@@ -788,7 +788,14 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       style={{ aspectRatio: `${BOX.cols} / ${BOX.rows * CELL_ASPECT}` }}
       className="ascii-art relative block w-full cursor-pointer select-none"
     >
-      <canvas ref={base} aria-hidden className="ascii-canvas" />
+      {/* Pinned to the corner: a button centres what's in it, so a canvas in
+          the flow would slide as it grows from its default size to the
+          flower's, which counts as a layout shift. */}
+      <canvas
+        ref={base}
+        aria-hidden
+        className="ascii-canvas absolute inset-0"
+      />
       <canvas
         ref={drift}
         aria-hidden
