@@ -47,7 +47,7 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
     // nearest ancestor with non-visible overflow, so nesting it inside an
     // overflow-hidden aside (the previous version) pinned it to that short
     // aside's box instead of the viewport, and it stopped tracking scroll.
-    <aside className="hidden lg:block">
+    <aside data-no-reveal className="hidden lg:block">
       {/* Sticky, width-transition, and the clip that produces the collapse
           all live on this one element instead, since overflow-hidden here
           only clips this element's own children — it doesn't affect its own

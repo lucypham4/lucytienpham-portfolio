@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Open_Sans, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
+import ScrollReveal from "@/components/ScrollReveal";
 import Footer from "@/components/Footer";
 
 const openSans = Open_Sans({
@@ -59,6 +60,7 @@ export default function RootLayout({
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
+        <ScrollReveal />
       </body>
     </html>
   );
