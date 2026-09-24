@@ -178,6 +178,49 @@ function mixHex(a: string, b: string, t: number) {
   return `rgb(${r}, ${g}, ${bl})`;
 }
 
+/**
+ * Each hue's opposite across the flower's red–green axis: red turns green,
+ * green turns red, orange turns yellow-green, at the same saturation and
+ * lightness. (A plain RGB inverse would send red to cyan, off the flower's
+ * palette.) Mirroring the hue wheel about 60° swaps 0° and 120°.
+ */
+function opposite(hex: string) {
+  const v = hexValue(hex);
+  const r = ((v >> 16) & 255) / 255;
+  const g = ((v >> 8) & 255) / 255;
+  const b = (v & 255) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  const l = (max + min) / 2;
+  const sat = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+  let h = 0;
+  if (d) {
+    if (max === r) h = ((g - b) / d) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h *= 60;
+  }
+  const flipped = (((120 - h) % 360) + 360) % 360;
+  // Back to RGB at the same saturation and lightness.
+  const c = (1 - Math.abs(2 * l - 1)) * sat;
+  const x = c * (1 - Math.abs(((flipped / 60) % 2) - 1));
+  const m = l - c / 2;
+  const [r1, g1, b1] =
+    flipped < 60 ? [c, x, 0]
+    : flipped < 120 ? [x, c, 0]
+    : flipped < 180 ? [0, c, x]
+    : flipped < 240 ? [0, x, c]
+    : flipped < 300 ? [x, 0, c]
+    : [c, 0, x];
+  const byte = (n: number) =>
+    Math.round((n + m) * 255).toString(16).padStart(2, "0");
+  return `#${byte(r1)}${byte(g1)}${byte(b1)}`;
+}
+
+/** What the cursor turns each palette hue in colour; see `opposite`. */
+const OPPOSITE = PALETTE.map(opposite);
+
 function decode(rle: string) {
   const cells = new Uint8Array(FLOWER_COLS * FLOWER_ROWS);
   let at = 0;
@@ -424,9 +467,9 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
      * Paints one layer. "body" is the flower itself, less its drifting
      * flecks, which "drift" paints on their own small layer so they can move
      * without the whole flower being redrawn. "scatter" paints the disturbed
-     * layer: random glyphs in the other side's colour. In colour that is the
-     * page's own background, so where the cursor passes the flower reads as
-     * having been scattered away rather than recoloured.
+     * layer: random glyphs in the other side's colour. In colour that is each
+     * hue's opposite (red for green, green for red), so where the cursor
+     * passes the flower flips to its complement.
      */
     const paint = (
       canvas: HTMLCanvasElement | null,
@@ -437,7 +480,6 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       if (!canvas || !ctx) return;
 
       const ink = token("--color-ink");
-      const ground = token("--color-bg");
 
       size(canvas);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -465,6 +507,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
           if (layer === "body" && DETACHED[i]) continue;
           if (layer === "drift" && !DETACHED[i]) continue;
           const hue = PALETTE[hueOf(code)];
+          const flip = OPPOSITE[hueOf(code)];
           const tone = toneOf(code);
 
           const x = (col - BOX.col) * cellW;
@@ -510,12 +553,11 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
 
           // The cursor always shows the other side: in ink, the letter's
           // own hue shows through near it and scatters in that hue; in
-          // colour, the page's background (white, or black when dark) does
-          // instead, so the bloom is brushed away where the cursor passes.
+          // colour, the hue's opposite does (red goes green, green red).
           if (scatter) {
-            ctx.fillStyle = active ? ground : hue;
+            ctx.fillStyle = active ? flip : hue;
           } else if (active) {
-            ctx.fillStyle = near > 0 ? mixHex(hue, ground, near) : hue;
+            ctx.fillStyle = near > 0 ? mixHex(hue, flip, near) : hue;
           } else {
             ctx.fillStyle = near > 0 ? mixHex(ink, hue, near) : ink;
           }
@@ -723,7 +765,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     };
     window.addEventListener("resize", onResize);
 
-    // The ink and background are read per paint, so without this the flower
+    // The ink is read per paint, so without this the flower
     // keeps the old palette after a theme switch until something else asks
     // for a repaint.
     const watchTheme = new MutationObserver(repaint);
