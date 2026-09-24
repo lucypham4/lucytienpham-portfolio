@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import LogoMark from "./LogoMark";
 import ThemeToggle from "./ThemeToggle";
 
@@ -37,12 +37,27 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Going "home" from the home page is not a navigation, so Next has nothing
-  // to scroll. Clear any #work left in the address bar and return to the top
-  // by hand.
+  // Home is always its top. Left to itself, Next scrolls the new page's
+  // first block into view unless it's already clear of the header, but the
+  // intro starts under the page's scroll padding (globals.css), so Next
+  // passes over it and lands on the work grid instead. So these links opt
+  // out of Next's scroll (`scroll={false}`) and go to the top here, before
+  // the home page paints.
+  const toTop = useRef(false);
+  useLayoutEffect(() => {
+    if (!toTop.current || pathname !== "/") return;
+    toTop.current = false;
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [pathname]);
+
+  // Going "home" from the home page is not a navigation, so there is nothing
+  // to wait for: clear any #work left in the address bar and glide up.
   const goHome = (e: React.MouseEvent) => {
     setOpen(false);
-    if (pathname !== "/") return;
+    if (pathname !== "/") {
+      toTop.current = true;
+      return;
+    }
     e.preventDefault();
     window.history.replaceState(null, "", "/");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -64,6 +79,7 @@ export default function Nav() {
       <div className="shell-wide flex items-center justify-between py-5 sm:py-8">
         <Link
           href="/"
+          scroll={false}
           className="transition-opacity hover:opacity-80"
           onClick={goHome}
         >
@@ -80,6 +96,7 @@ export default function Nav() {
               <Link
                 key={link.label}
                 href={link.href}
+                scroll={link.href !== "/"}
                 onClick={link.href === "/" ? goHome : undefined}
                 className={`rounded-card px-4 py-2 text-base uppercase tracking-[1px] transition-colors hover:bg-line ${
                   active ? "text-ink" : "text-ink"
@@ -126,6 +143,7 @@ export default function Nav() {
             <Link
               key={link.label}
               href={link.href}
+              scroll={link.href !== "/"}
               onClick={link.href === "/" ? goHome : () => setOpen(false)}
               className="py-3 text-base uppercase tracking-[1px]"
             >
