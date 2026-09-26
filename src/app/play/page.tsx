@@ -123,7 +123,18 @@ function Labels({ labels }: { labels: string[] }) {
   );
 }
 
-function Media({ media }: { media: PlayItem["media"] }) {
+/** How many tiles lead the page: on screen on arrival at any width, so
+ *  fetched at once rather than lazily. Two, not a desktop row of three: on a
+ *  phone the third is below the fold and would only compete with them. */
+const FIRST_ROW = 2;
+
+function Media({
+  media,
+  priority = false,
+}: {
+  media: PlayItem["media"];
+  priority?: boolean;
+}) {
   if (media.type === "video") {
     return (
       <LazyVideo
@@ -132,6 +143,7 @@ function Media({ media }: { media: PlayItem["media"] }) {
         webm={media.webm}
         mp4={media.mp4}
         sizes={PLAY_TILE}
+        priority={priority}
       />
     );
   }
@@ -153,6 +165,8 @@ function Media({ media }: { media: PlayItem["media"] }) {
       width={media.width}
       height={media.height}
       sizes={PLAY_TILE}
+      priority={priority}
+      fetchPriority={priority ? "high" : undefined}
       className="grow-media rounded-card"
     />
   );
@@ -172,7 +186,7 @@ export default function PlayPage() {
                 aspectRatio: `${item.media.width} / ${item.media.height}`,
               }}
             >
-              <Media media={item.media} />
+              <Media media={item.media} priority={i < FIRST_ROW} />
               <Labels labels={item.labels} />
             </div>
           );
