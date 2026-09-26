@@ -72,7 +72,8 @@ export default function Nav() {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-bg/80 backdrop-blur-md transition-transform duration-300 ${
+      data-menu-open={open || undefined}
+      className={`site-header sticky top-0 z-50 transition-transform duration-300 ${
         hidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >
@@ -83,7 +84,7 @@ export default function Nav() {
           className="transition-opacity hover:opacity-80"
           onClick={goHome}
         >
-          <LogoMark className="h-14 w-14" />
+          <LogoMark className="h-11 w-11" />
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
