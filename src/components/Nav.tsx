@@ -84,7 +84,7 @@ export default function Nav() {
           className="transition-opacity hover:opacity-80"
           onClick={goHome}
         >
-          <LogoMark className="h-14 w-14" />
+          <LogoMark className="h-11 w-11" />
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
