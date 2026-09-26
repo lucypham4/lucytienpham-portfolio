@@ -72,7 +72,8 @@ export default function Nav() {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-bg/80 backdrop-blur-md transition-transform duration-300 ${
+      data-menu-open={open || undefined}
+      className={`site-header sticky top-0 z-50 transition-transform duration-300 ${
         hidden ? "-translate-y-full" : "translate-y-0"
       }`}
     >

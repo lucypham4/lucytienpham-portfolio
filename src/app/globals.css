@@ -354,3 +354,64 @@ body {
     opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
     transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
 }
+
+/* Arrival: the bar, then the page, fade up into place when the site is first
+   opened. Pure CSS on elements the root layout keeps, so it plays once as
+   the document paints (no waiting on script) and not again on moving
+   between pages. `backwards` holds the start state through each delay, and
+   leaves no transform behind afterwards, which would trap the fixed
+   lightbox and the header's own hide-on-scroll. Blocks further down still
+   arrive on scroll; see ScrollReveal. */
+@keyframes enter {
+  from {
+    /* Not quite 0: Chrome doesn't count a fully transparent paint as the
+       page's content appearing, and this fade runs off the main thread, so
+       the page would be timed as blank until long after it's visible. */
+    opacity: 0.01;
+    transform: translateY(var(--enter-rise, 16px));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .site-header {
+    --enter-rise: -12px;
+    animation: enter 900ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+
+  main,
+  .site-footer {
+    animation: enter 1100ms cubic-bezier(0.22, 1, 0.36, 1) 120ms backwards;
+  }
+}
+
+/* The bar: the page's own colour, solid along the top and fading to clear
+   at its bottom edge, so content slides under it rather than being cut
+   off by a line. A blur follows the same fade, keeping the links legible
+   over whatever passes behind them without a hard blur edge. */
+.site-header {
+  background: linear-gradient(
+    to bottom,
+    var(--color-bg) 0%,
+    var(--color-bg) 35%,
+    color-mix(in srgb, var(--color-bg) 75%, transparent) 65%,
+    transparent 100%
+  );
+}
+
+/* With the phone menu open the bar sits over the menu's own solid panel, so
+   it goes solid too rather than fading into it. */
+.site-header[data-menu-open] {
+  background: var(--color-bg);
+}
+
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  mask-image: linear-gradient(to bottom, #000 50%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent);
+}
