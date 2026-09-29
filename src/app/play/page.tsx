@@ -68,7 +68,7 @@ const items: PlayItem[] = [
     },
   },
   {
-    labels: [],
+    labels: ["Portrait", "Marker on receipts"],
     media: {
       type: "image",
       width: 733,
