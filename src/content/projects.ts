@@ -23,7 +23,7 @@ export const projects: Project[] = [
     categories: ["Product Design", "Internship"],
     thumb: { type: "image", src: `${A}/frame-2-6.png`, alt: "The Washington Post Live Activity" },
     hero: {
-      headline: "Designing an AI-powered Live Activity Feed",
+      headline: "Designing an AI-powered Live Activity",
       media: { type: "image", src: `${A}/group-1-1.png`, alt: "Live Activity concept" },
       panel: true,
       hideTagline: true,
@@ -237,7 +237,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "I presented the <strong>Live Activity Feed</strong> prototype to <strong>Content XP leadership</strong>, alongside other newsroom and product teams exploring engagement-driven solutions.",
+        html: "I presented the <strong>Live Activity</strong> prototype to <strong>Content XP leadership</strong>, alongside other newsroom and product teams exploring engagement-driven solutions.",
       },
       {
         kind: "cards",
