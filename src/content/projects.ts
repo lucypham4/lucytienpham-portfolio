@@ -23,15 +23,15 @@ export const projects: Project[] = [
     categories: ["Product Design", "Internship"],
     thumb: { type: "image", src: `${A}/frame-2-6.png`, alt: "The Washington Post Live Activity" },
     hero: {
-      headline: "Designing an AI-powered Live Activity Feed",
+      headline: "Designing an AI-powered Live Activity",
       media: { type: "image", src: `${A}/group-1-1.png`, alt: "Live Activity concept" },
       panel: true,
       hideTagline: true,
     },
     overview: {
-      html: "To elevate real-time mobile engagement, The Washington Post&rsquo;s Content XP team set out to integrate iOS Live Activities with its Live Update Feed (LUFs). Our goal was to design a scalable, AI-powered experience that delivers glanceable news updates directly on the lock screen, boosting engagement and shaping reader habit.",
+      html: "To elevate real-time mobile engagement, The Washington Post&rsquo;s Content XP team set out to integrate iOS Live Activities with its Live Updating Files (LUFs). Our goal was to design a scalable, AI-powered experience that delivers glanceable news updates directly on the lock screen, boosting engagement and shaping reader habit.",
       impact:
-        "Approved for a Q1 2026 launch and added to the roadmap, with projected gains of 17% to 25% opt-ins, 3+ average views per user, and 60-second sessions.",
+        "Approved for a Q1 2026 launch and added to the roadmap, with projected opt-ins rising from 17% to 25%, 3+ average views per user, and 60-second sessions.",
     },
     meta: [
       { label: "Duration", value: "July – August 2025 (1 month)" },
@@ -50,7 +50,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "Existing Live Activity Feeds (LUFs) attracted high traffic (55.1M pageviews H1 2025), yet 39% came from anonymous users who rarely registered or subscribed. With that in mind:",
+        html: "Existing Live Updating Files (LUFs) attracted high traffic (55.1M pageviews H1 2025), yet 39% came from anonymous users who rarely registered or subscribed. With that in mind:",
       },
       {
         kind: "callout",
@@ -59,7 +59,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Current LUF layout" },
       {
         kind: "text",
-        html: "With the Live Activity Feeds (LUFs), contributors are not limited to traditional article formatting and can publish quick posts designed as cards that readers can follow. To understand how to design the iOS Live Activity, I needed to understand LUFs&rsquo; anatomy.",
+        html: "With Live Updating Files (LUFs), contributors are not limited to traditional article formatting and can publish quick posts designed as cards that readers can follow. To understand how to design the iOS Live Activity, I needed to understand LUFs&rsquo; anatomy.",
       },
       {
         kind: "media",
@@ -237,7 +237,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "I presented the <strong>Live Activity Feed</strong> prototype to <strong>Content XP leadership</strong>, alongside other newsroom and product teams exploring engagement-driven solutions.",
+        html: "I presented the <strong>Live Activity</strong> prototype to <strong>Content XP leadership</strong>, alongside other newsroom and product teams exploring engagement-driven solutions.",
       },
       {
         kind: "cards",
