@@ -318,7 +318,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "After meeting with stakeholders, I found that non-artistic directors struggle to manage content, feeling <strong>constrained by the design system</strong> and often breaking things when they try to update it. The old site was not optimized for VTC&rsquo;s mission. How might we create a site that empowers the current staff?",
+        html: "After meeting with stakeholders, I found that non-artistic directors struggle to manage content, feeling <strong>constrained by the design system</strong> and often breaking things when they try to update it. The old site was not optimized for VTC&rsquo;s mission. How might we create a site the current staff can update themselves?",
       },
       {
         kind: "media",
@@ -366,7 +366,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "In nonprofit theater, operational independence is everything. I redesigned the site to <strong>empower a small, non-technical team</strong> to manage their own content without breaking the design system, giving VTC a digital presence built to last beyond launch. To reinforce long-term success, I introduced a templated CMS architecture paired with hands-on training, transforming a once fragile, developer-dependent website into a <strong>maintainable, brand-consistent</strong> platform.",
+        html: "A nonprofit theater needs to run its own site without calling a developer. I redesigned the site to <strong>let a small, non-technical team</strong> manage their own content without breaking the design system. To make that last past launch, I introduced a templated CMS architecture paired with hands-on training, which turned a once fragile, developer-dependent website into a <strong>maintainable, brand-consistent</strong> platform.",
       },
 
       {
