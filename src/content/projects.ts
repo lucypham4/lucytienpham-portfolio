@@ -50,7 +50,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "Existing Live Activity Feeds (LUFs) attracted high traffic (55.1M pageviews H1 2025), yet 39% came from anonymous users who rarely registered or subscribed. Knowing this context:",
+        html: "Existing Live Activity Feeds (LUFs) attracted high traffic (55.1M pageviews H1 2025), yet 39% came from anonymous users who rarely registered or subscribed. With that in mind:",
       },
       {
         kind: "callout",
@@ -59,7 +59,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Current LUF layout" },
       {
         kind: "text",
-        html: "With the Live Activity Feeds (LUFs), contributors are not limited to traditional article formatting, allowing for quick posts designed as cards that readers can follow. To understand how to design the iOS Live Activity, I needed to understand LUFs&rsquo; anatomy.",
+        html: "With the Live Activity Feeds (LUFs), contributors are not limited to traditional article formatting and can publish quick posts designed as cards that readers can follow. To understand how to design the iOS Live Activity, I needed to understand LUFs&rsquo; anatomy.",
       },
       {
         kind: "media",
@@ -74,7 +74,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "I spoke with designers, engineers, and editors across The Washington Post&rsquo;s Content XP team to understand the existing LUF experience and the challenges of mobile engagement. Through these discussions, we uncovered several key insights that shaped our design direction:",
+        html: "I spoke with designers, engineers, and editors across The Washington Post&rsquo;s Content XP team to understand the existing LUF experience and the challenges of mobile engagement. These discussions gave us three insights that shaped our design direction:",
       },
       {
         kind: "cards",
@@ -101,7 +101,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "I <strong>dissected existing LUF structure</strong>: dynamic headlines, dynamic descriptions, contributor credits, reporter insights, article excerpts, and quick posts to understand the content I was designing for. I also <strong>defined LUF categories</strong> to further break down which type of news would work with a live activity template in addition to how users would interact with different LUF live activities.",
+        html: "I <strong>dissected existing LUF structure</strong>: dynamic headlines, dynamic descriptions, contributor credits, reporter insights, article excerpts, and quick posts to understand the content I was designing for. I also <strong>defined LUF categories</strong> to break down which types of news would work with a live activity template, and how users would interact with different LUF live activities.",
       },
       {
         kind: "grid",
@@ -114,13 +114,13 @@ export const projects: Project[] = [
       { kind: "heading", text: "Learning from The 2024 Election Live Activity" },
       {
         kind: "text",
-        html: "<strong>The 2024 Election prototype served as the baseline for my design.</strong> Though it generated high engagement (26% click-through), it did require heavy manual tagging by journalists. Since the process was not scalable, I worked alongside the PM intern to integrate an LLM-based classifier to automate surfacing urgent, high-salience posts to reduce noise. <strong>My design needed to be adaptable</strong> and act as a sort of template for different formats and combinations of quantitative and qualitative data.",
+        html: "<strong>The 2024 Election prototype was the baseline for my design.</strong> Though it generated high engagement (26% click-through), it required heavy manual tagging by journalists. Since the process was not scalable, I worked alongside the PM intern to integrate an LLM-based classifier that automatically surfaces urgent, high-salience posts and reduces noise. <strong>My design needed to be adaptable</strong> and act as a sort of template for different formats and combinations of quantitative and qualitative data.",
       },
       { kind: "media", media: { type: "image", src: `${A}/group-692.png`, alt: "2024 Election Live Activity" } },
       { kind: "heading", text: "iOS Live Activity Requirements" },
       {
         kind: "text",
-        html: "The iOS Live Activity requirements were an added constraint throughout my design process. <strong>Designing for such a small screen</strong> with areas where UI would not show or would be rejected during the final Apple approval process gave me a <strong>unique challenge to solve.</strong>",
+        html: "The iOS Live Activity requirements were an added constraint throughout my design process. <strong>Designing for such a small screen</strong> with areas where UI would not show or would be rejected during the final Apple approval process gave me a <strong>challenge to solve.</strong>",
       },
       {
         kind: "media",
@@ -136,7 +136,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Early Sketches" },
       {
         kind: "text",
-        html: "My early concepts primarily focused on exploring how much information could fit in the compact format and the variety of data, taking note of constraints with the display as well as the 8 hour limit that a live activity appears on the user&rsquo;s screen.",
+        html: "My early concepts explored how much information could fit in the compact format and the variety of data it could show. I also noted the constraints of the display and the 8 hour limit on how long a live activity appears on the user&rsquo;s screen.",
       },
       {
         kind: "grid",
@@ -150,7 +150,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "V1 Designs" },
       {
         kind: "text",
-        html: "For my initial design, I focused on exploring different ways to display the live update title, time stamps, and pieces of content while utilizing the Post&rsquo;s components in the existing Figma libraries. I learned to rapidly prototype new iterations to better prioritize visual hierarchy at this conceptual design stage. The Hurricane Ian story served as the example use case to populate content.",
+        html: "For my initial design, I explored different ways to display the live update title, time stamps, and pieces of content, using the Post&rsquo;s components in the existing Figma libraries. I learned to rapidly prototype new iterations to better prioritize visual hierarchy at this conceptual design stage. I used the Hurricane Ian story as the example use case to populate content.",
       },
       {
         kind: "grid",
@@ -164,7 +164,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Design Feedback" },
       {
         kind: "text",
-        html: "After feedback from product and design leadership, I implemented the following changes: <strong>Optimized scalability:</strong> created a flexible component system that could accommodate event-specific visuals (e.g., cultural vs. political coverage) while maintaining consistency. <strong>Defined interaction model:</strong> clarified transitions from lock screen to app view using timestamped anchors and subtle motion cues.",
+        html: "After feedback from product and design leadership, I made two changes. I <strong>optimized scalability</strong> by creating a flexible component system that could accommodate event-specific visuals (e.g., cultural vs. political coverage) while maintaining consistency. I also <strong>defined the interaction model</strong>, clarifying transitions from lock screen to app view with timestamped anchors and subtle motion cues.",
       },
       {
         kind: "grid",
@@ -178,7 +178,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Designing for Technical Constraints" },
       {
         kind: "text",
-        html: "Collaboration with the iOS engineering team that worked on the elections live activities revealed technical limitations in Live Activity height, interactivity, and refresh rates. To maintain performance and compliance, I established modular zones for the headline, timestamp, and update source that scale within iOS boundaries. These insights also informed future LUF integrations, ensuring visual adaptability across compact and expanded states.",
+        html: "Collaboration with the iOS engineering team that worked on the elections live activities revealed technical limitations in Live Activity height, interactivity, and refresh rates. To maintain performance and compliance, I established modular zones for the headline, timestamp, and update source that scale within iOS boundaries. These insights also informed future LUF integrations, so the design stays visually adaptable across compact and expanded states.",
       },
       {
         kind: "grid",
@@ -197,7 +197,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "To support The Post&rsquo;s diverse storytelling, I built a <strong>template design system</strong> that balanced scalability with creative freedom. Each template could adapt to event type (breaking, ongoing, or scheduled) and editorial tone while leaving space for visual experimentation by graphic artists. This framework ensures consistent brand presence across all Live Activities while allowing for event-specific customization.",
+        html: "To support The Post&rsquo;s diverse storytelling, I built a <strong>template design system</strong> that balanced scalability with creative freedom. Each template could adapt to event type (breaking, ongoing, or scheduled) and editorial tone while leaving space for visual experimentation by graphic artists. The framework keeps the brand consistent across all Live Activities and still allows event-specific customization.",
       },
       {
         kind: "media",
@@ -206,7 +206,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Motion Interactions" },
       {
         kind: "text",
-        html: "I learned how to prototype smooth motion interactions by making my own local components for transitional states within the live activity. These animations would allow users to better understand when content has been updated in real time, helping them maintain context within their experience.",
+        html: "I learned how to prototype smooth motion interactions by making my own local components for transitional states within the live activity. These animations would help users see when content has been updated in real time, so they don&rsquo;t lose context.",
       },
       {
         kind: "media",
@@ -254,7 +254,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "This was my third project at The Post, and it challenged me to move beyond execution and think like a product strategist. My key takeaways:",
+        html: "This was my third project at The Post, and it challenged me to move beyond execution and think like a product strategist. My takeaways:",
       },
       {
         kind: "cards",
