@@ -81,11 +81,11 @@ export const projects: Project[] = [
         items: [
           {
             title: "Engagement drops after the first alert.",
-            body: "Users often open one push notification but rarely return to check for updates, signaling low sustained attention.",
+            body: "Users often open one push notification but rarely return to check for updates.",
           },
           {
             title: "Notification fatigue is common.",
-            body: "Too many alerts during live events cause users to mute or disable notifications entirely, decreasing engagement.",
+            body: "Too many alerts during live events cause users to mute or disable notifications entirely.",
           },
           {
             title: "Users crave quick context without refreshing.",
@@ -244,10 +244,10 @@ export const projects: Project[] = [
         items: [
           {
             title: "Executive feedback",
-            body: "Praised for scalability, technical feasibility, and editorial alignment — automating newsroom tagging without compromising journalistic integrity.",
+            body: "Praised for scalability, technical feasibility, and editorial alignment, since it automates newsroom tagging without compromising journalistic integrity.",
           },
           {
-            title: "Organizational Impact",
+            title: "Organizational impact",
             body: "Approved for a Q1 2026 launch and added to the roadmap, with projected opt-ins rising from 17% to 25%.",
           },
         ],
@@ -261,15 +261,15 @@ export const projects: Project[] = [
         items: [
           {
             title: "Collaborate early with engineering",
-            body: "I partner with engineers early to turn technical constraints into innovative, feasible designs.",
+            body: "I partner with engineers early to turn technical constraints into feasible designs.",
           },
           {
             title: "Embrace iteration and feedback loops",
-            body: "I use constant feedback to align my work with user needs and product goals.",
+            body: "I use constant feedback to check my work against user needs and product goals.",
           },
           {
             title: "Go beyond the MVP",
-            body: "I design scalable frameworks and flexible templates that ensure products can grow well past their initial launch.",
+            body: "I design scalable frameworks and flexible templates so products can grow past their initial launch.",
           },
         ],
       },
