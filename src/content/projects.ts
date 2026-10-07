@@ -443,10 +443,10 @@ export const projects: Project[] = [
     },
     overview: {
       label: "Challenge",
-      html: "Under Prof. G&ouml;khan Ersan, I was tasked with creating a coffee table book that would be published by the end of the semester. The main challenge was to create a polished editorial design for a single subject that would implement a navigational design.",
+      html: "Under Prof. G&ouml;khan Ersan, I was tasked with creating a coffee table book that would be published by the end of the semester. The main challenge was to create a polished editorial design for a single subject, with navigation built into the design.",
       impactLabel: "Approach",
       impact:
-        "I utilized a 9 x 9 grid system, custom icons, contact pages, spread planning, and experimental design tools to strengthen the visual language of the book and help solidify my vision for the final printing.",
+        "I used a 9 x 9 grid system, custom icons, contact pages, spread planning, and experimental design tools to strengthen the book's visual language and settle my vision for the final printing.",
     },
     meta: [
       { label: "Duration", value: "October – December 2025\nOne semester (~2.5 months)" },
@@ -794,7 +794,7 @@ export const projects: Project[] = [
           },
           {
             title: "Iconography is information design",
-            body: "Treating the icons as navigation rather than decoration gave the book a structure a reader can feel without being told about it.",
+            body: "Treating the icons as navigation gave the book a structure a reader can follow without being told about it.",
           },
         ],
       },
