@@ -839,15 +839,15 @@ export const projects: Project[] = [
         kind: "cards",
         items: [
           {
-            title: "Problem — Graditude's admins need more support.",
+            title: "Problem: Graditude's admins need more support.",
             body: "Admins struggle to effectively manage mentorship programs due to limited visibility into participant engagement, which leads to poor outcomes and discouraging program launches.",
           },
           {
-            title: "Solution — A centralized dashboard that allows admins to view and understand their programs.",
+            title: "Solution: A centralized dashboard that allows admins to view and understand their programs.",
             body: "Admins now have a central dashboard to track member engagement and intervene as needed throughout the mentorship lifecycle, with early priorities focused on Recruiting, Matching, and Solidifying.",
           },
           {
-            title: "Outcome — Successful stakeholder presentation and dev handoff",
+            title: "Outcome: Successful stakeholder presentation and dev handoff",
             body: "During the last days of my internship, I delivered a stakeholder presentation that communicated my solutions to the dev of the project, setting the team up for implementation.",
           },
         ],
