@@ -864,7 +864,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Stakeholder Interview and Past Documentation" },
       {
         kind: "text",
-        html: "I talked to the CEO, Steven, to truly understand the business needs and admins&rsquo; needs to improve program success, ultimately supporting Graditude&rsquo;s overall operations. The following were his intentions for the dashboard, as well as insights taken from interview transcripts from people interested in being a program admin.",
+        html: "I talked to the CEO, Steven, to understand the business needs and admins&rsquo; needs for improving program success, which supports Graditude&rsquo;s overall operations. The following were his intentions for the dashboard, along with insights from interview transcripts of people interested in being a program admin.",
       },
       {
         kind: "cards",
@@ -890,7 +890,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "User Journey" },
       {
         kind: "text",
-        html: "After <strong>consolidating</strong> existing documentation and <strong>defining</strong> our approach, I created a detailed user journey for our example admin, &ldquo;Carol.&rdquo; This journey illustrated Carol&rsquo;s workflow, challenges, and decision points, helping stakeholders visualize her needs and guiding the design of dashboard features to support her actions effectively.",
+        html: "After <strong>consolidating</strong> existing documentation and <strong>defining</strong> our approach, I created a detailed user journey for our example admin, &ldquo;Carol.&rdquo; The journey showed Carol&rsquo;s workflow, challenges, and decision points. It helped stakeholders see her needs and guided which dashboard features I designed to support her actions.",
       },
       {
         kind: "media",
@@ -905,19 +905,19 @@ export const projects: Project[] = [
       { kind: "heading", text: "User Persona" },
       {
         kind: "text",
-        html: "Based on our business goals and existing admin interview transcripts, we created a focused user persona: Carol Thompson, a mentorship program coordinator, who struggles to track mentor–mentee engagement and know when to intervene. The Admin Dashboard solves this by giving her <strong>real-time visibility</strong> into match activity and progress toward goals, enabling <strong>quick, targeted actions</strong> that keep programs on track and deliver stronger outcomes.",
+        html: "Based on our business goals and existing admin interview transcripts, we created a user persona: Carol Thompson, a mentorship program coordinator, who struggles to track mentor-mentee engagement and know when to intervene. The Admin Dashboard gives her <strong>real-time visibility</strong> into match activity and progress toward goals, so she can take <strong>quick, targeted actions</strong> that keep programs on track and lead to stronger outcomes.",
       },
       { kind: "media", media: { type: "image", src: `${A}/basic-information-1.avif`, alt: "User persona" } },
       { kind: "heading", text: "User Flow" },
       {
         kind: "text",
-        html: "Our &ldquo;Nudge&rdquo; flow allows admins to quickly identify low-engagement or underperforming mentor–mentee matches from the Admin Dashboard, select them, and send targeted notifications. By <strong>streamlining the process</strong> into just a few steps, admins can efficiently re-engage pairs before progress stalls, which ensures that mentorship programs stay active and productive.",
+        html: "Our &ldquo;Nudge&rdquo; flow lets admins quickly identify low-engagement or underperforming mentor-mentee matches from the Admin Dashboard, select them, and send targeted notifications. By <strong>streamlining the process</strong> into just a few steps, admins can re-engage pairs before progress stalls, which keeps mentorship programs active.",
       },
       { kind: "media", media: { type: "image", src: `${A}/frame-28.avif`, alt: "Nudge user flow" } },
       { kind: "heading", text: "Defining Roles" },
       {
         kind: "text",
-        html: "To further define our scope and ensure that our plan was a comprehensive solution for Graditude&rsquo;s mission of providing admins with the tools they need to manage mentee/mentor matches, <strong>I took ownership</strong> over the main dashboard, inviting new members flow, creating new programs flow, and making sure that we had clear action items before and after our weekly meetings.",
+        html: "To define our scope and make sure our plan supported Graditude&rsquo;s mission of giving admins the tools they need to manage mentee/mentor matches, <strong>I took ownership</strong> of the main dashboard, the flow for inviting new members, and the flow for creating new programs. I also made sure we had clear action items before and after our weekly meetings.",
       },
 
       {
@@ -928,7 +928,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Sketching and Wireframes" },
       {
         kind: "text",
-        html: "I hosted a fast sketching exercise just to get an idea of the core functionality of the dashboard and foster creativity in our approach when designing for low to high fidelity. Our primary goal was to allow the admin to:",
+        html: "I hosted a fast sketching exercise to get an idea of the core functionality of the dashboard and encourage creativity as we designed from low to high fidelity. Our primary goal was to allow the admin to:",
       },
       {
         kind: "list",
@@ -965,19 +965,19 @@ export const projects: Project[] = [
       { kind: "heading", text: "Navigation" },
       {
         kind: "text",
-        html: "<strong>Enhancing the side nav bar</strong> to include not only members and mentors, but also giving admins access to programs.",
+        html: "<strong>Enhancing the side nav bar</strong> so admins can reach programs as well as members and mentors.",
       },
       { kind: "media", media: { type: "image", src: `${A}/frame-427318949-3.avif`, alt: "Navigation design" } },
       { kind: "heading", text: "Data Display" },
       {
         kind: "text",
-        html: "<strong>Including more positive metrics</strong> such as total numbers, active participation rates, and overall satisfaction instead of purely negative such as # of inactive members.",
+        html: "<strong>Including more positive metrics</strong> such as total numbers, active participation rates, and overall satisfaction instead of purely negative metrics such as # of inactive members.",
       },
       { kind: "media", media: { type: "image", src: `${A}/frame-427318951-1.avif`, alt: "Data display design" } },
       { kind: "heading", text: "Feature Consolidation" },
       {
         kind: "text",
-        html: "<strong>Consolidating features</strong> such as analytics and managing invites on one page to enable quicker decision-making for admins.",
+        html: "<strong>Consolidating features</strong> such as analytics and managing invites on one page so admins can make decisions faster.",
       },
       {
         kind: "media",
@@ -1053,7 +1053,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "In the future I&rsquo;d want to include more features that would provide admins with the personalization they need to really cater to their specific program, such as options for different views (tiled, lists) or even options to customize their dashboard through dynamic cards. I&rsquo;m so glad that I got to design for data, and this really sparked my interest in designing for admin-facing tools!",
+        html: "In the future I&rsquo;d want to add features that let admins personalize the dashboard for their specific program, such as options for different views (tiled, lists) or even customizing the dashboard through dynamic cards. I&rsquo;m so glad that I got to design for data, and this really sparked my interest in designing for admin-facing tools!",
       },
     ],
   },
