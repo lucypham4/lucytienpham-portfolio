@@ -1305,7 +1305,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Brand Guidelines" },
       {
         kind: "text",
-        html: "I developed brand guidelines for QB to have a clear <strong>understanding of their identity</strong>. I wanted the company to reference this in future materials to have <strong>consistent branding across digital and print media.</strong>",
+        html: "I developed brand guidelines so QB would have a clear <strong>understanding of their identity</strong>. I wanted the company to reference them in future materials, so they get <strong>consistent branding across digital and print media.</strong>",
       },
       {
         kind: "grid",
@@ -1319,14 +1319,14 @@ export const projects: Project[] = [
       { kind: "media", media: { type: "image", src: `${A}/brainstorming-2.webp`, alt: "Logo brainstorming" } },
       {
         kind: "text",
-        html: "The CEO wanted a <strong>new logo that encapsulates QB&rsquo;s mission</strong> while also looking <strong>professional to shareholders.</strong> After many collaborative brainstorming sessions with the team, we identified the best fit for QB&rsquo;s brand.",
+        html: "The CEO wanted a <strong>new logo that captures QB&rsquo;s mission</strong> while also looking <strong>professional to shareholders.</strong> After many brainstorming sessions with the team, we identified the best fit for QB&rsquo;s brand.",
       },
 
       { kind: "section", label: "Delivery" },
       { kind: "heading", text: "Final Designs" },
       {
         kind: "text",
-        html: "Here are some mockups presented for a better way to <strong>visualize some of the products</strong> that the CEO decided to print and order using the redesigned logo.",
+        html: "Here are some mockups I presented to help <strong>visualize some of the products</strong> that the CEO decided to print and order using the redesigned logo.",
       },
       { kind: "media", media: { type: "image", src: `${A}/qb-mockups-1-1.webp`, alt: "Product mockups" } },
 
@@ -1334,7 +1334,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Takeaways" },
       {
         kind: "text",
-        html: "<strong>Being a confident designer.</strong> Before this internship, I had experience with improving a designer&rsquo;s previous branding work, but QB taught me how to create an entire brand without a preexisting foundation. Throughout the entire process, I learned how to shake off the imposter syndrome that comes with being a junior designer and trusting my own research and insights while also being open to criticism and feedback.",
+        html: "<strong>Being a confident designer.</strong> Before this internship, I had experience with improving a designer&rsquo;s previous branding work, but QB taught me how to create an entire brand without a preexisting foundation. Throughout the process, I learned to shake off the imposter syndrome that comes with being a junior designer and to trust my own research and insights while staying open to criticism and feedback.",
       },
       { kind: "heading", text: "The Future" },
       {
