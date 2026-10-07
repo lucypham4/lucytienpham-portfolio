@@ -1113,7 +1113,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Trail of Truth Videos" },
       {
         kind: "text",
-        html: "Videos created to showcase the impact of substance use disorder on families. An emotional tone was used as a call to action to attend the event.",
+        html: "These videos show the impact of substance use disorder on families. They use an emotional tone as a call to action to attend the event.",
       },
       {
         kind: "embed",
@@ -1124,7 +1124,7 @@ export const projects: Project[] = [
         kind: "list",
         items: [
           "Painted tombstones symbolize the lives lost from substance use disorder",
-          "The intent of the video was to showcase the emotional toll on families, materialized by these tombstones",
+          "The video aims to show the emotional toll on families through these tombstones",
         ],
       },
       {
@@ -1136,7 +1136,7 @@ export const projects: Project[] = [
         kind: "list",
         items: [
           "Edited and manually subtitled video for accessibility and storytelling",
-          "Showcased a case study on the lives of the children and families affected by substance use disorder",
+          "Presented a case study on the lives of the children and families affected by substance use disorder",
         ],
       },
 
@@ -1151,7 +1151,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "I had the amazing opportunity to market, photograph, and attend Truth Pharm&rsquo;s advocacy events. Talking to those affected by substance use disorder helped me get a better picture of how to message and therefore design my social media campaigns. This hands-on experience <strong>strengthened my understanding and empathy</strong> for the families, victims, and lives affected by substance use. Listening to the speakers and performers detail their experiences inspired me to create materials that would help Truth Pharm spread their messaging.",
+        html: "I got to market, photograph, and attend Truth Pharm&rsquo;s advocacy events. Talking to those affected by substance use disorder helped me get a better picture of how to message and therefore design my social media campaigns. This hands-on experience <strong>strengthened my understanding and empathy</strong> for the families and victims affected by substance use. Listening to the speakers and performers detail their experiences inspired me to create materials that would help Truth Pharm spread their messaging.",
       },
 
       { kind: "section", label: "Design" },
@@ -1173,7 +1173,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Printables & Social Media" },
       {
         kind: "text",
-        html: "Business cards, postcards, flyers, and other forms of merchandise were designed to promote both Truth Pharm and the Trail of Truth. Alongside printed deliverables, I managed both social media accounts and posted at least 3 times a week, tracking analytics using the Meta Business Suite.",
+        html: "I designed business cards, postcards, flyers, and other merchandise to promote both Truth Pharm and the Trail of Truth. Alongside printed deliverables, I managed both social media accounts, posted at least 3 times a week, and tracked analytics using the Meta Business Suite.",
       },
       { kind: "media", media: { type: "image", src: `${A}/delivery-t-shirts.webp`, alt: "T-shirts" } },
       {
@@ -1203,7 +1203,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Takeaways" },
       {
         kind: "text",
-        html: "<strong>Social media is a relatively inexpensive way to expand any organization&rsquo;s reach.</strong> I&rsquo;m proud to say that my efforts at Truth Pharm led to a <strong>200% increase in account engagement</strong> according to the Meta Business Suite, with the social media videos being the most popular. To my surprise, I also found that people responded positively to text-heavy posts if they were accompanied by an impactful photo. My time at Truth Pharm informed me of a problem that plagues people from all different backgrounds. I truly <strong>looked forward to educating myself and learning about the science of addiction</strong> through people that have lived through so much.",
+        html: "<strong>Social media is a relatively inexpensive way to expand any organization&rsquo;s reach.</strong> I&rsquo;m proud that my efforts at Truth Pharm led to a <strong>200% increase in account engagement</strong> according to the Meta Business Suite, and the social media videos were the most popular. To my surprise, I also found that people responded positively to text-heavy posts if they were accompanied by an impactful photo. My time at Truth Pharm showed me a problem that affects people from all different backgrounds. I <strong>looked forward to educating myself and learning about the science of addiction</strong> through people that have lived through so much.",
       },
       { kind: "heading", text: "The Future" },
       {
