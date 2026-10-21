@@ -279,7 +279,7 @@ export const projects: Project[] = [
   {
     slug: "voyage-theater-company",
     title: "Voyage Theater Company",
-    tagline: "Building a scalable digital stage for diverse voices.",
+    tagline: "Built a scalable digital stage for diverse voices.",
     categories: ["Product Design", "Contract"],
     thumb: {
       type: "video",
@@ -288,7 +288,7 @@ export const projects: Project[] = [
       webm: `${A}/vtc-portfolio-webm.webm`,
     },
     hero: {
-      headline: "Building a scalable digital stage for diverse voices.",
+      headline: "Built a scalable digital stage for diverse voices.",
       media: {
         type: "video",
         poster: `${A}/vtc-portfolio-poster-0000000.jpg`,
@@ -805,7 +805,7 @@ export const projects: Project[] = [
     slug: "graditude",
     title: "Graditude",
     tagline:
-      "Designing a centralized dashboard that allows admins to understand their mentorship programs.",
+      "Designed a centralized dashboard that allowed admins to understand their mentorship programs.",
     categories: ["Product Design", "Internship"],
     thumb: { type: "image", src: `${A}/frame-1-2.png`, alt: "Graditude dashboard" },
     accent: "grad",
@@ -1061,7 +1061,7 @@ export const projects: Project[] = [
   {
     slug: "truth-pharm",
     title: "Truth Pharm",
-    tagline: "Launching a marketing campaign for a substance use awareness non profit.",
+    tagline: "Launched a marketing campaign for a substance use awareness non profit.",
     categories: ["Branding", "Internship"],
     thumb: { type: "image", src: `${A}/splash-2.webp`, alt: "Truth Pharm campaign" },
     hero: {
@@ -1220,7 +1220,7 @@ export const projects: Project[] = [
   {
     slug: "quorum-bio",
     title: "Quorum Bio",
-    tagline: "Modernizing the brand of a microbial solutions startup company.",
+    tagline: "Modernized the brand of a microbial solutions startup company.",
     categories: ["Branding", "Internship"],
     thumb: { type: "image", src: `${A}/splash-6.webp`, alt: "Quorum Bio brand" },
     hero: {

@@ -102,6 +102,14 @@ export type Meta = { label: string; value: string }[];
 export type Project = {
   slug: string;
   title: string;
+  /**
+   * The one-line description on the home-page card, and the page's meta
+   * description. Its tense follows the project's status: simple past once the
+   * project has ended ("Built a site..."), present "-ing" while it is still
+   * ongoing ("Building a site..."). Judge by the end date in `meta`, and flip
+   * the tense when an ongoing project wraps. Where `hero.headline` repeats the
+   * tagline (the page then shows it once), change both together.
+   */
   tagline: string;
   categories: string[];
   /** Home-page card thumbnail. */
