@@ -47,7 +47,7 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
     // nearest ancestor with non-visible overflow, so nesting it inside an
     // overflow-hidden aside (the previous version) pinned it to that short
     // aside's box instead of the viewport, and it stopped tracking scroll.
-    <aside className="hidden lg:block">
+    <aside data-no-reveal className="hidden lg:block">
       {/* Sticky, width-transition, and the clip that produces the collapse
           all live on this one element instead, since overflow-hidden here
           only clips this element's own children — it doesn't affect its own
@@ -66,8 +66,10 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
           <button
             type="button"
             onClick={() => setCollapsed((c) => !c)}
+            // Named by its visible "Sections" text, so people who speak or
+            // read the label they see can reach it; aria-expanded says
+            // whether the list is open.
             aria-expanded={!collapsed}
-            aria-label={collapsed ? "Expand section list" : "Collapse section list"}
             className="flex cursor-pointer items-center gap-2 text-sm font-semibold text-ink"
           >
             {/* Bordered just around the icon, not the whole button — at 40px
@@ -96,7 +98,7 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
           </button>
 
           <div
-            className={`flex flex-col gap-4 pt-4 transition-opacity duration-200 ${
+            className={`flex flex-col gap-5 pt-4 transition-opacity duration-200 ${
               collapsed ? "pointer-events-none opacity-0" : "opacity-100"
             }`}
           >
@@ -111,7 +113,7 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
                     setActive(section.id);
                     lockedUntil.current = Date.now() + 900;
                   }}
-                  className={`text-base leading-6 transition-colors ${
+                  className={`text-base leading-[1.15] transition-colors ${
                     isActive ? "font-semibold text-ink" : "text-grey hover:text-ink"
                   }`}
                 >

@@ -17,9 +17,13 @@ const FRAME_MS = 38;
 export default function GlitchLine({
   text,
   className = "",
+  echoClassName,
 }: {
   text: string;
   className?: string;
+  /** When given, a second, hidden copy of the line is drawn with this class,
+   *  letter for letter the same as the first, for effects laid over it. */
+  echoClassName?: string;
 }) {
   const [shown, setShown] = useState(text);
   const settled = useRef(text);
@@ -58,8 +62,15 @@ export default function GlitchLine({
   }, [text]);
 
   return (
-    <span aria-live="polite" className={className}>
-      {shown}
-    </span>
+    <>
+      <span aria-live="polite" className={className}>
+        {shown}
+      </span>
+      {echoClassName && (
+        <span aria-hidden className={echoClassName}>
+          {shown}
+        </span>
+      )}
+    </>
   );
 }

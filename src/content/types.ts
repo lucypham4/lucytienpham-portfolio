@@ -108,6 +108,8 @@ export type Block =
   | { kind: "cards"; items: { title: string; body?: string; icon?: string }[]; columns?: 2 | 3 }
   /** `html` items may carry inline markup such as a bold lead-in. */
   | { kind: "list"; items: string[]; ordered?: boolean; html?: boolean }
+  /** A media block paired with a bullet list in the same row, media on the left. */
+  | { kind: "mediaList"; media: Media; items: string[] }
   | { kind: "beforeAfter"; before: Media; after: Media }
   /**
    * Before and after side by side at every width, each under a coloured pill
@@ -134,7 +136,16 @@ export type Block =
       kind: "bookGallery";
       parts: { label: string; caption?: string; images: Media[] }[];
     }
-  | { kind: "embed"; src: string; title: string; ratio?: number };
+  /** A third-party player. `ratio` is width over height (16/9 if unset).
+   *  `watch` links to the video on its own platform, for visitors whose
+   *  browser blocks the player. */
+  | {
+      kind: "embed";
+      src: string;
+      title: string;
+      ratio?: number;
+      watch?: { href: string; label: string };
+    };
 
 export type Meta = { label: string; value: string }[];
 

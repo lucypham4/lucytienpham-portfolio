@@ -33,6 +33,19 @@ loads from Webflow at runtime, so the site keeps working after that subscription
 Colors, fonts, and radii from the original site are defined as Tailwind theme variables in
 [`src/app/globals.css`](src/app/globals.css). The site uses Open Sans throughout, matching Webflow.
 
+## Review copy at /dive
+
+`/dive` (with `/dive/about`, `/dive/play` and `/dive/work/<slug>`) is a review-only copy of the portfolio for
+Dive Club. It renders the same components and content as the public site; the route files in
+[`src/app/dive`](src/app/dive) only pass `base="/dive"` so every internal link stays inside it. The shared
+nav reads the base from the URL (see [`src/lib/dive.ts`](src/lib/dive.ts)).
+
+- Its layout ([`src/app/dive/layout.tsx`](src/app/dive/layout.tsx)) is the only place the Inflight widget
+  `<script>` is rendered, so it is in the server-rendered `<head>` of `/dive` pages and absent everywhere else.
+  Don't add a second, unscoped copy to the root layout.
+- Those pages are `noindex`, there is no sitemap, and the public nav doesn't link to them.
+- The link is public, not password-protected.
+
 ## Deploying
 
 Build with `npm run build`. Every page is statically prerendered, so it can be hosted on Vercel,

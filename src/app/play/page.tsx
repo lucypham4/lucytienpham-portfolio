@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { useState } from "react";
+import LazyVideo from "@/components/LazyVideo";
 import Lightbox from "@/components/Lightbox";
+import { PLAY_TILE } from "@/lib/sizes";
 
 type PlayItem = {
   labels: string[];
@@ -66,7 +68,7 @@ const items: PlayItem[] = [
     },
   },
   {
-    labels: [],
+    labels: ["Portrait", "Marker on receipts"],
     media: {
       type: "image",
       width: 733,
@@ -121,20 +123,28 @@ function Labels({ labels }: { labels: string[] }) {
   );
 }
 
-function Media({ media }: { media: PlayItem["media"] }) {
+/** How many tiles lead the page: on screen on arrival at any width, so
+ *  fetched at once rather than lazily. Two, not a desktop row of three: on a
+ *  phone the third is below the fold and would only compete with them. */
+const FIRST_ROW = 2;
+
+function Media({
+  media,
+  priority = false,
+}: {
+  media: PlayItem["media"];
+  priority?: boolean;
+}) {
   if (media.type === "video") {
     return (
-      <video
+      <LazyVideo
         className="grow-media rounded-card"
         poster={media.poster}
-        autoPlay
-        loop
-        muted
-        playsInline
-      >
-        {media.webm && <source src={media.webm} type="video/webm" />}
-        <source src={media.mp4} type="video/mp4" />
-      </video>
+        webm={media.webm}
+        mp4={media.mp4}
+        sizes={PLAY_TILE}
+        priority={priority}
+      />
     );
   }
   // The animation is a live document, so it fills its frame but does not grow
@@ -154,6 +164,9 @@ function Media({ media }: { media: PlayItem["media"] }) {
       alt=""
       width={media.width}
       height={media.height}
+      sizes={PLAY_TILE}
+      priority={priority}
+      fetchPriority={priority ? "high" : undefined}
       className="grow-media rounded-card"
     />
   );
@@ -173,7 +186,7 @@ export default function PlayPage() {
                 aspectRatio: `${item.media.width} / ${item.media.height}`,
               }}
             >
-              <Media media={item.media} />
+              <Media media={item.media} priority={i < FIRST_ROW} />
               <Labels labels={item.labels} />
             </div>
           );

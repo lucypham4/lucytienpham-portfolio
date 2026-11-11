@@ -1,11 +1,14 @@
 import Image from "next/image";
+import { createElement, type ReactNode } from "react";
 import type { Block } from "@/content/types";
 import { sideBySide } from "@/lib/layout";
 import { slugify } from "@/lib/slug";
 import BookGallery from "./BookGallery";
 import Compare from "./Compare";
+import Embed from "./Embed";
 import MediaTabs from "./MediaTabs";
 import MediaBlock from "./MediaBlock";
+import { CAP_MD, CAP_SM, GRID, MEDIA_LIST, PAIR } from "@/lib/sizes";
 
 const gridCols = {
   2: "sm:grid-cols-2",
@@ -20,7 +23,32 @@ const sizeCap = {
   md: "max-w-[560px] mx-auto",
 } as const;
 
-function BlockView({ block }: { block: Block }) {
+/** A heading tag, h2 to h4. */
+type Heading = "h2" | "h3" | "h4";
+
+/** The heading one level below `level` (1 is the page's h1), capped at h4. */
+const below = (level: number): Heading =>
+  `h${Math.min(Math.max(level + 1, 2), 4)}` as Heading;
+
+/** A heading whose level is chosen by its place on the page. */
+function HeadingAt({
+  tag,
+  className,
+  children,
+}: {
+  tag: Heading;
+  className: string;
+  children: ReactNode;
+}) {
+  return createElement(tag, { className }, children);
+}
+
+/**
+ * `outer` is the level of the nearest heading above this block, so headings
+ * inside it can sit one level lower and never skip one (h1 straight to h3,
+ * say), whatever order a case study's blocks come in.
+ */
+function BlockView({ block, outer }: { block: Block; outer: number }) {
   switch (block.kind) {
     case "section":
       return (
@@ -48,9 +76,12 @@ function BlockView({ block }: { block: Block }) {
 
     case "heading":
       return (
-        <h3 className="mt-10 text-2xl leading-8 font-semibold text-ink">
+        <HeadingAt
+          tag={below(outer)}
+          className="mt-10 text-2xl leading-8 font-semibold text-ink"
+        >
           {block.text}
-        </h3>
+        </HeadingAt>
       );
 
     case "text":
@@ -77,14 +108,23 @@ function BlockView({ block }: { block: Block }) {
         <figure className={`mt-8 ${block.size ? sizeCap[block.size] : ""}`}>
           {frame ? (
             <div className="mx-auto max-w-[560px] rounded-xl2 bg-black p-8">
-              <MediaBlock media={block.media} />
+              <MediaBlock media={block.media} sizes={CAP_MD} />
             </div>
           ) : block.panel ? (
             <div className="rounded-xl2 bg-[#f4f4f4] p-4 sm:p-10">
               <MediaBlock media={block.media} />
             </div>
           ) : (
-            <MediaBlock media={block.media} />
+            <MediaBlock
+              media={block.media}
+              sizes={
+                block.size === "sm"
+                  ? CAP_SM
+                  : block.size === "md"
+                    ? CAP_MD
+                    : undefined
+              }
+            />
           )}
           {block.caption && (
             <figcaption className="mt-3 text-sm leading-6 text-grey">
@@ -119,10 +159,10 @@ function BlockView({ block }: { block: Block }) {
           {block.media.map((m, i) =>
             block.framed ? (
               <div key={i} className="flex items-center justify-center">
-                <MediaBlock media={m} />
+                <MediaBlock media={m} sizes={GRID} />
               </div>
             ) : (
-              <MediaBlock key={i} media={m} />
+              <MediaBlock key={i} media={m} sizes={GRID} />
             ),
           )}
         </div>
@@ -136,9 +176,12 @@ function BlockView({ block }: { block: Block }) {
 
     case "pair":
       return (
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-6">
-          <div className="flex h-40 min-w-0 flex-1 items-center justify-center sm:h-48">
-            <MediaBlock media={block.from} fit="contain" className="rounded-card" />
+        <div className="mt-8 flex items-center gap-4 sm:gap-6">
+          {/* Each side is a `flex-1` share of the row, and the `aspect-video`
+              box (not the image's own content) sets its size — so the two
+              sides match regardless of the source assets' own aspect ratios. */}
+          <div className="aspect-video min-w-0 flex-1 overflow-hidden rounded-xl2">
+            <MediaBlock media={block.from} fit="fill" sizes={PAIR} />
           </div>
           <svg
             aria-hidden
@@ -154,8 +197,8 @@ function BlockView({ block }: { block: Block }) {
               strokeLinejoin="round"
             />
           </svg>
-          <div className="flex h-40 min-w-0 flex-1 items-center justify-center sm:h-48">
-            <MediaBlock media={block.to} fit="contain" className="rounded-card" />
+          <div className="aspect-video min-w-0 flex-1 overflow-hidden rounded-xl2">
+            <MediaBlock media={block.to} fit="fill" sizes={PAIR} />
           </div>
         </div>
       );
@@ -179,9 +222,12 @@ function BlockView({ block }: { block: Block }) {
                   className="mb-4 h-7 w-7"
                 />
               )}
-              <h4 className="text-base leading-6 font-semibold text-ink">
+              <HeadingAt
+                tag={below(outer)}
+                className="text-base leading-6 font-semibold text-ink"
+              >
                 {item.title}
-              </h4>
+              </HeadingAt>
               {item.body && (
                 <p className="mt-2 text-sm leading-6 text-grey">{item.body}</p>
               )}
@@ -217,6 +263,21 @@ function BlockView({ block }: { block: Block }) {
       );
     }
 
+    case "mediaList":
+      return (
+        <div className="mt-8 grid grid-cols-1 items-start gap-8 md:grid-cols-[1fr_1.4fr]">
+          <MediaBlock media={block.media} sizes={MEDIA_LIST} />
+          <ul className="flex flex-col gap-2">
+            {block.items.map((item, i) => (
+              <li key={i} className="flex gap-3 text-lg leading-8 text-ink-soft">
+                <span aria-hidden className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+
     case "beforeAfter":
       return (
         <MediaTabs
@@ -250,31 +311,51 @@ function BlockView({ block }: { block: Block }) {
     case "bookGallery":
       return <BookGallery parts={block.parts} />;
 
-    case "embed":
+    case "embed": {
+      // Width over height. Tall players are capped to a phone's width and
+      // centred rather than stretched across the column.
+      const ratio = block.ratio ?? 16 / 9;
       return (
-        <figure className="mt-8">
-          <div className="aspect-video w-full overflow-hidden rounded-card bg-shell">
-            <iframe
-              src={block.src}
-              title={block.title}
-              allow="autoplay"
-              allowFullScreen
-              className="h-full w-full border-0"
-            />
-          </div>
-          <figcaption className="mt-3 text-sm leading-6 text-grey">
-            {block.title}
+        <figure className={`mt-8 ${ratio < 1 ? "mx-auto max-w-[360px]" : ""}`}>
+          <Embed src={block.src} title={block.title} ratio={ratio} />
+          <figcaption className="mt-3 flex flex-wrap justify-between gap-x-4 text-sm leading-6 text-grey">
+            <span>{block.title}</span>
+            {block.watch && (
+              <a
+                href={block.watch.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-ink underline underline-offset-4 transition-opacity hover:opacity-70"
+              >
+                {block.watch.label}
+                <span aria-hidden> ↗</span>
+                <span className="sr-only"> (opens in a new tab)</span>
+              </a>
+            )}
           </figcaption>
         </figure>
       );
+    }
   }
+}
+
+/** The level of the last heading before block `i`: 1 for the page's h1
+ *  until a section (h2) or sub-heading appears. */
+function levelBefore(blocks: Block[], i: number) {
+  let level = 1;
+  for (let j = 0; j < i; j++) {
+    const block = blocks[j];
+    if (block.kind === "section") level = 2;
+    else if (block.kind === "heading") level = Math.min(Math.max(level + 1, 2), 4);
+  }
+  return level;
 }
 
 export default function Blocks({ blocks }: { blocks: Block[] }) {
   return (
     <>
       {blocks.map((block, i) => (
-        <BlockView key={i} block={block} />
+        <BlockView key={i} block={block} outer={levelBefore(blocks, i)} />
       ))}
     </>
   );

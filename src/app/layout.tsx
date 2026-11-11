@@ -3,6 +3,7 @@ import Script from "next/script";
 import { Open_Sans, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
+import ScrollReveal from "@/components/ScrollReveal";
 import Footer from "@/components/Footer";
 
 const openSans = Open_Sans({
@@ -12,10 +13,13 @@ const openSans = Open_Sans({
 });
 
 // The ASCII piece is a Roboto Mono specimen, so it is set in the real face.
+// Only the flower uses it, so it isn't preloaded on every page; AsciiFlower
+// asks for it when it draws.
 const robotoMono = Roboto_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
   weight: ["400"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -56,6 +60,7 @@ export default function RootLayout({
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />
+        <ScrollReveal />
       </body>
     </html>
   );

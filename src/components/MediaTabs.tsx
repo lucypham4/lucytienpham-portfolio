@@ -5,6 +5,7 @@ import type { TabItem } from "@/content/types";
 import { sideBySide } from "@/lib/layout";
 import Compare from "./Compare";
 import MediaBlock from "./MediaBlock";
+import { COLUMN, GRID } from "@/lib/sizes";
 
 const gridCols = {
   2: "sm:grid-cols-2",
@@ -159,7 +160,12 @@ export default function MediaTabs({
               }
             >
               {item.media.map((m, j) => (
-                <MediaBlock key={j} media={m} fit={many ? "cover" : "bounded"} />
+                <MediaBlock
+                  key={j}
+                  media={m}
+                  fit={many ? "cover" : "bounded"}
+                  sizes={many ? GRID : COLUMN}
+                />
               ))}
               {item.caption && (
                 <p

@@ -3,139 +3,274 @@ import type { Project } from "./types";
 const A = "/assets";
 const S = "/assets/staj";
 
+/** A public Facebook reel, by its id (the number in facebook.com/reel/<id>):
+ *  Facebook's embeddable player, which the Embed component sizes to its
+ *  frame, and a link to the reel itself for visitors whose browser blocks
+ *  the player. The player only plays while the reel is public. */
+const facebookReel = (id: string) => {
+  const href = `https://www.facebook.com/reel/${id}`;
+  return {
+    src: `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(href)}&show_text=false`,
+    watch: { href, label: "Watch on Facebook" },
+  };
+};
+
 export const projects: Project[] = [
   {
-    slug: "voyage-theater-company",
-    title: "Voyage Theater Company",
-    tagline: "Building a scalable digital stage for diverse voices.",
-    categories: ["Product Design", "Contract"],
-    thumb: {
-      type: "video",
-      poster: `${A}/vtc-portfolio-poster-0000000.jpg`,
-      mp4: `${A}/vtc-portfolio-mp4.mp4`,
-      webm: `${A}/vtc-portfolio-webm.webm`,
-    },
+    slug: "the-washington-post",
+    title: "The Washington Post",
+    tagline:
+      "Designed scalable solutions for the Content Experience, Monetization and Subscriptions, and Central Design Teams.",
+    categories: ["Product Design", "Internship"],
+    thumb: { type: "image", src: `${A}/frame-2-6.png`, alt: "The Washington Post Live Activity" },
     hero: {
-      headline: "Building a scalable digital stage for diverse voices.",
-      media: {
-        type: "video",
-        poster: `${A}/vtc-portfolio-poster-0000000.jpg`,
-        mp4: `${A}/vtc-portfolio-mp4.mp4`,
-        webm: `${A}/vtc-portfolio-webm.webm`,
-      },
+      headline: "Designing an AI-powered Live Activity",
+      media: { type: "image", src: `${A}/group-1-1.png`, alt: "Live Activity concept" },
+      panel: true,
+      hideTagline: true,
     },
     overview: {
-      html: 'To modernize a decade-old digital presence and eliminate technical fragility, I led the transformation of <a href="https://voyagetheatercompany.org/" target="_blank" rel="noopener noreferrer">Voyage Theater Company</a>&rsquo;s &ldquo;messy patchwork&rdquo; WordPress site into a professional digital stage.',
+      html: "To elevate real-time mobile engagement, The Washington Post&rsquo;s Content XP team set out to integrate iOS Live Activities with its Live Updating Files (LUFs). Our goal was to design a scalable, AI-powered experience that delivers glanceable news updates directly on the lock screen, boosting engagement and shaping reader habit.",
       impact:
-        "Replaced a decade-old WordPress build with a templated CMS and trained the staff to run it, so a small non-technical team can update the site without breaking it.",
+        "Approved for a Q1 2026 launch and added to the roadmap, with projected opt-ins rising from 17% to 25%, 3+ average views per user, and 60-second sessions.",
     },
     meta: [
-      { label: "Duration", value: "Oct 2025 – Feb 2026" },
-      { label: "My Role", value: "Product Designer\nContract" },
+      { label: "Duration", value: "July – August 2025 (1 month)" },
+      { label: "My Role", value: "Product Design Intern" },
       {
         label: "Team",
-        value:
-          "Wayne Maugans, Founding Artistic Director\nKathleen Salazar, Associate Artistic Director\nCharles C. Bales, Founding Executive Director",
+        value: "1 Engineer\n2 Design Leads\n1 PM\n1 PM Intern",
       },
+      { label: "Tools", value: "Figma, FigJam, Google Docs, Zeppelin" },
     ],
     blocks: [
-      { kind: "section", label: "A Fragile Patchwork" },
       {
-        kind: "quote",
-        text: "Every time we make updates, something crashes or goes awry.",
+        kind: "section",
+        label: "Notification Fatigue",
+        heading: "Mobile Users Receive Repetitive Push Notifications And Quickly Disengage.",
       },
       {
         kind: "text",
-        html: "After meeting with stakeholders, I found that non-artistic directors struggle to manage content, feeling <strong>constrained by the design system</strong> and often breaking things when they try to update it. The old site was not optimized for VTC&rsquo;s mission. How might we create a site that empowers the current staff?",
+        html: "Existing Live Updating Files (LUFs) attracted high traffic (55.1M pageviews H1 2025), yet 39% came from anonymous users who rarely registered or subscribed. With that in mind:",
+      },
+      {
+        kind: "callout",
+        html: "How might we make breaking coverage glanceable and valuable enough to drive repeat visits without overwhelming users?",
+      },
+      { kind: "heading", text: "Current LUF layout" },
+      {
+        kind: "text",
+        html: "With Live Updating Files (LUFs), contributors are not limited to traditional article formatting and can publish quick posts designed as cards that readers can follow. To understand how to design the iOS Live Activity, I needed to understand LUFs&rsquo; anatomy.",
       },
       {
         kind: "media",
-        media: { type: "image", src: `${A}/desktop-1.png`, alt: "The previous Voyage Theater Company website" },
+        media: { type: "image", src: `${A}/luf2.avif`, alt: "LUF layout anatomy" },
+        size: "sm",
       },
 
       {
         kind: "section",
-        label: "Rebuilding The Architecture",
-        heading: "A Comprehensive Redesign Spanning From Branding To Technical Migration.",
+        label: "Understanding Reader Habits",
+        heading: "Understanding How A User Interacts With A Notification.",
       },
       {
         kind: "text",
-        html: "Instead of patching a messy web of broken links, I rebuilt Voyage Theater Company&rsquo;s site architecture into a <strong>clear, scalable system</strong>. With improved structure, branding guidelines, and CMS training, the team <strong>can now confidently update content</strong> and grow their digital presence without breaking the site.",
+        html: "I spoke with designers, engineers, and editors across The Washington Post&rsquo;s Content XP team to understand the existing LUF experience and the challenges of mobile engagement. These discussions gave us three insights that shaped our design direction:",
       },
-      {
-        kind: "media",
-        media: {
-          type: "video",
-          poster: `${A}/current-season-poster-0000000.jpg`,
-          mp4: `${A}/current-season-mp4.mp4`,
-          webm: `${A}/current-season-webm.webm`,
-        },
-      },
-      {
-        kind: "beforeAfter",
-        before: { type: "image", src: `${A}/screenshot-2026-04-23-at-11-25-01-pm-1.png`, alt: "Before" },
-        after: { type: "image", src: `${A}/screenshot-2026-04-23-at-11-25-40-pm-1.png`, alt: "After" },
-      },
-      {
-        kind: "beforeAfter",
-        before: { type: "image", src: `${A}/desktop-3.png`, alt: "Before" },
-        after: {
-          type: "video",
-          poster: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-poster-0000000.jpg`,
-          mp4: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-mp4.mp4`,
-          webm: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-webm.webm`,
-        },
-      },
-
-      {
-        kind: "section",
-        label: "Content Ownership",
-        heading: "Empowering Non-Technical Content Ownership",
-      },
-      {
-        kind: "text",
-        html: "In nonprofit theater, operational independence is everything. I redesigned the site to <strong>empower a small, non-technical team</strong> to manage their own content without breaking the design system, giving VTC a digital presence built to last beyond launch. To reinforce long-term success, I introduced a templated CMS architecture paired with hands-on training, transforming a once fragile, developer-dependent website into a <strong>maintainable, brand-consistent</strong> platform.",
-      },
-
-      {
-        kind: "tabs",
-        items: [
-          {
-            label: "Branding & Logo",
-            cols: 2,
-            media: [
-              { type: "image", src: `${A}/screenshot-2026-02-13-at-1-38-38-pm-1-1-1.png`, alt: "Brand exploration" },
-              { type: "image", src: `${A}/screenshot-2026-02-13-at-1-37-49-pm-1-1.png`, alt: "Logo system" },
-            ],
-          },
-          {
-            label: "Live Site",
-            media: [{ type: "image", src: `${A}/frame-8-9.png`, alt: "Live site" }],
-          },
-          {
-            label: "CMS & Site Training",
-            media: [
-              { type: "image", src: `${A}/screenshot-2026-02-13-at-12-47-40-pm-1.png`, alt: "CMS training materials" },
-            ],
-          },
-        ],
-      },
-
-      { kind: "section", label: "Reflection" },
       {
         kind: "cards",
         items: [
           {
-            title: "Managing Up",
-            body: "Made sure that all stakeholders are aligned with meeting dates, expectations, and tasks.",
+            title: "Engagement drops after the first alert.",
+            body: "Users often open one push notification but rarely return to check for updates.",
           },
           {
-            title: "Operational Autonomy",
-            body: "Unified page architecture ensures brand consistency and reduces future maintenance friction.",
+            title: "Notification fatigue is common.",
+            body: "Too many alerts during live events cause users to mute or disable notifications entirely.",
           },
           {
-            title: "Contracting 101",
-            body: "Understanding setting rates, scope management, and professional offboarding.",
+            title: "Users crave quick context without refreshing.",
+            body: "They want to understand what's happening at a glance without unlocking their phone or scrolling through feeds.",
+          },
+        ],
+      },
+
+      {
+        kind: "section",
+        label: "Anatomy Of A Feed",
+        heading: "Understanding LUF's Anatomy",
+      },
+      {
+        kind: "text",
+        html: "I <strong>dissected existing LUF structure</strong>: dynamic headlines, dynamic descriptions, contributor credits, reporter insights, article excerpts, and quick posts to understand the content I was designing for. I also <strong>defined LUF categories</strong> to break down which types of news would work with a live activity template, and how users would interact with different LUF live activities.",
+      },
+      {
+        kind: "grid",
+        cols: 2,
+        media: [
+          { type: "image", src: `${A}/luf-structure.png`, alt: "LUF structure" },
+          { type: "image", src: `${A}/table-1.png`, alt: "LUF categories table" },
+        ],
+      },
+      { kind: "heading", text: "Learning from The 2024 Election Live Activity" },
+      {
+        kind: "text",
+        html: "<strong>The 2024 Election prototype was the baseline for my design.</strong> Though it generated high engagement (26% click-through), it required heavy manual tagging by journalists. Since the process was not scalable, I worked alongside the PM intern to integrate an LLM-based classifier that automatically surfaces urgent, high-salience posts and reduces noise. <strong>My design needed to be adaptable</strong> and act as a sort of template for different formats and combinations of quantitative and qualitative data.",
+      },
+      { kind: "media", media: { type: "image", src: `${A}/group-692.png`, alt: "2024 Election Live Activity" } },
+      { kind: "heading", text: "iOS Live Activity Requirements" },
+      {
+        kind: "text",
+        html: "The iOS Live Activity requirements were an added constraint throughout my design process. <strong>Designing for such a small screen</strong> with areas where UI would not show or would be rejected during the final Apple approval process gave me a <strong>challenge to solve.</strong>",
+      },
+      {
+        kind: "media",
+        media: { type: "image", src: `${A}/screenshot-2025-10-21-at-11-14-49-pm.png`, alt: "iOS Live Activity specs" },
+        size: "md",
+      },
+
+      {
+        kind: "section",
+        label: "Designing Within iOS Limits",
+        heading: "Designing Within iOS Limits",
+      },
+      { kind: "heading", text: "Early Sketches" },
+      {
+        kind: "text",
+        html: "My early concepts explored how much information could fit in the compact format and the variety of data it could show. I also noted the constraints of the display and the 8 hour limit on how long a live activity appears on the user&rsquo;s screen.",
+      },
+      {
+        kind: "grid",
+        cols: 2,
+        size: "md",
+        media: [
+          { type: "image", src: `${A}/2025-10-21-23-27-page-3-1-1.png`, alt: "Early sketches" },
+          { type: "image", src: `${A}/2025-10-21-23-27-page-1-1.png`, alt: "Early sketches" },
+        ],
+      },
+      { kind: "heading", text: "V1 Designs" },
+      {
+        kind: "text",
+        html: "For my initial design, I explored different ways to display the live update title, time stamps, and pieces of content, using the Post&rsquo;s components in the existing Figma libraries. I learned to rapidly prototype new iterations to better prioritize visual hierarchy at this conceptual design stage. I used the Hurricane Ian story as the example use case to populate content.",
+      },
+      {
+        kind: "grid",
+        cols: 2,
+        size: "md",
+        media: [
+          { type: "image", src: `${A}/live-activity-lock-screen.png`, alt: "V1 lock screen" },
+          { type: "image", src: `${A}/live-activity-compact-3.png`, alt: "V1 compact" },
+        ],
+      },
+      { kind: "heading", text: "Design Feedback" },
+      {
+        kind: "text",
+        html: "After feedback from product and design leadership, I made two changes. I <strong>optimized scalability</strong> by creating a flexible component system that could accommodate event-specific visuals (e.g., cultural vs. political coverage) while maintaining consistency. I also <strong>defined the interaction model</strong>, clarifying transitions from lock screen to app view with timestamped anchors and subtle motion cues.",
+      },
+      {
+        kind: "grid",
+        cols: 2,
+        size: "md",
+        media: [
+          { type: "image", src: `${A}/live-activity-lock-screen-3.png`, alt: "Revised lock screen" },
+          { type: "image", src: `${A}/live-activity-compact-5.png`, alt: "Revised compact" },
+        ],
+      },
+      { kind: "heading", text: "Designing for Technical Constraints" },
+      {
+        kind: "text",
+        html: "Collaboration with the iOS engineering team that worked on the elections live activities revealed technical limitations in Live Activity height, interactivity, and refresh rates. To maintain performance and compliance, I established modular zones for the headline, timestamp, and update source that scale within iOS boundaries. These insights also informed future LUF integrations, so the design stays visually adaptable across compact and expanded states.",
+      },
+      {
+        kind: "grid",
+        cols: 2,
+        size: "md",
+        media: [
+          { type: "image", src: `${A}/live-activity-lock-screen-1.png`, alt: "Modular zones, lock screen" },
+          { type: "image", src: `${A}/live-activity-compact-4.png`, alt: "Modular zones, compact" },
+        ],
+      },
+
+      {
+        kind: "section",
+        label: "Flexible Templates",
+        heading: "Creating Flexible Templates For Diverse Storytelling",
+      },
+      {
+        kind: "text",
+        html: "To support The Post&rsquo;s diverse storytelling, I built a <strong>template design system</strong> that balanced scalability with creative freedom. Each template could adapt to event type (breaking, ongoing, or scheduled) and editorial tone while leaving space for visual experimentation by graphic artists. The framework keeps the brand consistent across all Live Activities and still allows event-specific customization.",
+      },
+      {
+        kind: "media",
+        media: { type: "image", src: `${A}/screenshot-2025-11-06-at-6-06-12-pm.png`, alt: "Template system" },
+      },
+      { kind: "heading", text: "Motion Interactions" },
+      {
+        kind: "text",
+        html: "I learned how to prototype smooth motion interactions by making my own local components for transitional states within the live activity. These animations would help users see when content has been updated in real time, so they don&rsquo;t lose context.",
+      },
+      {
+        kind: "media",
+        media: { type: "image", src: `${A}/screenshot-2025-11-06-at-6-54-58-pm.png`, alt: "Motion prototype" },
+      },
+
+      {
+        kind: "section",
+        label: "Final Prototype",
+        heading: "Final Prototype",
+      },
+      {
+        kind: "media",
+        // Portrait phone capture — even at 560px wide it runs over 1100px tall.
+        size: "sm",
+        media: {
+          type: "video",
+          poster: `${A}/screen-recording-2025-11-06-at-72619-pm-poster-00001.jpg`,
+          mp4: `${A}/screen-recording-2025-11-06-at-72619-pm-transcode.mp4`,
+          webm: `${A}/screen-recording-2025-11-06-at-72619-pm-transcode.webm`,
+        },
+      },
+
+      {
+        kind: "section",
+        label: "Results & Learnings",
+        heading: "Results And Learnings",
+      },
+      {
+        kind: "text",
+        html: "I presented the <strong>Live Activity</strong> prototype to <strong>Content XP leadership</strong>, alongside other newsroom and product teams exploring engagement-driven solutions.",
+      },
+      {
+        kind: "cards",
+        items: [
+          {
+            title: "Executive feedback",
+            body: "Praised for scalability, technical feasibility, and editorial alignment, since it automates newsroom tagging without compromising journalistic integrity.",
+          },
+          {
+            title: "Organizational impact",
+            body: "Approved for a Q1 2026 launch and added to the roadmap, with projected opt-ins rising from 17% to 25%.",
+          },
+        ],
+      },
+      {
+        kind: "text",
+        html: "This was my third project at The Post, and it challenged me to move beyond execution and think like a product strategist. My takeaways:",
+      },
+      {
+        kind: "cards",
+        items: [
+          {
+            title: "Collaborate early with engineering",
+            body: "I partner with engineers early to turn technical constraints into feasible designs.",
+          },
+          {
+            title: "Embrace iteration and feedback loops",
+            body: "I use constant feedback to check my work against user needs and product goals.",
+          },
+          {
+            title: "Go beyond the MVP",
+            body: "I design scalable frameworks and flexible templates so products can grow past their initial launch.",
           },
         ],
       },
@@ -481,260 +616,137 @@ export const projects: Project[] = [
   },
 
   {
-    slug: "the-washington-post",
-    title: "The Washington Post",
-    tagline:
-      "Designed scalable solutions for the Content Experience, Monetization and Subscriptions, and Central Design Teams.",
-    categories: ["Product Design", "Internship"],
-    thumb: { type: "image", src: `${A}/frame-2-6.png`, alt: "The Washington Post Live Activity" },
+    slug: "voyage-theater-company",
+    title: "Voyage Theater Company",
+    tagline: "Building a scalable digital stage for diverse voices.",
+    categories: ["Product Design", "Contract"],
+    thumb: {
+      type: "video",
+      poster: `${A}/vtc-portfolio-poster-0000000.jpg`,
+      mp4: `${A}/vtc-portfolio-mp4.mp4`,
+      webm: `${A}/vtc-portfolio-webm.webm`,
+    },
     hero: {
-      headline: "Designing an AI-powered Live Activity Feed",
-      media: { type: "image", src: `${A}/group-1-1.png`, alt: "Live Activity concept" },
-      panel: true,
-      hideTagline: true,
+      headline: "Building a scalable digital stage for diverse voices.",
+      media: {
+        type: "video",
+        poster: `${A}/vtc-portfolio-poster-0000000.jpg`,
+        mp4: `${A}/vtc-portfolio-mp4.mp4`,
+        webm: `${A}/vtc-portfolio-webm.webm`,
+      },
     },
     overview: {
-      html: "To elevate real-time mobile engagement, The Washington Post&rsquo;s Content XP team set out to integrate iOS Live Activities with its Live Update Feed (LUFs). Our goal was to design a scalable, AI-powered experience that delivers glanceable news updates directly on the lock screen, boosting engagement and shaping reader habit.",
+      html: 'To modernize a decade-old digital presence and eliminate technical fragility, I led the transformation of <a href="https://voyagetheatercompany.org/" target="_blank" rel="noopener noreferrer">Voyage Theater Company</a>&rsquo;s &ldquo;messy patchwork&rdquo; WordPress site into a professional digital stage.',
       impact:
-        "Approved for a Q1 2026 launch and added to the roadmap, with projected gains of 17% to 25% opt-ins, 3+ average views per user, and 60-second sessions.",
+        "Replaced a decade-old WordPress build with a templated CMS and trained the staff to run it, so a small non-technical team can update the site without breaking it.",
     },
     meta: [
-      { label: "Duration", value: "July – August 2025 (1 month)" },
-      { label: "My Role", value: "Product Design Intern" },
+      { label: "Duration", value: "Oct 2025 – Feb 2026" },
+      { label: "My Role", value: "Product Designer\nContract" },
       {
         label: "Team",
-        value: "1 Engineer\n2 Design Leads\n1 PM\n1 PM Intern",
+        value:
+          "Wayne Maugans, Founding Artistic Director\nKathleen Salazar, Associate Artistic Director\nCharles C. Bales, Founding Executive Director",
       },
-      { label: "Tools", value: "Figma, FigJam, Google Docs, Zeppelin" },
     ],
     blocks: [
+      { kind: "section", label: "A Fragile Patchwork" },
       {
-        kind: "section",
-        label: "Notification Fatigue",
-        heading: "Mobile Users Receive Repetitive Push Notifications And Quickly Disengage.",
+        kind: "quote",
+        text: "Every time we make updates, something crashes or goes awry.",
       },
       {
         kind: "text",
-        html: "Existing Live Activity Feeds (LUFs) attracted high traffic (55.1M pageviews H1 2025), yet 39% came from anonymous users who rarely registered or subscribed. Knowing this context:",
-      },
-      {
-        kind: "callout",
-        html: "How might we make breaking coverage glanceable and valuable enough to drive repeat visits without overwhelming users?",
-      },
-      { kind: "heading", text: "Current LUF layout" },
-      {
-        kind: "text",
-        html: "With the Live Activity Feeds (LUFs), contributors are not limited to traditional article formatting, allowing for quick posts designed as cards that readers can follow. To understand how to design the iOS Live Activity, I needed to understand LUFs&rsquo; anatomy.",
+        html: "After meeting with stakeholders, I found that non-artistic directors struggle to manage content, feeling <strong>constrained by the design system</strong> and often breaking things when they try to update it. The old site was not optimized for VTC&rsquo;s mission. How might we create a site the current staff can update themselves?",
       },
       {
         kind: "media",
-        media: { type: "image", src: `${A}/luf2.avif`, alt: "LUF layout anatomy" },
-        size: "sm",
+        media: { type: "image", src: `${A}/desktop-1.png`, alt: "The previous Voyage Theater Company website" },
       },
 
       {
         kind: "section",
-        label: "Understanding Reader Habits",
-        heading: "Understanding How A User Interacts With A Notification.",
+        label: "Rebuilding The Architecture",
+        heading: "A Comprehensive Redesign Spanning From Branding To Technical Migration.",
       },
       {
         kind: "text",
-        html: "I spoke with designers, engineers, and editors across The Washington Post&rsquo;s Content XP team to understand the existing LUF experience and the challenges of mobile engagement. Through these discussions, we uncovered several key insights that shaped our design direction:",
-      },
-      {
-        kind: "cards",
-        items: [
-          {
-            title: "Engagement drops after the first alert.",
-            body: "Users often open one push notification but rarely return to check for updates, signaling low sustained attention.",
-          },
-          {
-            title: "Notification fatigue is common.",
-            body: "Too many alerts during live events cause users to mute or disable notifications entirely, decreasing engagement.",
-          },
-          {
-            title: "Users crave quick context without refreshing.",
-            body: "They want to understand what's happening at a glance without unlocking their phone or scrolling through feeds.",
-          },
-        ],
-      },
-
-      {
-        kind: "section",
-        label: "Anatomy Of A Feed",
-        heading: "Understanding LUF's Anatomy",
-      },
-      {
-        kind: "text",
-        html: "I <strong>dissected existing LUF structure</strong>: dynamic headlines, dynamic descriptions, contributor credits, reporter insights, article excerpts, and quick posts to understand the content I was designing for. I also <strong>defined LUF categories</strong> to further break down which type of news would work with a live activity template in addition to how users would interact with different LUF live activities.",
-      },
-      {
-        kind: "grid",
-        cols: 2,
-        media: [
-          { type: "image", src: `${A}/luf-structure.png`, alt: "LUF structure" },
-          { type: "image", src: `${A}/table-1.png`, alt: "LUF categories table" },
-        ],
-      },
-      { kind: "heading", text: "Learning from The 2024 Election Live Activity" },
-      {
-        kind: "text",
-        html: "<strong>The 2024 Election prototype served as the baseline for my design.</strong> Though it generated high engagement (26% click-through), it did require heavy manual tagging by journalists. Since the process was not scalable, I worked alongside the PM intern to integrate an LLM-based classifier to automate surfacing urgent, high-salience posts to reduce noise. <strong>My design needed to be adaptable</strong> and act as a sort of template for different formats and combinations of quantitative and qualitative data.",
-      },
-      { kind: "media", media: { type: "image", src: `${A}/group-692.png`, alt: "2024 Election Live Activity" } },
-      { kind: "heading", text: "iOS Live Activity Requirements" },
-      {
-        kind: "text",
-        html: "The iOS Live Activity requirements were an added constraint throughout my design process. <strong>Designing for such a small screen</strong> with areas where UI would not show or would be rejected during the final Apple approval process gave me a <strong>unique challenge to solve.</strong>",
+        html: "Instead of patching a messy web of broken links, I rebuilt Voyage Theater Company&rsquo;s site architecture into a <strong>clear, scalable system</strong>. With improved structure, branding guidelines, and CMS training, the team <strong>can now confidently update content</strong> and grow their digital presence without breaking the site.",
       },
       {
         kind: "media",
-        media: { type: "image", src: `${A}/screenshot-2025-10-21-at-11-14-49-pm.png`, alt: "iOS Live Activity specs" },
-        size: "md",
-      },
-
-      {
-        kind: "section",
-        label: "Designing Within iOS Limits",
-        heading: "Designing Within iOS Limits",
-      },
-      { kind: "heading", text: "Early Sketches" },
-      {
-        kind: "text",
-        html: "My early concepts primarily focused on exploring how much information could fit in the compact format and the variety of data, taking note of constraints with the display as well as the 8 hour limit that a live activity appears on the user&rsquo;s screen.",
-      },
-      {
-        kind: "grid",
-        cols: 2,
-        size: "md",
-        media: [
-          { type: "image", src: `${A}/2025-10-21-23-27-page-3-1-1.png`, alt: "Early sketches" },
-          { type: "image", src: `${A}/2025-10-21-23-27-page-1-1.png`, alt: "Early sketches" },
-        ],
-      },
-      { kind: "heading", text: "V1 Designs" },
-      {
-        kind: "text",
-        html: "For my initial design, I focused on exploring different ways to display the live update title, time stamps, and pieces of content while utilizing the Post&rsquo;s components in the existing Figma libraries. I learned to rapidly prototype new iterations to better prioritize visual hierarchy at this conceptual design stage. The Hurricane Ian story served as the example use case to populate content.",
-      },
-      {
-        kind: "grid",
-        cols: 2,
-        size: "md",
-        media: [
-          { type: "image", src: `${A}/live-activity-lock-screen.png`, alt: "V1 lock screen" },
-          { type: "image", src: `${A}/live-activity-compact-3.png`, alt: "V1 compact" },
-        ],
-      },
-      { kind: "heading", text: "Design Feedback" },
-      {
-        kind: "text",
-        html: "After feedback from product and design leadership, I implemented the following changes: <strong>Optimized scalability:</strong> created a flexible component system that could accommodate event-specific visuals (e.g., cultural vs. political coverage) while maintaining consistency. <strong>Defined interaction model:</strong> clarified transitions from lock screen to app view using timestamped anchors and subtle motion cues.",
-      },
-      {
-        kind: "grid",
-        cols: 2,
-        size: "md",
-        media: [
-          { type: "image", src: `${A}/live-activity-lock-screen-3.png`, alt: "Revised lock screen" },
-          { type: "image", src: `${A}/live-activity-compact-5.png`, alt: "Revised compact" },
-        ],
-      },
-      { kind: "heading", text: "Designing for Technical Constraints" },
-      {
-        kind: "text",
-        html: "Collaboration with the iOS engineering team that worked on the elections live activities revealed technical limitations in Live Activity height, interactivity, and refresh rates. To maintain performance and compliance, I established modular zones for the headline, timestamp, and update source that scale within iOS boundaries. These insights also informed future LUF integrations, ensuring visual adaptability across compact and expanded states.",
-      },
-      {
-        kind: "grid",
-        cols: 2,
-        size: "md",
-        media: [
-          { type: "image", src: `${A}/live-activity-lock-screen-1.png`, alt: "Modular zones, lock screen" },
-          { type: "image", src: `${A}/live-activity-compact-4.png`, alt: "Modular zones, compact" },
-        ],
-      },
-
-      {
-        kind: "section",
-        label: "Flexible Templates",
-        heading: "Creating Flexible Templates For Diverse Storytelling",
-      },
-      {
-        kind: "text",
-        html: "To support The Post&rsquo;s diverse storytelling, I built a <strong>template design system</strong> that balanced scalability with creative freedom. Each template could adapt to event type (breaking, ongoing, or scheduled) and editorial tone while leaving space for visual experimentation by graphic artists. This framework ensures consistent brand presence across all Live Activities while allowing for event-specific customization.",
-      },
-      {
-        kind: "media",
-        media: { type: "image", src: `${A}/screenshot-2025-11-06-at-6-06-12-pm.png`, alt: "Template system" },
-      },
-      { kind: "heading", text: "Motion Interactions" },
-      {
-        kind: "text",
-        html: "I learned how to prototype smooth motion interactions by making my own local components for transitional states within the live activity. These animations would allow users to better understand when content has been updated in real time, helping them maintain context within their experience.",
-      },
-      {
-        kind: "media",
-        media: { type: "image", src: `${A}/screenshot-2025-11-06-at-6-54-58-pm.png`, alt: "Motion prototype" },
-      },
-
-      {
-        kind: "section",
-        label: "Final Prototype",
-        heading: "Final Prototype",
-      },
-      {
-        kind: "media",
-        // Portrait phone capture — even at 560px wide it runs over 1100px tall.
-        size: "sm",
         media: {
           type: "video",
-          poster: `${A}/screen-recording-2025-11-06-at-72619-pm-poster-00001.jpg`,
-          mp4: `${A}/screen-recording-2025-11-06-at-72619-pm-transcode.mp4`,
-          webm: `${A}/screen-recording-2025-11-06-at-72619-pm-transcode.webm`,
+          poster: `${A}/current-season-poster-0000000.jpg`,
+          mp4: `${A}/current-season-mp4.mp4`,
+          webm: `${A}/current-season-webm.webm`,
+        },
+      },
+      {
+        kind: "beforeAfter",
+        before: { type: "image", src: `${A}/screenshot-2026-04-23-at-11-25-01-pm-1.png`, alt: "Before" },
+        after: { type: "image", src: `${A}/screenshot-2026-04-23-at-11-25-40-pm-1.png`, alt: "After" },
+      },
+      {
+        kind: "beforeAfter",
+        before: { type: "image", src: `${A}/desktop-3.png`, alt: "Before" },
+        after: {
+          type: "video",
+          poster: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-poster-0000000.jpg`,
+          mp4: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-mp4.mp4`,
+          webm: `${A}/screen-recording-2026-04-23-at-10-41-11-pm-webm.webm`,
         },
       },
 
       {
         kind: "section",
-        label: "Results & Learnings",
-        heading: "Results And Learnings",
+        label: "Content Ownership",
+        heading: "Empowering Non-Technical Content Ownership",
       },
       {
         kind: "text",
-        html: "I presented the <strong>Live Activity Feed</strong> prototype to <strong>Content XP leadership</strong>, alongside other newsroom and product teams exploring engagement-driven solutions.",
+        html: "A nonprofit theater needs to run its own site without calling a developer. I redesigned the site to <strong>let a small, non-technical team</strong> manage their own content without breaking the design system. To make that last past launch, I introduced a templated CMS architecture paired with hands-on training, which turned a once fragile, developer-dependent website into a <strong>maintainable, brand-consistent</strong> platform.",
       },
+
       {
-        kind: "cards",
+        kind: "tabs",
         items: [
           {
-            title: "Executive feedback",
-            body: "Praised for scalability, technical feasibility, and editorial alignment — automating newsroom tagging without compromising journalistic integrity.",
+            label: "Branding & Logo",
+            cols: 2,
+            media: [
+              { type: "image", src: `${A}/screenshot-2026-02-13-at-1-38-38-pm-1-1-1.png`, alt: "Brand exploration" },
+              { type: "image", src: `${A}/screenshot-2026-02-13-at-1-37-49-pm-1-1.png`, alt: "Logo system" },
+            ],
           },
           {
-            title: "Organizational Impact",
-            body: "Approved for a Q1 2026 launch and added to the roadmap, with projected opt-ins rising from 17% to 25%.",
+            label: "Live Site",
+            media: [{ type: "image", src: `${A}/frame-8-9.png`, alt: "Live site" }],
+          },
+          {
+            label: "CMS & Site Training",
+            media: [
+              { type: "image", src: `${A}/screenshot-2026-02-13-at-12-47-40-pm-1.png`, alt: "CMS training materials" },
+            ],
           },
         ],
       },
-      {
-        kind: "text",
-        html: "This was my third project at The Post, and it challenged me to move beyond execution and think like a product strategist. My key takeaways:",
-      },
+
+      { kind: "section", label: "Reflection" },
       {
         kind: "cards",
         items: [
           {
-            title: "Collaborate early with engineering",
-            body: "I partner with engineers early to turn technical constraints into innovative, feasible designs.",
+            title: "Managing Up",
+            body: "Made sure that all stakeholders are aligned with meeting dates, expectations, and tasks.",
           },
           {
-            title: "Embrace iteration and feedback loops",
-            body: "I use constant feedback to align my work with user needs and product goals.",
+            title: "Operational Autonomy",
+            body: "Unified page architecture ensures brand consistency and reduces future maintenance friction.",
           },
           {
-            title: "Go beyond the MVP",
-            body: "I design scalable frameworks and flexible templates that ensure products can grow well past their initial launch.",
+            title: "Contracting 101",
+            body: "Understanding setting rates, scope management, and professional offboarding.",
           },
         ],
       },
@@ -770,10 +782,10 @@ export const projects: Project[] = [
     },
     overview: {
       label: "Challenge",
-      html: "Under Prof. G&ouml;khan Ersan, I was tasked with creating a coffee table book that would be published by the end of the semester. The main challenge was to create a polished editorial design for a single subject that would implement a navigational design.",
+      html: "Under Prof. G&ouml;khan Ersan, I was tasked with creating a coffee table book that would be published by the end of the semester. The main challenge was to create a polished editorial design for a single subject, with navigation built into the design.",
       impactLabel: "Approach",
       impact:
-        "I utilized a 9 x 9 grid system, custom icons, contact pages, spread planning, and experimental design tools to strengthen the visual language of the book and help solidify my vision for the final printing.",
+        "I used a 9 x 9 grid system, custom icons, contact pages, spread planning, and experimental design tools to strengthen the book's visual language and settle my vision for the final printing.",
     },
     meta: [
       { label: "Duration", value: "October – December 2025\nOne semester (~2.5 months)" },
@@ -1121,7 +1133,7 @@ export const projects: Project[] = [
           },
           {
             title: "Iconography is information design",
-            body: "Treating the icons as navigation rather than decoration gave the book a structure a reader can feel without being told about it.",
+            body: "Treating the icons as navigation gave the book a structure a reader can follow without being told about it.",
           },
         ],
       },
@@ -1166,15 +1178,15 @@ export const projects: Project[] = [
         kind: "cards",
         items: [
           {
-            title: "Problem — Graditude's admins need more support.",
+            title: "Problem: Graditude's admins need more support.",
             body: "Admins struggle to effectively manage mentorship programs due to limited visibility into participant engagement, which leads to poor outcomes and discouraging program launches.",
           },
           {
-            title: "Solution — A centralized dashboard that allows admins to view and understand their programs.",
+            title: "Solution: A centralized dashboard that allows admins to view and understand their programs.",
             body: "Admins now have a central dashboard to track member engagement and intervene as needed throughout the mentorship lifecycle, with early priorities focused on Recruiting, Matching, and Solidifying.",
           },
           {
-            title: "Outcome — Successful stakeholder presentation and dev handoff",
+            title: "Outcome: Successful stakeholder presentation and dev handoff",
             body: "During the last days of my internship, I delivered a stakeholder presentation that communicated my solutions to the dev of the project, setting the team up for implementation.",
           },
         ],
@@ -1191,7 +1203,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Stakeholder Interview and Past Documentation" },
       {
         kind: "text",
-        html: "I talked to the CEO, Steven, to truly understand the business needs and admins&rsquo; needs to improve program success, ultimately supporting Graditude&rsquo;s overall operations. The following were his intentions for the dashboard, as well as insights taken from interview transcripts from people interested in being a program admin.",
+        html: "I talked to the CEO, Steven, to understand the business needs and admins&rsquo; needs for improving program success, which supports Graditude&rsquo;s overall operations. The following were his intentions for the dashboard, along with insights from interview transcripts of people interested in being a program admin.",
       },
       {
         kind: "cards",
@@ -1217,7 +1229,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "User Journey" },
       {
         kind: "text",
-        html: "After <strong>consolidating</strong> existing documentation and <strong>defining</strong> our approach, I created a detailed user journey for our example admin, &ldquo;Carol.&rdquo; This journey illustrated Carol&rsquo;s workflow, challenges, and decision points, helping stakeholders visualize her needs and guiding the design of dashboard features to support her actions effectively.",
+        html: "After <strong>consolidating</strong> existing documentation and <strong>defining</strong> our approach, I created a detailed user journey for our example admin, &ldquo;Carol.&rdquo; The journey showed Carol&rsquo;s workflow, challenges, and decision points. It helped stakeholders see her needs and guided which dashboard features I designed to support her actions.",
       },
       {
         kind: "media",
@@ -1232,19 +1244,19 @@ export const projects: Project[] = [
       { kind: "heading", text: "User Persona" },
       {
         kind: "text",
-        html: "Based on our business goals and existing admin interview transcripts, we created a focused user persona: Carol Thompson, a mentorship program coordinator, who struggles to track mentor–mentee engagement and know when to intervene. The Admin Dashboard solves this by giving her <strong>real-time visibility</strong> into match activity and progress toward goals, enabling <strong>quick, targeted actions</strong> that keep programs on track and deliver stronger outcomes.",
+        html: "Based on our business goals and existing admin interview transcripts, we created a user persona: Carol Thompson, a mentorship program coordinator, who struggles to track mentor-mentee engagement and know when to intervene. The Admin Dashboard gives her <strong>real-time visibility</strong> into match activity and progress toward goals, so she can take <strong>quick, targeted actions</strong> that keep programs on track and lead to stronger outcomes.",
       },
       { kind: "media", media: { type: "image", src: `${A}/basic-information-1.avif`, alt: "User persona" } },
       { kind: "heading", text: "User Flow" },
       {
         kind: "text",
-        html: "Our &ldquo;Nudge&rdquo; flow allows admins to quickly identify low-engagement or underperforming mentor–mentee matches from the Admin Dashboard, select them, and send targeted notifications. By <strong>streamlining the process</strong> into just a few steps, admins can efficiently re-engage pairs before progress stalls, which ensures that mentorship programs stay active and productive.",
+        html: "Our &ldquo;Nudge&rdquo; flow lets admins quickly identify low-engagement or underperforming mentor-mentee matches from the Admin Dashboard, select them, and send targeted notifications. By <strong>streamlining the process</strong> into just a few steps, admins can re-engage pairs before progress stalls, which keeps mentorship programs active.",
       },
       { kind: "media", media: { type: "image", src: `${A}/frame-28.avif`, alt: "Nudge user flow" } },
       { kind: "heading", text: "Defining Roles" },
       {
         kind: "text",
-        html: "To further define our scope and ensure that our plan was a comprehensive solution for Graditude&rsquo;s mission of providing admins with the tools they need to manage mentee/mentor matches, <strong>I took ownership</strong> over the main dashboard, inviting new members flow, creating new programs flow, and making sure that we had clear action items before and after our weekly meetings.",
+        html: "To define our scope and make sure our plan supported Graditude&rsquo;s mission of giving admins the tools they need to manage mentee/mentor matches, <strong>I took ownership</strong> of the main dashboard, the flow for inviting new members, and the flow for creating new programs. I also made sure we had clear action items before and after our weekly meetings.",
       },
 
       {
@@ -1255,7 +1267,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Sketching and Wireframes" },
       {
         kind: "text",
-        html: "I hosted a fast sketching exercise just to get an idea of the core functionality of the dashboard and foster creativity in our approach when designing for low to high fidelity. Our primary goal was to allow the admin to:",
+        html: "I hosted a fast sketching exercise to get an idea of the core functionality of the dashboard and encourage creativity as we designed from low to high fidelity. Our primary goal was to allow the admin to:",
       },
       {
         kind: "list",
@@ -1292,19 +1304,19 @@ export const projects: Project[] = [
       { kind: "heading", text: "Navigation" },
       {
         kind: "text",
-        html: "<strong>Enhancing the side nav bar</strong> to include not only members and mentors, but also giving admins access to programs.",
+        html: "<strong>Enhancing the side nav bar</strong> so admins can reach programs as well as members and mentors.",
       },
       { kind: "media", media: { type: "image", src: `${A}/frame-427318949-3.avif`, alt: "Navigation design" } },
       { kind: "heading", text: "Data Display" },
       {
         kind: "text",
-        html: "<strong>Including more positive metrics</strong> such as total numbers, active participation rates, and overall satisfaction instead of purely negative such as # of inactive members.",
+        html: "<strong>Including more positive metrics</strong> such as total numbers, active participation rates, and overall satisfaction instead of purely negative metrics such as # of inactive members.",
       },
       { kind: "media", media: { type: "image", src: `${A}/frame-427318951-1.avif`, alt: "Data display design" } },
       { kind: "heading", text: "Feature Consolidation" },
       {
         kind: "text",
-        html: "<strong>Consolidating features</strong> such as analytics and managing invites on one page to enable quicker decision-making for admins.",
+        html: "<strong>Consolidating features</strong> such as analytics and managing invites on one page so admins can make decisions faster.",
       },
       {
         kind: "media",
@@ -1380,7 +1392,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "In the future I&rsquo;d want to include more features that would provide admins with the personalization they need to really cater to their specific program, such as options for different views (tiled, lists) or even options to customize their dashboard through dynamic cards. I&rsquo;m so glad that I got to design for data, and this really sparked my interest in designing for admin-facing tools!",
+        html: "In the future I&rsquo;d want to add features that let admins personalize the dashboard for their specific program, such as options for different views (tiled, lists) or even customizing the dashboard through dynamic cards. I&rsquo;m so glad that I got to design for data, and this really sparked my interest in designing for admin-facing tools!",
       },
     ],
   },
@@ -1393,11 +1405,9 @@ export const projects: Project[] = [
     thumb: { type: "image", src: `${A}/splash-2.webp`, alt: "Truth Pharm campaign" },
     hero: {
       headline: "Truth Pharm",
-      fullBleed: true,
       media: { type: "image", src: `${A}/splash-2.webp`, alt: "Truth Pharm" },
     },
     overview: {
-      media: { type: "image", src: `${A}/frame-1.webp`, alt: "" },
       html: "Truth Pharm is a nonprofit based in Binghamton, NY that focuses on reducing the stigma against substance use disorder and helping affected families heal through advocacy. I designed and marketed for both the nonprofit and their annual event, the Trail of Truth, which is the largest rally for substance use disorder in the US.",
     },
     meta: [
@@ -1418,10 +1428,10 @@ export const projects: Project[] = [
         label: "Problem",
         heading: "Truth Pharm needed a way to design and market their upcoming events.",
       },
-      { kind: "media", media: { type: "image", src: `${A}/tp-2.webp`, alt: "Truth Pharm event" } },
       { kind: "text", html: "To accomplish this goal, I collaborated with the team to:" },
       {
-        kind: "list",
+        kind: "mediaList",
+        media: { type: "image", src: `${A}/tp-2.webp`, alt: "Truth Pharm event" },
         items: [
           "Schedule social media posts across both Truth Pharm and Trail of Truth accounts",
           "Design event flyers, headers, and posts to advertise upcoming events and rallies",
@@ -1442,30 +1452,30 @@ export const projects: Project[] = [
       { kind: "heading", text: "Trail of Truth Videos" },
       {
         kind: "text",
-        html: "Videos created to showcase the impact of substance use disorder on families. An emotional tone was used as a call to action to attend the event.",
+        html: "These videos show the impact of substance use disorder on families. They use an emotional tone as a call to action to attend the event.",
       },
       {
         kind: "embed",
-        src: "https://drive.google.com/file/d/1k-yVDfn6oBwGsJJLbHOQqzemAgtAaQ6R/preview",
+        ...facebookReel("245340501751186"),
         title: "Tombstone Video",
       },
       {
         kind: "list",
         items: [
           "Painted tombstones symbolize the lives lost from substance use disorder",
-          "The intent of the video was to showcase the emotional toll on families, materialized by these tombstones",
+          "The video aims to show the emotional toll on families through these tombstones",
         ],
       },
       {
         kind: "embed",
-        src: "https://drive.google.com/file/d/1YGrPXIKUK8FOJ1inoFicLMeJWov_KlA1/preview",
+        ...facebookReel("1299963617578978"),
         title: "Gracie Parker Video",
       },
       {
         kind: "list",
         items: [
           "Edited and manually subtitled video for accessibility and storytelling",
-          "Showcased a case study on the lives of the children and families affected by substance use disorder",
+          "Presented a case study on the lives of the children and families affected by substance use disorder",
         ],
       },
 
@@ -1480,7 +1490,7 @@ export const projects: Project[] = [
       },
       {
         kind: "text",
-        html: "I had the amazing opportunity to market, photograph, and attend Truth Pharm&rsquo;s advocacy events. Talking to those affected by substance use disorder helped me get a better picture of how to message and therefore design my social media campaigns. This hands-on experience <strong>strengthened my understanding and empathy</strong> for the families, victims, and lives affected by substance use. Listening to the speakers and performers detail their experiences inspired me to create materials that would help Truth Pharm spread their messaging.",
+        html: "I got to market, photograph, and attend Truth Pharm&rsquo;s advocacy events. Talking to those affected by substance use disorder helped me get a better picture of how to message and therefore design my social media campaigns. This hands-on experience <strong>strengthened my understanding and empathy</strong> for the families and victims affected by substance use. Listening to the speakers and performers detail their experiences inspired me to create materials that would help Truth Pharm spread their messaging.",
       },
 
       { kind: "section", label: "Design" },
@@ -1502,19 +1512,20 @@ export const projects: Project[] = [
       { kind: "heading", text: "Printables & Social Media" },
       {
         kind: "text",
-        html: "Business cards, postcards, flyers, and other forms of merchandise were designed to promote both Truth Pharm and the Trail of Truth. Alongside printed deliverables, I managed both social media accounts and posted at least 3 times a week, tracking analytics using the Meta Business Suite.",
+        html: "I designed business cards, postcards, flyers, and other merchandise to promote both Truth Pharm and the Trail of Truth. Alongside printed deliverables, I managed both social media accounts, posted at least 3 times a week, and tracked analytics using the Meta Business Suite.",
       },
+      { kind: "media", media: { type: "image", src: `${A}/delivery-t-shirts.webp`, alt: "T-shirts" } },
       {
         kind: "grid",
-        cols: 3,
+        cols: 2,
         media: [
-          { type: "image", src: `${A}/delivery-t-shirts.webp`, alt: "T-shirts" },
           { type: "image", src: `${A}/delivery-cards.webp`, alt: "Cards" },
           { type: "image", src: `${A}/delivery-posters.webp`, alt: "Posters" },
         ],
       },
       {
         kind: "media",
+        size: "sm",
         media: {
           type: "video",
           poster: `${A}/video-mp4-320x642-4-poster-00001.jpg`,
@@ -1531,7 +1542,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Takeaways" },
       {
         kind: "text",
-        html: "<strong>Social media is a relatively inexpensive way to expand any organization&rsquo;s reach.</strong> I&rsquo;m proud to say that my efforts at Truth Pharm led to a <strong>200% increase in account engagement</strong> according to the Meta Business Suite, with the social media videos being the most popular. To my surprise, I also found that people responded positively to text-heavy posts if they were accompanied by an impactful photo. My time at Truth Pharm informed me of a problem that plagues people from all different backgrounds. I truly <strong>looked forward to educating myself and learning about the science of addiction</strong> through people that have lived through so much.",
+        html: "<strong>Social media is a relatively inexpensive way to expand any organization&rsquo;s reach.</strong> I&rsquo;m proud that my efforts at Truth Pharm led to a <strong>200% increase in account engagement</strong> according to the Meta Business Suite, and the social media videos were the most popular. To my surprise, I also found that people responded positively to text-heavy posts if they were accompanied by an impactful photo. My time at Truth Pharm showed me a problem that affects people from all different backgrounds. I <strong>looked forward to educating myself and learning about the science of addiction</strong> through people that have lived through so much.",
       },
       { kind: "heading", text: "The Future" },
       {
@@ -1633,7 +1644,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Brand Guidelines" },
       {
         kind: "text",
-        html: "I developed brand guidelines for QB to have a clear <strong>understanding of their identity</strong>. I wanted the company to reference this in future materials to have <strong>consistent branding across digital and print media.</strong>",
+        html: "I developed brand guidelines so QB would have a clear <strong>understanding of their identity</strong>. I wanted the company to reference them in future materials, so they get <strong>consistent branding across digital and print media.</strong>",
       },
       {
         kind: "grid",
@@ -1647,14 +1658,14 @@ export const projects: Project[] = [
       { kind: "media", media: { type: "image", src: `${A}/brainstorming-2.webp`, alt: "Logo brainstorming" } },
       {
         kind: "text",
-        html: "The CEO wanted a <strong>new logo that encapsulates QB&rsquo;s mission</strong> while also looking <strong>professional to shareholders.</strong> After many collaborative brainstorming sessions with the team, we identified the best fit for QB&rsquo;s brand.",
+        html: "The CEO wanted a <strong>new logo that captures QB&rsquo;s mission</strong> while also looking <strong>professional to shareholders.</strong> After many brainstorming sessions with the team, we identified the best fit for QB&rsquo;s brand.",
       },
 
       { kind: "section", label: "Delivery" },
       { kind: "heading", text: "Final Designs" },
       {
         kind: "text",
-        html: "Here are some mockups presented for a better way to <strong>visualize some of the products</strong> that the CEO decided to print and order using the redesigned logo.",
+        html: "Here are some mockups I presented to help <strong>visualize some of the products</strong> that the CEO decided to print and order using the redesigned logo.",
       },
       { kind: "media", media: { type: "image", src: `${A}/qb-mockups-1-1.webp`, alt: "Product mockups" } },
 
@@ -1662,7 +1673,7 @@ export const projects: Project[] = [
       { kind: "heading", text: "Takeaways" },
       {
         kind: "text",
-        html: "<strong>Being a confident designer.</strong> Before this internship, I had experience with improving a designer&rsquo;s previous branding work, but QB taught me how to create an entire brand without a preexisting foundation. Throughout the entire process, I learned how to shake off the imposter syndrome that comes with being a junior designer and trusting my own research and insights while also being open to criticism and feedback.",
+        html: "<strong>Being a confident designer.</strong> Before this internship, I had experience with improving a designer&rsquo;s previous branding work, but QB taught me how to create an entire brand without a preexisting foundation. Throughout the process, I learned to shake off the imposter syndrome that comes with being a junior designer and to trust my own research and insights while staying open to criticism and feedback.",
       },
       { kind: "heading", text: "The Future" },
       {

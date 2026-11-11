@@ -2,23 +2,33 @@
 
 import { useEffect, useRef } from "react";
 import {
+  FLOWER_ALPHABET,
+  FLOWER_CELL_ASPECT,
   FLOWER_COLS,
   FLOWER_FRAMES,
   FLOWER_ROWS,
+  FLOWER_TONES,
   PALETTE,
 } from "@/content/flower-frames";
+import { FLOWER_ASPECT, PULL_RADIUS } from "@/content/flower-shape";
 
-/** Tiled through the drawing so the flower is spelled out of her name. */
-const PHRASE = "lucy cat tien pham ";
+/**
+ * The letters of her name, sorted from least ink to most. Each tone picks
+ * from its own pair, so the flower's shading is drawn with "lucy cat tien
+ * pham" the way the clip shades with its glyph ramp.
+ */
+const RAMP = ["", "il", "lt", "tc", "cy", "ue", "an", "ph", "hm"];
+/** How strongly each tone is inked, faintest fleck to brightest petal. */
+const TONE_ALPHA = [0, 0.35, 0.45, 0.55, 0.65, 0.75, 0.85, 0.93, 1];
 
 /** What the cursor scatters the letters into: a spread of glyph weights so the
  *  disturbed cells read as static rather than as words. */
 const NOISE = "0]M%bBhqZdpr#Q\\uX!k&@aWJZvC<K^9z;~+\"{}|/$IwvY*=?3T7";
 
-/** Character cells are about half again as tall as they are wide. The width
- *  itself comes from whatever room the column gives the piece, so the flower
- *  fills it rather than sitting at a fixed size. */
-const CELL_ASPECT = 6 / 3.9;
+/** Character cells keep the clip's proportions. The width itself comes from
+ *  whatever room the column gives the piece, so the flower fills it rather
+ *  than sitting at a fixed size. */
+const CELL_ASPECT = FLOWER_CELL_ASPECT;
 
 const TRAIL_MS = 520;
 const TRAIL_RADIUS = 45;
@@ -27,7 +37,6 @@ const SCATTER_MS = 70;
 /** Letters lean toward the cursor, never straying more than this from where
  *  they belong, and only within reach of it. */
 const PULL_MAX = 2;
-const PULL_RADIUS = 110;
 
 /**
  * A press runs one unbroken cycle: the flower closes back to a bud and opens
@@ -39,40 +48,243 @@ const BLOOM_MS = 1700;
 const CYCLE_MS = WILT_MS + BLOOM_MS;
 const SPREAD_MS = 900;
 
+/**
+ * A press waters the flower first: streaks of flickering letters fall at 45°
+ * from the top left over the whole plant, each soaking in at a letter of it.
+ * The flower answers RAIN_LEAD_MS in, while the rest of the water falls.
+ */
+const RAIN_DROPS = 110;
+/** Letters in one streak. */
+const RAIN_LENGTH = 5;
+/** What a streak is made of. Each letter re-rolls at the rhythm of the hover
+ *  scatter, so the water flickers as it falls. */
+const RAIN_GLYPHS = "abcdefghijklmnopqrstuvwxyz";
+/** Drops set off across this long, so the water arrives as a shower. */
+const RAIN_SPAWN_MS = 700;
+/** How fast a drop falls, in rows per millisecond, each drop a little
+ *  faster or slower. Measured against the flower rather than in pixels, so
+ *  a shower takes as long at any width. */
+const RAIN_SPEED = 0.12;
+const RAIN_SPEED_SPREAD = 0.03;
+/** The shower's letters against the flower's, so they stand out from it. */
+const RAIN_SCALE = 1.5;
+/** How far apart a streak's letters sit along its path, in rows: about one
+ *  letter's advance at RAIN_SCALE. */
+const RAIN_STEP = Math.SQRT1_2;
+/** Used if the site's blue token is missing. */
+const RAIN_FALLBACK = "#339af0";
+/** How long the water falls before the flower starts to close and bloom. */
+const RAIN_LEAD_MS = 500;
+
 type Point = { x: number; y: number; born: number };
+
+/** One falling streak. Positions are in grid cells, fractional, with the
+ *  head of the streak at (col, row) when it sets off at `born`. */
+type Drop = {
+  col: number;
+  row: number;
+  born: number;
+  speed: number;
+  lands: number;
+};
+
+type Rain = {
+  drops: Drop[];
+  began: number;
+  /** Whether the flower has started its cycle for this shower yet. */
+  answered: boolean;
+  /** When the last streak has soaked in. */
+  ends: number;
+};
+
+/** Rows the head has fallen since it set off. A step down one row is a step
+ *  across CELL_ASPECT columns, which keeps the path at 45° on screen. */
+const headRow = (drop: Drop, now: number) =>
+  drop.row + (now - drop.born) * drop.speed;
+
+/** The letter in place `k` of streak `n` during flicker step `step`: random
+ *  looking, but steady until the step changes. */
+function rainGlyph(n: number, k: number, step: number) {
+  let h = (n * 374761393 + k * 668265263 + step * 1274126177) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1103515245);
+  h ^= h >>> 16;
+  return RAIN_GLYPHS[(h >>> 0) % RAIN_GLYPHS.length];
+}
+
+/** Aims a shower at the plant as it stands in `cells`. */
+function makeRain(cells: Uint8Array, now: number): Rain {
+  const lit: number[] = [];
+  for (let i = 0; i < cells.length; i++) {
+    const col = i % FLOWER_COLS;
+    if (cells[i] && col >= BOX.col && col < BOX.col + BOX.cols) lit.push(i);
+  }
+
+  const drops: Drop[] = [];
+  let ends = now;
+  // Every streak starts wholly above the top edge.
+  const start = BOX.row - RAIN_LENGTH * RAIN_STEP - 1;
+  for (let k = 0; k < RAIN_DROPS && lit.length; k++) {
+    // Each streak soaks in at a letter of the plant picked at random, so the
+    // water falls over the whole of it rather than only its near edge.
+    const target = lit[(Math.random() * lit.length) | 0];
+    const lands = Math.floor(target / FLOWER_COLS);
+    const col = (target % FLOWER_COLS) - (lands - start) * CELL_ASPECT;
+
+    const born = now + Math.random() * RAIN_SPAWN_MS;
+    const speed = RAIN_SPEED + (Math.random() * 2 - 1) * RAIN_SPEED_SPREAD;
+    // The tail lands a streak's length behind the head.
+    const soaked = born + (lands - start + RAIN_LENGTH * RAIN_STEP) / speed;
+    if (soaked > ends) ends = soaked;
+    drops.push({ col, row: start, born, speed, lands });
+  }
+  return { drops, began: now, answered: false, ends };
+}
+
+type Shot = {
+  frame: number;
+  colour: boolean;
+  next: boolean;
+  spread: number;
+  began: number | null;
+  rain: Rain | null;
+};
+
+/** Starts the close-and-bloom, handing the flower the other colours. A cycle
+ *  already running restarts rather than stacking another. */
+function beginCycle(s: Shot, now: number) {
+  s.colour = s.next;
+  s.next = !s.colour;
+  s.spread = 0;
+  s.began = now;
+}
+
+/** A `#rgb` or `#rrggbb` colour as a number. The build shortens colours
+ *  where it can, so the page's white arrives as `#fff`. */
+function hexValue(hex: string) {
+  const digits = hex.slice(1);
+  return parseInt(
+    digits.length === 3 ? digits.replace(/./g, "$&$&") : digits,
+    16,
+  );
+}
+
+/** Blends two hex colours; t=0 is `a`, t=1 is `b`. */
+function mixHex(a: string, b: string, t: number) {
+  const pa = hexValue(a);
+  const pb = hexValue(b);
+  const r = Math.round(((pa >> 16) & 255) + (((pb >> 16) & 255) - ((pa >> 16) & 255)) * t);
+  const g = Math.round(((pa >> 8) & 255) + (((pb >> 8) & 255) - ((pa >> 8) & 255)) * t);
+  const bl = Math.round((pa & 255) + ((pb & 255) - (pa & 255)) * t);
+  return `rgb(${r}, ${g}, ${bl})`;
+}
+
+/**
+ * Each hue's opposite across the flower's red–green axis: red turns green,
+ * green turns red, orange turns yellow-green, at the same saturation and
+ * lightness. (A plain RGB inverse would send red to cyan, off the flower's
+ * palette.) Mirroring the hue wheel about 60° swaps 0° and 120°.
+ */
+function opposite(hex: string) {
+  const v = hexValue(hex);
+  const r = ((v >> 16) & 255) / 255;
+  const g = ((v >> 8) & 255) / 255;
+  const b = (v & 255) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const d = max - min;
+  const l = (max + min) / 2;
+  const sat = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+  let h = 0;
+  if (d) {
+    if (max === r) h = ((g - b) / d) % 6;
+    else if (max === g) h = (b - r) / d + 2;
+    else h = (r - g) / d + 4;
+    h *= 60;
+  }
+  const flipped = (((120 - h) % 360) + 360) % 360;
+  // Back to RGB at the same saturation and lightness.
+  const c = (1 - Math.abs(2 * l - 1)) * sat;
+  const x = c * (1 - Math.abs(((flipped / 60) % 2) - 1));
+  const m = l - c / 2;
+  const [r1, g1, b1] =
+    flipped < 60 ? [c, x, 0]
+    : flipped < 120 ? [x, c, 0]
+    : flipped < 180 ? [0, c, x]
+    : flipped < 240 ? [0, x, c]
+    : flipped < 300 ? [x, 0, c]
+    : [c, 0, x];
+  const byte = (n: number) =>
+    Math.round((n + m) * 255).toString(16).padStart(2, "0");
+  return `#${byte(r1)}${byte(g1)}${byte(b1)}`;
+}
+
+/** What the cursor turns each palette hue in colour; see `opposite`. */
+const OPPOSITE = PALETTE.map(opposite);
 
 function decode(rle: string) {
   const cells = new Uint8Array(FLOWER_COLS * FLOWER_ROWS);
   let at = 0;
   for (let i = 0; i < rle.length; i += 2) {
-    const slot = parseInt(rle[i], 36);
-    const run = parseInt(rle[i + 1], 36);
-    cells.fill(slot, at, at + run);
+    const code = FLOWER_ALPHABET.indexOf(rle[i]);
+    const run = FLOWER_ALPHABET.indexOf(rle[i + 1]);
+    cells.fill(code, at, at + run);
     at += run;
   }
   return cells;
 }
 
+/** A cell's code is 1 + hue * tones + (tone - 1); 0 is empty. */
+const hueOf = (code: number) => Math.floor((code - 1) / FLOWER_TONES);
+const toneOf = (code: number) => ((code - 1) % FLOWER_TONES) + 1;
+
+/** Which of its tone's letters a cell wears, fixed per cell so the texture
+ *  holds still between frames instead of shimmering. */
+const pickOf = (row: number, col: number) =>
+  ((row * 7 + col * 13 + ((row * col) % 5)) % 2) as 0 | 1;
+
 const FRAMES = FLOWER_FRAMES.map(decode);
 const LAST = FRAMES.length - 1;
 
-/** The box the drawing actually occupies across every frame, so the empty
- *  columns down one side are not paid for in width. */
+/** Share of a frame's letters the box may leave out at each side. A few
+ *  specks flung wide of the petals would otherwise set the flower's width,
+ *  leaving the bloom small inside a box that is mostly empty. */
+const SPECK_SHARE = 0.005;
+
+/**
+ * The box the drawing occupies. Sideways it spans the petals of every frame,
+ * less the stray specks past them, so the edge of the box is the edge of the
+ * bloom. Top to bottom it keeps everything, so the stem keeps its tail.
+ */
 const BOX = (() => {
   let minCol = FLOWER_COLS;
   let maxCol = 0;
   let minRow = FLOWER_ROWS;
   let maxRow = 0;
+  const perCol = new Uint32Array(FLOWER_COLS);
   for (const cells of FRAMES) {
+    perCol.fill(0);
+    let total = 0;
     for (let row = 0; row < FLOWER_ROWS; row++) {
       for (let col = 0; col < FLOWER_COLS; col++) {
         if (!cells[row * FLOWER_COLS + col]) continue;
-        if (col < minCol) minCol = col;
-        if (col > maxCol) maxCol = col;
+        perCol[col]++;
+        total++;
         if (row < minRow) minRow = row;
         if (row > maxRow) maxRow = row;
       }
     }
+    if (!total) continue;
+
+    const spare = total * SPECK_SHARE;
+    let first = 0;
+    let skipped = 0;
+    while (skipped + perCol[first] <= spare) skipped += perCol[first++];
+    let last = FLOWER_COLS - 1;
+    skipped = 0;
+    while (skipped + perCol[last] <= spare) skipped += perCol[last--];
+
+    if (first < minCol) minCol = first;
+    if (last > maxCol) maxCol = last;
   }
   return {
     col: minCol,
@@ -82,11 +294,8 @@ const BOX = (() => {
   };
 })();
 
-/**
- * How far each cell sits from the heart of the bloom, as 0 to 1. The colour
- * change is released from the centre and washes outward along this.
- */
-const REACH = (() => {
+/** The heart of the open bloom, in cells: the middle of all its letters. */
+const HEART = (() => {
   const open = FRAMES[LAST];
   let sumX = 0;
   let sumY = 0;
@@ -99,16 +308,24 @@ const REACH = (() => {
       n++;
     }
   }
-  const heartX = n ? sumX / n : FLOWER_COLS / 2;
-  const heartY = n ? sumY / n : FLOWER_ROWS / 2;
+  return {
+    col: n ? sumX / n : FLOWER_COLS / 2,
+    row: n ? sumY / n : FLOWER_ROWS / 2,
+  };
+})();
 
+/**
+ * How far each cell sits from the heart of the bloom, as 0 to 1. The colour
+ * change is released from the centre and washes outward along this.
+ */
+const REACH = (() => {
   const out = new Float32Array(FLOWER_COLS * FLOWER_ROWS);
   let far = 1;
   for (let row = 0; row < FLOWER_ROWS; row++) {
     for (let col = 0; col < FLOWER_COLS; col++) {
-      // Columns are about half as wide as rows are tall, so the sweep stays
-      // round rather than stretching sideways.
-      const d = Math.hypot((col - heartX) * 0.5, row - heartY);
+      // Columns are narrower than rows are tall, so the sweep stays round
+      // rather than stretching sideways.
+      const d = Math.hypot((col - HEART.col) / CELL_ASPECT, row - HEART.row);
       out[row * FLOWER_COLS + col] = d;
       if (d > far) far = d;
     }
@@ -117,25 +334,103 @@ const REACH = (() => {
   return out;
 })();
 
+/**
+ * Cells that never touch the bloom's main body in the open frame — flecks
+ * that sit off on their own rather than joining a petal. They drift free
+ * instead of holding a fixed cell.
+ */
+const DETACHED = (() => {
+  const cells = FRAMES[LAST];
+  const total = FLOWER_COLS * FLOWER_ROWS;
+  const component = new Int32Array(total).fill(-1);
+  const sizes: number[] = [];
+  const stack: number[] = [];
+
+  for (let start = 0; start < total; start++) {
+    if (!cells[start] || component[start] !== -1) continue;
+    const id = sizes.length;
+    let size = 0;
+    stack.push(start);
+    component[start] = id;
+    while (stack.length) {
+      const i = stack.pop()!;
+      size++;
+      const row = Math.floor(i / FLOWER_COLS);
+      const col = i % FLOWER_COLS;
+      // The grid is fine enough that a petal's glyphs can sit a cell apart,
+      // so neighbours two cells off still count as touching.
+      for (let dr = -2; dr <= 2; dr++) {
+        for (let dc = -2; dc <= 2; dc++) {
+          if (!dr && !dc) continue;
+          const r = row + dr;
+          const c = col + dc;
+          if (r < 0 || r >= FLOWER_ROWS || c < 0 || c >= FLOWER_COLS) continue;
+          const j = r * FLOWER_COLS + c;
+          if (!cells[j] || component[j] !== -1) continue;
+          component[j] = id;
+          stack.push(j);
+        }
+      }
+    }
+    sizes.push(size);
+  }
+
+  let mainId = 0;
+  for (let id = 1; id < sizes.length; id++) {
+    if (sizes[id] > sizes[mainId]) mainId = id;
+  }
+
+  const out = new Uint8Array(total);
+  for (let i = 0; i < total; i++) {
+    out[i] = cells[i] && component[i] !== mainId ? 1 : 0;
+  }
+  return out;
+})();
+
+const FLOAT_ANY = DETACHED.some(Boolean);
+/** How often a detached letter's drift is re-evaluated. */
+const FLOAT_MS = 90;
+/** One full up-and-down cycle. */
+const FLOAT_PERIOD_MS = 7000;
+/** How far a detached letter strays from its cell, in cells' worth of pixel. */
+const FLOAT_AMPLITUDE = 1.6;
+/** Every other letter drifts the same way, only this far, so the whole
+ *  flower quivers without losing its shape. Only where there is a mouse or
+ *  trackpad (see QUIVER_MEDIA): redrawing the whole flower for it is too
+ *  much to ask of a phone that is just showing the page. */
+const JITTER_AMPLITUDE = 1;
+const QUIVER_MEDIA = "(hover: hover) and (pointer: fine)";
+/** How often the whole flower is redrawn for its quiver. */
+const JITTER_MS = 120;
+
 export default function AsciiFlower({ onPick }: { onPick: () => void }) {
   const base = useRef<HTMLCanvasElement>(null);
   const reveal = useRef<HTMLCanvasElement>(null);
+  const drift = useRef<HTMLCanvasElement>(null);
   const stage = useRef<HTMLButtonElement>(null);
   const points = useRef<Point[]>([]);
   const cursor = useRef<{ x: number; y: number } | null>(null);
 
   /** Everything the loop needs, held in refs so a press never restarts it. */
-  const shot = useRef({
+  const shot = useRef<Shot>({
     frame: 0,
-    /** Opens contrasted against the page; a press hands it the clip's colours. */
-    colour: false,
+    /** Opens in the clip's colours; a press trades them for the page's ink. */
+    colour: true,
     /** Colour the spread is moving toward, while a cycle runs. */
-    next: false,
+    next: true,
     /** How far the colour has washed out from the heart, 0 to 1. */
     spread: 1,
     /** When the running cycle began; null once it has finished. */
-    began: null as number | null,
+    began: null,
+    /** The shower on its way down, if any. */
+    rain: null,
   });
+
+  /** The latest onPick, for the loop to call once the water has landed. */
+  const pick = useRef(onPick);
+  useEffect(() => {
+    pick.current = onPick;
+  }, [onPick]);
 
   useEffect(() => {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -169,21 +464,30 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     };
 
     /**
-     * `scatter` paints the disturbed layer: random glyphs in the page's own
-     * background colour, so where the cursor passes the flower reads as having
-     * been scattered away rather than recoloured.
+     * Paints one layer. "body" is the flower itself, less its drifting
+     * flecks, which "drift" paints on their own small layer so they can move
+     * without the whole flower being redrawn. "scatter" paints the disturbed
+     * layer: random glyphs in the other side's colour. In colour that is each
+     * hue's opposite (red for green, green for red), so where the cursor
+     * passes the flower flips to its complement.
      */
-    const paint = (canvas: HTMLCanvasElement | null, scatter = false) => {
+    const paint = (
+      canvas: HTMLCanvasElement | null,
+      layer: "body" | "drift" | "scatter",
+    ) => {
+      const scatter = layer === "scatter";
       const ctx = canvas?.getContext("2d");
       if (!canvas || !ctx) return;
 
       const ink = token("--color-ink");
-      const bg = token("--color-bg");
 
       size(canvas);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
-      ctx.font = `${cellH}px var(--font-mono, ui-monospace, monospace)`;
+      // Canvas fonts can't read CSS variables, so resolve the face first —
+      // otherwise the whole string is rejected and it falls back to 10px sans.
+      const mono = token("--font-mono") || "ui-monospace";
+      ctx.font = `700 ${cellH}px ${mono}, monospace`;
       ctx.textBaseline = "top";
 
       const now = shot.current;
@@ -191,54 +495,141 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       if (!cells) return;
 
       const at = cursor.current;
-
+      const clock = performance.now();
+      const quiver = quivers.matches;
       for (let row = 0; row < FLOWER_ROWS; row++) {
         for (let col = 0; col < FLOWER_COLS; col++) {
           const i = row * FLOWER_COLS + col;
-          const slot = cells[i];
-          if (!slot) continue;
+          const code = cells[i];
+          if (!code) continue;
+          // Specks past the edge of the bloom are left out; see BOX.
+          if (col < BOX.col || col >= BOX.col + BOX.cols) continue;
+          if (layer === "body" && DETACHED[i]) continue;
+          if (layer === "drift" && !DETACHED[i]) continue;
+          const hue = PALETTE[hueOf(code)];
+          const flip = OPPOSITE[hueOf(code)];
+          const tone = toneOf(code);
 
           const x = (col - BOX.col) * cellW;
           const y = (row - BOX.row) * cellH;
 
+          // Each letter's own offset, so neighbours move out of step.
+          const seed = (row * 12.9898 + col * 78.233) % (Math.PI * 2);
+
+          // Flecks off the main body drift on their own slow, quiet cycle,
+          // each out of step with its neighbours.
+          let floatX = 0;
+          let floatY = 0;
+          {
+            const t = (clock / FLOAT_PERIOD_MS) * Math.PI * 2;
+            const reach = DETACHED[i]
+              ? FLOAT_AMPLITUDE
+              : quiver
+                ? JITTER_AMPLITUDE
+                : 0;
+            floatY = Math.sin(t + seed) * reach;
+            floatX = Math.cos(t * 0.85 + seed) * reach * 0.6;
+          }
+
           // Lean toward the cursor, falling off with distance and capped so a
-          // letter never drifts far from its own cell.
+          // letter never drifts far from its own cell. The same falloff
+          // also decides how much of the letter's own hue shows through.
           let leanX = 0;
           let leanY = 0;
+          let near = 0;
           if (at) {
             const dx = at.x - x;
             const dy = at.y - y;
             const away = Math.hypot(dx, dy) || 1;
-            const pull = Math.max(0, 1 - away / PULL_RADIUS) * PULL_MAX;
+            near = Math.max(0, 1 - away / PULL_RADIUS);
+            const pull = near * PULL_MAX;
             leanX = (dx / away) * pull;
             leanY = (dy / away) * pull;
           }
 
+          // Cells the wash has already reached wear the new colour.
+          const turned = REACH[i] <= now.spread;
+          const active = turned ? now.next : now.colour;
+
+          // The cursor always shows the other side: in ink, the letter's
+          // own hue shows through near it and scatters in that hue; in
+          // colour, the hue's opposite does (red goes green, green red).
           if (scatter) {
-            ctx.fillStyle = bg;
+            ctx.fillStyle = active ? flip : hue;
+          } else if (active) {
+            ctx.fillStyle = near > 0 ? mixHex(hue, flip, near) : hue;
           } else {
-            // Cells the wash has already reached wear the new colour.
-            const turned = REACH[i] <= now.spread;
-            ctx.fillStyle = (turned ? now.next : now.colour)
-              ? PALETTE[slot - 1]
-              : ink;
+            ctx.fillStyle = near > 0 ? mixHex(ink, hue, near) : ink;
           }
+          ctx.globalAlpha = TONE_ALPHA[tone];
 
           ctx.fillText(
             scatter
               ? NOISE[(Math.random() * NOISE.length) | 0]
-              : PHRASE[(col + row * 5) % PHRASE.length],
-            x + leanX,
-            y + leanY,
+              : RAMP[tone][pickOf(row, col)],
+            x + leanX + floatX,
+            y + leanY + floatY,
           );
         }
       }
+
+      if (layer === "body" && now.rain) paintRain(ctx, now.rain);
+    };
+
+    /** The shower, drawn over the plant: each letter turned to lie along
+     *  its 45° path, the head brightest, gone once it reaches its landing. */
+    const paintRain = (ctx: CanvasRenderingContext2D, rain: Rain) => {
+      const t = performance.now();
+      const step = Math.floor(t / SCATTER_MS);
+      const turn = Math.SQRT1_2 * dpr;
+      ctx.fillStyle = token("--color-grad-blue") || RAIN_FALLBACK;
+      ctx.font = ctx.font.replace(/[\d.]+px/, `${cellH * RAIN_SCALE}px`);
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+
+      rain.drops.forEach((drop, n) => {
+        if (t < drop.born) return;
+        const head = headRow(drop, t);
+        for (let k = 0; k < RAIN_LENGTH; k++) {
+          const row = head - k * RAIN_STEP;
+          if (row > drop.lands) continue;
+          const col = drop.col + (row - drop.row) * CELL_ASPECT;
+          const x = (col - BOX.col + 0.5) * cellW;
+          const y = (row - BOX.row + 0.5) * cellH;
+          ctx.globalAlpha = 1 - k * 0.16;
+          ctx.setTransform(turn, turn, -turn, turn, x * dpr, y * dpr);
+          ctx.fillText(rainGlyph(n, k, step), 0, 0);
+        }
+      });
+
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.globalAlpha = 1;
+      ctx.textAlign = "start";
+      ctx.textBaseline = "top";
     };
 
     const repaint = () => {
-      paint(base.current);
-      paint(reveal.current, true);
+      paint(base.current, "body");
+      paint(drift.current, "drift");
+      paint(reveal.current, "scatter");
     };
+
+    if (
+      process.env.NODE_ENV !== "production" &&
+      Math.abs(BOX.cols / (BOX.rows * CELL_ASPECT) - FLOWER_ASPECT) > 1e-9
+    ) {
+      console.warn(
+        `FLOWER_ASPECT is stale: the box is ${BOX.cols}x${BOX.rows}. Update src/content/flower-shape.ts.`,
+      );
+    }
+
+    // The mono face is loaded only here, where it is used, rather than on
+    // every page. The canvas can't ask for it, so ask, and redraw once it
+    // has arrived.
+    const mono = token("--font-mono");
+    if (mono && document.fonts) {
+      document.fonts.load(`12px ${mono}`).then(repaint, () => {});
+    }
 
     // Open on load the same way a press does, minus the closing half.
     shot.current.began = performance.now() - WILT_MS;
@@ -251,13 +642,32 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     }
 
     let raf = 0;
+    const quivers = window.matchMedia(QUIVER_MEDIA);
+    /** Whether any of the flower is on screen. Off screen the loop stops,
+     *  so the flower costs nothing while the page is scrolled past it. */
+    let onScreen = true;
     let lastScatter = 0;
+    let lastFloat = 0;
+    let lastJitter = 0;
+    let masked = "";
     let leaning = "";
     let drawn = -1;
 
     const tick = (now: number) => {
       const s = shot.current;
       let dirty = false;
+
+      // A moment into the shower the flower answers; the rest of the water
+      // keeps falling while it closes and blooms.
+      if (s.rain) {
+        dirty = true;
+        if (!s.rain.answered && now - s.rain.began >= RAIN_LEAD_MS) {
+          s.rain.answered = true;
+          beginCycle(s, now);
+          pick.current();
+        }
+        if (s.rain.answered && now >= s.rain.ends) s.rain = null;
+      }
 
       if (s.began !== null) {
         const t = now - s.began;
@@ -296,8 +706,22 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         dirty = true;
       }
 
+      // The detached flecks drift on their own clock, on their own layer,
+      // so only they are redrawn for it.
+      let drifted = dirty;
+      if (FLOAT_ANY && now - lastFloat > FLOAT_MS) {
+        lastFloat = now;
+        drifted = true;
+      }
+      // The rest of the flower quivers more slowly, so it is redrawn less
+      // often for it.
+      if (quivers.matches && now - lastJitter > JITTER_MS) {
+        lastJitter = now;
+        dirty = true;
+      }
 
-      if (dirty) paint(base.current);
+      if (dirty) paint(base.current, "body");
+      if (drifted) paint(drift.current, "drift");
 
       points.current = points.current.filter((p) => now - p.born < TRAIL_MS);
 
@@ -305,7 +729,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       // rate so the static reads as flicker rather than a blur.
       if (points.current.length && now - lastScatter > SCATTER_MS) {
         lastScatter = now;
-        paint(reveal.current, true);
+        paint(reveal.current, "scatter");
       }
 
       const mask = points.current
@@ -321,12 +745,15 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       // rather than "none", which would remove the mask and reveal all of it.
       const applied = mask || "linear-gradient(#0000, #0000)";
       const node = reveal.current;
-      if (node) {
+      // Only touch the style when the mask changes: rewriting it every
+      // frame would have the browser restyle the page for nothing.
+      if (node && applied !== masked) {
+        masked = applied;
         node.style.maskImage = applied;
         node.style.webkitMaskImage = applied;
       }
 
-      raf = requestAnimationFrame(tick);
+      raf = onScreen ? requestAnimationFrame(tick) : 0;
     };
 
     measure();
@@ -338,7 +765,7 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
     };
     window.addEventListener("resize", onResize);
 
-    // The ink and background are read per paint, so without this the flower
+    // The ink is read per paint, so without this the flower
     // keeps the old palette after a theme switch until something else asks
     // for a repaint.
     const watchTheme = new MutationObserver(repaint);
@@ -347,11 +774,18 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
       attributeFilter: ["data-theme"],
     });
 
+    const watchView = new IntersectionObserver(([entry]) => {
+      onScreen = entry.isIntersecting;
+      if (onScreen && !raf) raf = requestAnimationFrame(tick);
+    });
+    if (stage.current) watchView.observe(stage.current);
+
     raf = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(raf);
       window.removeEventListener("resize", onResize);
       watchTheme.disconnect();
+      watchView.disconnect();
     };
   }, []);
 
@@ -367,12 +801,16 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
 
   const press = () => {
     const s = shot.current;
-    // A press during a cycle restarts it rather than stacking another.
-    s.colour = s.next;
-    s.next = !s.colour;
-    s.spread = 0;
-    s.began = performance.now();
-    onPick();
+    // Water already on its way lands before any more is poured.
+    if (s.rain) return;
+    const now = performance.now();
+    // Without motion there is no shower to watch, so answer straight away.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      beginCycle(s, now);
+      onPick();
+      return;
+    }
+    s.rain = makeRain(FRAMES[Math.min(Math.max(s.frame, 0), LAST)], now);
   };
 
   return (
@@ -385,11 +823,26 @@ export default function AsciiFlower({ onPick }: { onPick: () => void }) {
         cursor.current = null;
       }}
       onMouseMove={track}
-      aria-label="Change the intro line and the flower's colours"
+      aria-label="Water the flower to change the intro line and its colours"
+      // Hold the flower's exact shape from the first paint. The canvas only
+      // gets its size once the script runs, and until then the page below
+      // would sit higher and then jump down.
+      style={{ aspectRatio: `${BOX.cols} / ${BOX.rows * CELL_ASPECT}` }}
       className="ascii-art relative block w-full cursor-pointer select-none"
     >
-      <span aria-hidden className="ascii-halo" />
-      <canvas ref={base} aria-hidden className="ascii-canvas" />
+      {/* Pinned to the corner: a button centres what's in it, so a canvas in
+          the flow would slide as it grows from its default size to the
+          flower's, which counts as a layout shift. */}
+      <canvas
+        ref={base}
+        aria-hidden
+        className="ascii-canvas absolute inset-0"
+      />
+      <canvas
+        ref={drift}
+        aria-hidden
+        className="ascii-canvas pointer-events-none absolute inset-0"
+      />
       <canvas ref={reveal} aria-hidden className="ascii-canvas ascii-reveal" />
     </button>
   );
