@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { TabItem } from "@/content/types";
+import { sideBySide } from "@/lib/layout";
+import Compare from "./Compare";
 import MediaBlock from "./MediaBlock";
 import { COLUMN, GRID } from "@/lib/sizes";
 
@@ -19,9 +21,11 @@ const gridCols = {
 export default function MediaTabs({
   items,
   ariaLabel,
+  side = false,
 }: {
   items: TabItem[];
   ariaLabel: string;
+  side?: boolean;
 }) {
   const [active, setActive] = useState(0);
 
@@ -118,6 +122,32 @@ export default function MediaTabs({
         {items.map((item, i) => {
           const many = item.media.length > 1;
           const visible = i === active;
+          if (side) {
+            return (
+              <div key={item.label} className={visible ? "" : "hidden"}>
+                <div className={sideBySide}>
+                  <MediaBlock media={item.media[0]} />
+                  <div>
+                    {item.title && (
+                      <h4 className="text-xl leading-7 font-semibold text-ink sm:text-2xl sm:leading-8">
+                        {item.title}
+                      </h4>
+                    )}
+                    {item.caption && (
+                      <p className="prose-body mt-3">{item.caption}</p>
+                    )}
+                  </div>
+                </div>
+                {item.note && (
+                  <p
+                    className="prose-body mt-8"
+                    dangerouslySetInnerHTML={{ __html: item.note }}
+                  />
+                )}
+                {item.compare && <Compare {...item.compare} />}
+              </div>
+            );
+          }
           return (
             <div
               key={item.label}

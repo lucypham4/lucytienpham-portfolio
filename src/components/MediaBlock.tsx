@@ -51,6 +51,50 @@ export default function MediaBlock({
     fit === "cover" ? "aspect-video w-full rounded-card" : fitClasses;
   const stackClasses = fit === "grow" ? boxClasses : `relative ${boxClasses}`;
 
+  if ((media.type === "video" || media.type === "image") && media.phone) {
+    const screen =
+      media.type === "video" ? (
+        <LazyVideo
+          poster={media.poster}
+          mp4={media.mp4}
+          webm={media.webm}
+          alt={media.alt}
+          eager={priority}
+          className="h-full w-full"
+        />
+      ) : (
+        <Image
+          src={media.src}
+          alt={media.alt ?? ""}
+          width={804}
+          height={1748}
+          sizes="(min-width: 768px) 360px, 100vw"
+          className="h-full w-full object-cover"
+        />
+      );
+
+    // The phone takes its width from the column; its own width cap keeps it
+    // within the viewport, so `bounded` needs nothing more.
+    return (
+      <div className={`phone ${className}`}>
+        <div className="phone-screen">{screen}</div>
+      </div>
+    );
+  }
+
+  if (media.type === "video" && media.motionSafe && fit === "cover") {
+    return (
+      <LazyVideo
+        poster={media.poster}
+        mp4={media.mp4}
+        webm={media.webm}
+        alt={media.alt}
+        eager={priority}
+        className={`${boxClasses} overflow-hidden ${className}`}
+      />
+    );
+  }
+
   if (media.type === "slideshow") {
     return (
       <MediaSlideshow

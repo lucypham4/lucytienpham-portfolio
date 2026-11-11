@@ -108,9 +108,14 @@ export default function CaseStudy({
                   </div>
                 )}
                 <div>
-                  <p className="eyebrow">{project.overview.label ?? "Overview"}</p>
+                  {/* An empty label hides the eyebrow, for a study that opens straight into its copy. */}
+                  {project.overview.label !== "" && (
+                    <p className="eyebrow mb-3">
+                      {project.overview.label ?? "Overview"}
+                    </p>
+                  )}
                   <p
-                    className="prose-body mt-3"
+                    className="prose-body"
                     dangerouslySetInnerHTML={{ __html: project.overview.html }}
                   />
                   {project.overview.impact && (
