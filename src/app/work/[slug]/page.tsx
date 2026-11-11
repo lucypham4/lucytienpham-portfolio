@@ -119,9 +119,13 @@ export default async function CaseStudyPage({
                   </div>
                 )}
                 <div>
-                  <p className="eyebrow">{project.overview.label ?? "Overview"}</p>
+                  {project.overview.label !== "" && (
+                    <p className="eyebrow mb-3">
+                      {project.overview.label ?? "Overview"}
+                    </p>
+                  )}
                   <p
-                    className="prose-body mt-3"
+                    className="prose-body"
                     dangerouslySetInnerHTML={{ __html: project.overview.html }}
                   />
                   {project.overview.impact && (

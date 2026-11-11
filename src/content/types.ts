@@ -1,6 +1,24 @@
 export type Media =
-  | { type: "image"; src: string; alt?: string }
-  | { type: "video"; poster: string; mp4: string; webm?: string }
+  /**
+   * `phone` draws a CSS phone outline around a portrait phone recording or
+   * screenshot, and caps it at a phone's width rather than the column's.
+   */
+  | { type: "image"; src: string; alt?: string; phone?: boolean }
+  | {
+      type: "video";
+      poster: string;
+      mp4: string;
+      webm?: string;
+      /** Read out in place of the picture, as an image's alt would be. */
+      alt?: string;
+      phone?: boolean;
+      /**
+       * Load only near the viewport and, under prefers-reduced-motion, hold
+       * on the poster behind a play button (LazyVideo). Phone recordings
+       * always do; this opts an in-flow 16:9 video in too.
+       */
+      motionSafe?: boolean;
+    }
   /**
    * Stills cycled in place the way a GIF would, for a thumbnail that has to
    * stand for a whole artefact rather than a single screen. `interval` is the
@@ -20,12 +38,23 @@ export type Media =
 
 export type MediaSize = "sm" | "md";
 
+/** A before and an after, each with a short label, shown side by side. */
+export type Comparison = {
+  before: { media: Media; label: string };
+  after: { media: Media; label: string };
+};
+
 export type TabItem = {
   label: string;
   media: Media[];
   cols?: 2 | 3 | 4;
   /** A short line shown under the tab's media, in place of body copy. */
   caption?: string;
+  /** With a side-by-side tabs block, a heading over the caption. */
+  title?: string;
+  /** With a side-by-side tabs block, copy and a before/after under the row. */
+  note?: string;
+  compare?: Comparison;
 };
 
 export type Block =
@@ -55,6 +84,12 @@ export type Block =
        * white line art that would vanish against a light page.
        */
       framed?: boolean;
+      /**
+       * Sit the asset inset on a rounded light-grey card, the same in both
+       * themes, for a transparent diagram whose dark text needs a light
+       * ground.
+       */
+      panel?: boolean;
     }
   | {
       kind: "grid";
@@ -69,11 +104,26 @@ export type Block =
   /** Two images side by side with a small arrow between them, both capped to
    * the same height so neither's own proportions dominate the pairing. */
   | { kind: "pair"; from: Media; to: Media }
-  | { kind: "cards"; items: { title: string; body?: string; icon?: string }[] }
-  | { kind: "list"; items: string[] }
+  /** `columns: 2` spreads a pair of cards across the column instead of leaving a third slot empty. */
+  | { kind: "cards"; items: { title: string; body?: string; icon?: string }[]; columns?: 2 | 3 }
+  /** `html` items may carry inline markup such as a bold lead-in. */
+  | { kind: "list"; items: string[]; ordered?: boolean; html?: boolean }
   | { kind: "beforeAfter"; before: Media; after: Media }
-  /** A group of media shown one panel at a time behind centred tabs. */
-  | { kind: "tabs"; items: TabItem[] }
+  /**
+   * Before and after side by side at every width, each under a coloured pill
+   * and a short label, on a tinted panel so the pair reads as one comparison
+   * rather than two more screens in the scroll. `beforeAfter` instead shows
+   * one at a time behind tabs.
+   */
+  | ({ kind: "compare" } & Comparison)
+  /**
+   * A group of media shown one panel at a time behind centred tabs. `side`
+   * sets each panel's media on the left with its title and caption beside
+   * it, so a demo and its description are on screen together.
+   */
+  | { kind: "tabs"; items: TabItem[]; side?: boolean }
+  /** One demo and its description side by side: media left, copy right. */
+  | { kind: "demo"; media: Media; html: string }
   /**
    * Tabbed parts of a book, each shown as a photo grid on a solid black/white
    * card — full contrast in both themes, rather than the neutral tinted panel
@@ -114,7 +164,8 @@ export type Project = {
   accent?: "grad" | "none";
   overview?: {
     html: string;
-    /** Eyebrow over `html`. Defaults to "Overview" — override for e.g. "Challenge". */
+    /** Eyebrow over `html`. Defaults to "Overview" — override for e.g.
+     * "Challenge", or pass "" for none. */
     label?: string;
     /** Short outcome statement shown under the overview copy. */
     impact?: string;

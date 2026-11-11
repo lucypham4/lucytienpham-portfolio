@@ -1,6 +1,7 @@
 import type { Project } from "./types";
 
 const A = "/assets";
+const S = "/assets/staj";
 
 export const projects: Project[] = [
   {
@@ -135,6 +136,344 @@ export const projects: Project[] = [
           {
             title: "Contracting 101",
             body: "Understanding setting rates, scope management, and professional offboarding.",
+          },
+        ],
+      },
+    ],
+  },
+
+  {
+    slug: "staj",
+    title: "Staj",
+    tagline: "Designing how chefs browse and share their dishes, from modal to motion.",
+    categories: ["Product Design", "Project"],
+    thumb: {
+      type: "video",
+      poster: `${S}/00-cover-poster.jpg`,
+      mp4: `${S}/00-cover.mp4`,
+      webm: `${S}/00-cover.webm`,
+    },
+    hero: {
+      headline: "Staj",
+      hideTagline: true,
+      media: {
+        type: "video",
+        poster: `${S}/00-cover-poster.jpg`,
+        mp4: `${S}/00-cover.mp4`,
+        webm: `${S}/00-cover.webm`,
+        alt: "Staj on a phone over a blurred, brightly coloured kitchen: the app opens on its Staj wordmark, a dish is tapped, and its recipe is scrolled into view.",
+        motionSafe: true,
+      },
+    },
+    overview: {
+      html: "Staj is a portfolio platform where chefs document their work and share public project pages with clients. I was the only designer and engineer, and I took it from early Figma concepts to a working React and Supabase app. This case study covers the dish view, because most of a chef&rsquo;s archive&rsquo;s value to clients comes from how easily they can explore individual dishes.",
+    },
+    meta: [
+      { label: "Duration", value: "Sep to Oct 2026" },
+      { label: "My Role", value: "Product designer and builder" },
+      { label: "Team", value: "Just me" },
+      { label: "Tools", value: "Figma, React, Supabase, Gemini, Claude Code, Playwright" },
+    ],
+    blocks: [
+      {
+        kind: "section",
+        label: "Understanding User Needs",
+        heading: "A Body Of Work Stuck In A Camera Roll",
+      },
+      {
+        kind: "text",
+        html: "Staj originated as a tool built for a chef friend to document their culinary creations, eventually evolving into a platform for chefs to share public portfolios with friends, family, other chefs, and even clients.",
+      },
+      {
+        kind: "text",
+        html: "Chefs document their dishes in their camera roll and share them through texts and social feeds. There&rsquo;s no single place to keep a body of work, or to show it to clients.",
+      },
+      {
+        kind: "quote",
+        text: "I want to show coworkers, friends, family, and even potential clients what I’ve been making. The easiest way for me to do that is probably through my phone, since I haven’t even opened my laptop up in a couple months.",
+        attribution: "Chef, Disney",
+      },
+
+      {
+        kind: "section",
+        label: "A Home For Every Dish",
+        heading: "A Home For Every Dish",
+      },
+      {
+        kind: "text",
+        html: "Staj gives chefs one place to log what they cook, keep it as a growing archive, and share it with clients through a public page. Each dish keeps its photo and story together, so a chef&rsquo;s body of work is always ready to show.",
+      },
+      { kind: "heading", text: "Key Flows" },
+      {
+        kind: "tabs",
+        side: true,
+        items: [
+          {
+            label: "Log",
+            caption:
+              "The chef adds a photo and a line of notes, and AI fills in the recipe card: the details, a summary and tags they can edit before saving it to the gallery.",
+            media: [
+              {
+                type: "video",
+                poster: `${S}/05-log-poster.jpg`,
+                mp4: `${S}/05-log.mp4`,
+                webm: `${S}/05-log.webm`,
+                alt: "Screen recording of logging a dish: a photo is added and cropped, a line of notes is typed, the recipe card fills itself in, and the saved dish appears first in the gallery.",
+                phone: true,
+              },
+            ],
+          },
+          {
+            label: "Read",
+            caption:
+              "The chef pulls the sheet open for the recipe. Pulling further turns the photo into a thumbnail beside the name.",
+            media: [
+              {
+                type: "video",
+                poster: `${S}/05-sheet-rests-poster.jpg`,
+                mp4: `${S}/05-sheet-rests.mp4`,
+                webm: `${S}/05-sheet-rests.webm`,
+                alt: "Screen recording: the sheet is pulled open to the recipe, then further until the photo becomes a thumbnail beside the dish name.",
+                phone: true,
+              },
+            ],
+          },
+          {
+            label: "Browse",
+            caption:
+              "A swipe brings the next photo in under the chef&rsquo;s finger while the text softens. A swipe that stops short of a third of the way settles back.",
+            media: [
+              {
+                type: "video",
+                poster: `${S}/05-swipe-poster.jpg`,
+                mp4: `${S}/05-swipe.mp4`,
+                webm: `${S}/05-swipe.webm`,
+                alt: "Screen recording: swiping across the sheet brings in the next dish photo while the text softens, and a short swipe settles back.",
+                phone: true,
+              },
+            ],
+          },
+          {
+            label: "Fix",
+            caption:
+              "On their own dishes, a chef taps Edit beside Share to reopen the recipe card, pre-filled.",
+            media: [
+              {
+                type: "video",
+                poster: `${S}/05-edit-poster.jpg`,
+                mp4: `${S}/05-edit.mp4`,
+                webm: `${S}/05-edit.webm`,
+                alt: "Screen recording: tapping Edit beside Share reopens the dish's recipe card with every field filled in.",
+                phone: true,
+              },
+            ],
+          },
+          {
+            label: "For Clients",
+            caption:
+              "A chef’s public page uses the same sheet and swipe. Its header follows the sheet’s rules: as the page scrolls, the chef’s picture and name travel into a bar at the top, the way the dish name collapses.",
+            media: [
+              {
+                type: "video",
+                poster: `${S}/05-public-header-poster.jpg`,
+                mp4: `${S}/05-public-header.mp4`,
+                webm: `${S}/05-public-header.webm`,
+                alt: "Screen recording of a chef's public page: as it scrolls, the chef's picture and name travel up into a bar at the top.",
+                phone: true,
+              },
+            ],
+          },
+        ],
+      },
+
+      {
+        kind: "section",
+        label: "Design System",
+        heading: "Building Staj’s Design System",
+      },
+      {
+        kind: "text",
+        html: "I wanted the dishes to speak for themselves. A chef&rsquo;s plate is already the most beautiful thing on the screen, so I built the design system to stay out of its way. I chose a quiet palette of cool grey, beige and off-black, with brighter colors saved for small moments. I dropped illustration and let photography do the work.",
+      },
+      {
+        kind: "media",
+        media: {
+          type: "image",
+          src: `${S}/design-system.png`,
+          alt: "Staj design system snapshot: the palette of off-white, beige, grey and off-black with a red accent; type specimens in Tinos, Instrument Sans and IBM Plex Mono; and the dish card, resting sheet, tag pills, buttons, segmented toggle and text field.",
+        },
+        panel: true,
+      },
+
+      {
+        kind: "section",
+        label: "Initial Findings",
+        heading: "Where Chefs And Clients Get Stuck",
+      },
+      {
+        kind: "text",
+        html: "These are the pain points across the journey, before Staj existed.",
+      },
+      {
+        kind: "media",
+        media: {
+          type: "image",
+          src: `${S}/pain-points.png`,
+          alt: "A table of five journey stages (Documenting a dish, Viewing a dish, Finding dishes, Sharing work, Following up) with pain points for chefs and clients. Viewing a dish is highlighted as the focus.",
+        },
+        panel: true,
+      },
+      {
+        kind: "text",
+        html: "Viewing a dish is the focus of this case study; finding dishes and following up are assumptions still to test.",
+      },
+
+      {
+        kind: "section",
+        label: "Opening A Dish",
+        heading: "Opening A Dish",
+      },
+      { kind: "heading", text: "A Recipe Card In A Box" },
+      {
+        kind: "text",
+        html: "Initially, dish details were displayed in a modal-based, two-panel card, which forced users into a high-friction navigation flow. Redesigning this pattern removed the constant context-switching and created a seamless browsing experience.",
+      },
+      {
+        kind: "tabs",
+        side: true,
+        items: [
+          {
+            label: "Before",
+            caption:
+              "To see the next dish, you closed the modal, found the next card in the gallery and opened it.",
+            media: [
+              {
+                type: "video",
+                poster: `${S}/01-switch-before-poster.jpg`,
+                mp4: `${S}/01-switch-before.mp4`,
+                webm: `${S}/01-switch-before.webm`,
+                alt: "Screen recording of the Sep 2026 Meal Diary: a dish is tapped open in a modal, the close button is tapped, and the next card is tapped in the gallery.",
+                phone: true,
+              },
+            ],
+          },
+          {
+            label: "After",
+            caption:
+              "The sheet stays open: swipe and the next dish comes in under your finger.",
+            media: [
+              {
+                type: "video",
+                poster: `${S}/05-switch-after-poster.jpg`,
+                mp4: `${S}/05-switch-after.mp4`,
+                webm: `${S}/05-switch-after.webm`,
+                alt: "Screen recording of Staj today: a dish is tapped open, then two swipes move straight to the next dishes.",
+                phone: true,
+              },
+            ],
+          },
+        ],
+      },
+      { kind: "heading", text: "Chefs Couldn’t Browse A Body Of Work" },
+      {
+        kind: "text",
+        html: "A chef shows their range by moving through dishes, not by opening one. The early versions got in the way three times:",
+      },
+      {
+        kind: "cards",
+        items: [
+          {
+            title: "One dish at a time",
+            body: "To see the next dish you closed the modal and found the next card.",
+          },
+          {
+            title: "The card cut itself off",
+            body: "When the sheet arrived in Sep 2026, the card peeking up under the photo showed the description, cut off mid-sentence.",
+          },
+          {
+            title: "The background went milky",
+            body: "A 55% wash of the page color and a 20px blur sat over the gallery and washed out the food.",
+          },
+        ],
+      },
+      {
+        kind: "callout",
+        html: "How might we make browsing dishes feel effortless for chefs and the clients they share them with?",
+      },
+      { kind: "heading", text: "Each Rebuild Answered A Problem" },
+      {
+        kind: "text",
+        html: "The dish view was rebuilt three times, each time to fix what the last version got in the way of.",
+      },
+      {
+        kind: "tabs",
+        side: true,
+        items: [
+          {
+            label: "V1",
+            title: "Step Between Dishes",
+            caption:
+              "Reaching the next dish no longer means closing the modal: you step by arrow, swipe or key, and the name cross-dissolves in place.",
+            media: [
+              {
+                type: "video",
+                poster: `${S}/04-stepping-sep28-poster.jpg`,
+                mp4: `${S}/04-stepping-sep28.mp4`,
+                webm: `${S}/04-stepping-sep28.webm`,
+                alt: "Screen recording of the Sep 2026 build: stepping to the previous dish, the name cross-dissolves in place while the text below blurs and sharpens.",
+                phone: true,
+              },
+            ],
+          },
+          {
+            label: "V2",
+            title: "Pull-Up Sheet",
+            caption:
+              "The view becomes a pull-up sheet with three rests, and the swipe follows your finger, so browsing feels attached to your hand.",
+            media: [
+              {
+                type: "image",
+                src: `${S}/04-evolution-3-sep29.avif`,
+                alt: "The first pull-up sheet: the dish name and photo above a card peeking up from the bottom of the screen.",
+                phone: true,
+              },
+            ],
+          },
+          {
+            label: "V3",
+            title: "Photo Flight",
+            caption:
+              "The photo flies from its card into the sheet and back home, so it’s always clear which dish you opened.",
+            media: [
+              {
+                type: "video",
+                poster: `${S}/05-flight-poster.jpg`,
+                mp4: `${S}/05-flight.mp4`,
+                webm: `${S}/05-flight.webm`,
+                alt: "Screen recording: a dish photo lifts out of its card in the gallery and settles into the sheet, then flies back home.",
+                phone: true,
+              },
+            ],
+          },
+        ],
+      },
+
+      {
+        kind: "section",
+        label: "Reflection",
+        heading: "Reflection",
+      },
+      {
+        kind: "cards",
+        columns: 2,
+        items: [
+          {
+            title: "Designing across the stack",
+            body: "Staj was my first project where I designed for both the front end and the back end. I followed the data a chef enters from input, to storage, to display, and saw firsthand how the same dish has to work for the chef who made it and for the client viewing it.",
+          },
+          {
+            title: "Building fast, iterating faster",
+            body: "This was the fastest I’ve ever designed. Using LLMs, I could prototype tools I couldn’t have built before. That speed let me try more formats and experiments, keeping the ones that best matched how chefs think.",
           },
         ],
       },
@@ -1337,6 +1676,7 @@ export const projects: Project[] = [
       },
     ],
   },
+
 ];
 
 export function getProject(slug: string) {

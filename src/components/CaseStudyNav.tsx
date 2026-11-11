@@ -111,7 +111,7 @@ export default function CaseStudyNav({ sections }: { sections: NavSection[] }) {
                     setActive(section.id);
                     lockedUntil.current = Date.now() + 900;
                   }}
-                  className={`text-base leading-6 whitespace-nowrap transition-colors ${
+                  className={`text-base leading-6 transition-colors ${
                     isActive ? "font-semibold text-ink" : "text-grey hover:text-ink"
                   }`}
                 >

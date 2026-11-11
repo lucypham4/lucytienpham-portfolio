@@ -17,6 +17,13 @@
   --color-mint: #e9fff9;
   --color-grad-blue: #339af0;
   --color-violet: #eee6f3;
+  /* Hairline around the CSS phone frame. */
+  --color-phone-edge: #d6d6d6;
+  /* Before / After pills on a comparison. */
+  --color-before: #fdeae5;
+  --color-before-ink: #a63d24;
+  --color-after: #e3f5e9;
+  --color-after-ink: #1d7a42;
 
   --font-sans: var(--font-open-sans), ui-sans-serif, system-ui, sans-serif;
 
@@ -35,6 +42,11 @@
   --color-shell: #1b1c21;
   --color-mint: #12241f;
   --color-violet: #241f2b;
+  --color-phone-edge: #3a3b41;
+  --color-before: #3a2019;
+  --color-before-ink: #f2a48f;
+  --color-after: #15291d;
+  --color-after-ink: #7fd6a1;
 }
 
 html {
@@ -317,5 +329,29 @@ body {
     inset: -2px;
     height: calc(100% + 4px);
     width: calc(100% + 4px);
+  }
+}
+
+/* A phone drawn in CSS around portrait recordings: the rounded screen edge
+   and a hairline, no device art. The corner is set in container units so it
+   stays 44px at the full 360px and scales down with the frame, whether the
+   phone is narrowed by a grid column or fitted to a card's height. */
+@layer components {
+  .phone {
+    container-type: inline-size;
+    width: 100%;
+    max-width: 360px;
+    margin-inline: auto;
+  }
+
+  .phone-screen {
+    position: relative;
+    aspect-ratio: 804 / 1748;
+    overflow: hidden;
+    /* Keeps Safari clipping a playing video to the rounded corners. */
+    isolation: isolate;
+    border: 1px solid var(--color-phone-edge);
+    border-radius: calc(44 / 360 * 100cqw);
+    background: var(--color-shell);
   }
 }

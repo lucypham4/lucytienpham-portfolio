@@ -1,7 +1,9 @@
 import Image from "next/image";
 import type { Block } from "@/content/types";
+import { sideBySide } from "@/lib/layout";
 import { slugify } from "@/lib/slug";
 import BookGallery from "./BookGallery";
+import Compare from "./Compare";
 import MediaTabs from "./MediaTabs";
 import MediaBlock from "./MediaBlock";
 
@@ -77,6 +79,10 @@ function BlockView({ block }: { block: Block }) {
             <div className="mx-auto max-w-[560px] rounded-xl2 bg-black p-8">
               <MediaBlock media={block.media} />
             </div>
+          ) : block.panel ? (
+            <div className="rounded-xl2 bg-[#f4f4f4] p-4 sm:p-10">
+              <MediaBlock media={block.media} />
+            </div>
           ) : (
             <MediaBlock media={block.media} />
           )}
@@ -90,9 +96,23 @@ function BlockView({ block }: { block: Block }) {
     }
 
     case "grid": {
+      // Phone screens are narrow enough to sit three across from tablet
+      // width, where other media would wrap to two and orphan the third.
+      const phones = block.media.every(
+        (m) => (m.type === "image" || m.type === "video") && m.phone,
+      );
+      // A run of four goes two by two on a phone rather than four screens
+      // tall.
+      const cols = !phones
+        ? `grid-cols-1 ${gridCols[block.cols ?? 2]}`
+        : block.cols === 4
+          ? "grid-cols-2 sm:grid-cols-4"
+          : block.cols === 3
+            ? "grid-cols-1 sm:grid-cols-3"
+            : `grid-cols-1 ${gridCols[block.cols ?? 2]}`;
       const grid = (
         <div
-          className={`grid grid-cols-1 gap-4 ${gridCols[block.cols ?? 2]} ${
+          className={`grid gap-4 ${cols} ${
             block.size ? sizeCap[block.size] : ""
           }`}
         >
@@ -142,7 +162,9 @@ function BlockView({ block }: { block: Block }) {
 
     case "cards":
       return (
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div
+          className={`mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 ${block.columns === 2 ? "" : "lg:grid-cols-3"}`}
+        >
           {block.items.map((item, i) => (
             <div
               key={i}
@@ -168,17 +190,32 @@ function BlockView({ block }: { block: Block }) {
         </div>
       );
 
-    case "list":
+    case "list": {
+      const List = block.ordered ? "ol" : "ul";
       return (
-        <ul className="mt-6 flex flex-col gap-2">
+        <List className="mt-6 flex flex-col gap-2">
           {block.items.map((item, i) => (
             <li key={i} className="flex gap-3 text-lg leading-8 text-ink-soft">
-              <span aria-hidden className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
-              <span>{item}</span>
+              {block.ordered ? (
+                <span aria-hidden className="w-5 shrink-0 font-semibold text-ink">
+                  {i + 1}.
+                </span>
+              ) : (
+                <span aria-hidden className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-ink" />
+              )}
+              {block.html ? (
+                <span
+                  className="prose-body"
+                  dangerouslySetInnerHTML={{ __html: item }}
+                />
+              ) : (
+                <span>{item}</span>
+              )}
             </li>
           ))}
-        </ul>
+        </List>
       );
+    }
 
     case "beforeAfter":
       return (
@@ -191,8 +228,24 @@ function BlockView({ block }: { block: Block }) {
         />
       );
 
+    case "compare":
+      return <Compare before={block.before} after={block.after} />;
+
     case "tabs":
-      return <MediaTabs ariaLabel="Project views" items={block.items} />;
+      return (
+        <MediaTabs ariaLabel="Project views" items={block.items} side={block.side} />
+      );
+
+    case "demo":
+      return (
+        <div className={`mt-8 ${sideBySide}`}>
+          <MediaBlock media={block.media} />
+          <p
+            className="prose-body"
+            dangerouslySetInnerHTML={{ __html: block.html }}
+          />
+        </div>
+      );
 
     case "bookGallery":
       return <BookGallery parts={block.parts} />;
