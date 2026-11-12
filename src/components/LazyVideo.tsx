@@ -97,7 +97,9 @@ export default function LazyVideo({
   const positioned = /\bgrow-media\b/.test(className) ? "" : "relative";
 
   return (
-    <div ref={box} className={`${positioned} overflow-hidden ${className}`}>
+    // Kept out of the scroll reveal: a fade or transform on a playing video
+    // can leave Safari showing a stuck frame while the clip runs underneath.
+    <div ref={box} data-no-reveal className={`${positioned} overflow-hidden ${className}`}>
       {sizes && (
         <Image
           src={poster}
