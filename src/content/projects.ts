@@ -567,9 +567,11 @@ export const projects: Project[] = [
               "The view becomes a pull-up sheet with three rests, and the swipe follows your finger, so browsing feels attached to your hand.",
             media: [
               {
-                type: "image",
-                src: `${S}/04-evolution-3-sep29.avif`,
-                alt: "The first pull-up sheet: the dish name and photo above a card peeking up from the bottom of the screen.",
+                type: "video",
+                poster: `${S}/04-sheet-sep29-poster.jpg`,
+                mp4: `${S}/04-sheet-sep29.mp4`,
+                webm: `${S}/04-sheet-sep29.webm`,
+                alt: "Screen recording of the Sep 2026 sheet: a dish is opened, the sheet is pulled up through its rests to the recipe and back down, then a swipe carries the next dish in under the finger.",
                 phone: true,
               },
             ],
